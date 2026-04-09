@@ -31,5 +31,7 @@ namespace MauiAppAMASBE.Models
 
         public double Peso { get; set; }
         public double Altura { get; set; }
+
+        public string Senha {  get; set; }
     }
 }
