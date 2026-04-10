@@ -15,7 +15,7 @@ namespace MauiAppAMASBE
                 {
                     string path = Path.Combine(
                        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                       "banco_sqlite_compras.db3");
+                       "banco_sqlite_AMASBE.db3");
                     _db = new SQLiteDatabaseHelper(path);
                 }
 
