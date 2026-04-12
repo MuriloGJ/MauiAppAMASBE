@@ -19,8 +19,8 @@ namespace MauiAppAMASBE.Helpers.HelperNotificacao
 
             return lista.Where(n => n.StatusNotificacao == "pendente").ToList();
         }
-    }
-    public static async Task CriarNotificacao(int idLembrete, int idMensagem)
+
+        public static async Task CriarNotificacao(int idLembrete, int idMensagem)
         {
             var notificacao = new Notificacao
             {
@@ -36,3 +36,4 @@ namespace MauiAppAMASBE.Helpers.HelperNotificacao
             await App.Db.InsertNotificacao(notificacao);
         }
     }
+}

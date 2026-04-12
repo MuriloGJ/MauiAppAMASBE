@@ -1,6 +1,5 @@
 ﻿using MauiAppAMASBE.Helpers;
-using Microsoft.Extensions.DependencyInjection;
-using System.Globalization;
+using MauiAppAMASBE.Pages;
 
 namespace MauiAppAMASBE
 {
@@ -14,29 +13,20 @@ namespace MauiAppAMASBE
                 if (_db == null)
                 {
                     string path = Path.Combine(
-                       Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                       "banco_sqlite_AMASBE.db3");
+                        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                        "banco_sqlite_AMASBE.db3");
+
                     _db = new SQLiteDatabaseHelper(path);
                 }
 
                 return _db;
             }
-
         }
 
         public App()
         {
             InitializeComponent();
-
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR");
-
-            MainPage = new NavigationPage(new MainPage());
+            MainPage = new NavigationPage(new LoginPage());
         }
-
-
-
-
-
-
     }
 }
