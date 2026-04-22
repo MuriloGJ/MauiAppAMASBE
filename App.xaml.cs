@@ -1,5 +1,6 @@
 ﻿using MauiAppAMASBE.Helpers;
 using MauiAppAMASBE.Pages;
+using System.Globalization;
 
 namespace MauiAppAMASBE
 {
@@ -26,6 +27,8 @@ namespace MauiAppAMASBE
         public App()
         {
             InitializeComponent();
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR");
+
             MainPage = new NavigationPage(new LoginPage());
         }
     }
