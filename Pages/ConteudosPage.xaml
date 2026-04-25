@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAppAMASBE.Pages.ConteudosPage"
+             Title="Conteúdos"
+             BackgroundColor="#F6F7FB">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="18">
+
+            <Label Text="Conteúdos Educativos"
+                   FontSize="26"
+                   FontAttributes="Bold"
+                   TextColor="#1E1E1E"
+                   HorizontalOptions="Center" />
+
+            <Label Text="Artigos e vídeos sobre saúde preventiva e bem-estar."
+                   FontSize="14"
+                   TextColor="#666"
+                   HorizontalTextAlignment="Center" />
+
+            <Frame BackgroundColor="#EDE9FF" CornerRadius="18" Padding="16" HasShadow="False">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="📄 Artigo | Alimentação saudável"
+                           FontSize="17"
+                           FontAttributes="Bold"
+                           TextColor="#403A5F" />
+
+                    <Label Text="Entenda como uma alimentação equilibrada ajuda na prevenção de doenças e melhora a qualidade de vida."
+                           FontSize="13"
+                           TextColor="#666" />
+
+                    <Button Text="Abrir artigo"
+                            BackgroundColor="#6C63FF"
+                            TextColor="White"
+                            CornerRadius="10"
+                            Clicked="OnAbrirArtigoAlimentacaoClicked" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="#EDE9FF" CornerRadius="18" Padding="16" HasShadow="False">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="🎥 Vídeo | Atividade física"
+                           FontSize="17"
+                           FontAttributes="Bold"
+                           TextColor="#403A5F" />
+
+                    <Label Text="Vídeo educativo sobre a importância dos exercícios físicos para a saúde do corpo e da mente."
+                           FontSize="13"
+                           TextColor="#666" />
+
+                    <Button Text="Abrir vídeo"
+                            BackgroundColor="#6C63FF"
+                            TextColor="White"
+                            CornerRadius="10"
+                            Clicked="OnAbrirVideoAtividadeClicked" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="#EDE9FF" CornerRadius="18" Padding="16" HasShadow="False">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="📄 Artigo | Hidratação"
+                           FontSize="17"
+                           FontAttributes="Bold"
+                           TextColor="#403A5F" />
+
+                    <Label Text="Conheça a importância da hidratação para o funcionamento do organismo e para o bem-estar diário."
+                           FontSize="13"
+                           TextColor="#666" />
+
+                    <Button Text="Abrir artigo"
+                            BackgroundColor="#6C63FF"
+                            TextColor="White"
+                            CornerRadius="10"
+                            Clicked="OnAbrirArtigoHidratacaoClicked" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="#EDE9FF" CornerRadius="18" Padding="16" HasShadow="False">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="🎥 Vídeo | Saúde mental"
+                           FontSize="17"
+                           FontAttributes="Bold"
+                           TextColor="#403A5F" />
+
+                    <Label Text="Conteúdo em vídeo sobre a importância de cuidar da saúde mental no dia a dia."
+                           FontSize="13"
+                           TextColor="#666" />
+
+                    <Button Text="Abrir vídeo"
+                            BackgroundColor="#6C63FF"
+                            TextColor="White"
+                            CornerRadius="10"
+                            Clicked="OnAbrirVideoSaudeMentalClicked" />
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

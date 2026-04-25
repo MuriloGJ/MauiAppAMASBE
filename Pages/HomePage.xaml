@@ -8,11 +8,21 @@
     <ScrollView>
         <VerticalStackLayout Padding="20,20,20,30" Spacing="20">
 
-            <Label Text="Minha Saúde"
-                   FontSize="26"
-                   FontAttributes="Bold"
-                   TextColor="#1E1E1E"
-                   HorizontalOptions="Center" />
+            <HorizontalStackLayout Spacing="10"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center">
+
+                <Image Source="logo.png"
+           HeightRequest="40"
+           WidthRequest="40"
+           Aspect="AspectFit" />
+
+                <Label Text="Minha Saúde"
+           FontSize="24"
+           FontAttributes="Bold"
+           TextColor="#1E1E1E"
+           VerticalOptions="Center"/>
+            </HorizontalStackLayout>
 
             <Frame BackgroundColor="#FFF3CD"
                    CornerRadius="12"
@@ -25,24 +35,24 @@
                        HorizontalTextAlignment="Center" />
             </Frame>
 
-            <Grid ColumnDefinitions="*,*,*"
+            <Grid ColumnDefinitions="*,*"
                   RowDefinitions="Auto,Auto,Auto"
                   ColumnSpacing="14"
                   RowSpacing="14">
 
                 <Frame Grid.Row="0" Grid.Column="0"
                        CornerRadius="18"
-                       Padding="12"
+                       Padding="18"
                        BackgroundColor="#EDE9FF"
                        HasShadow="False"
-                       HeightRequest="110">
+                       HeightRequest="120">
                     <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnEspecialistasTapped" />
+                        <TapGestureRecognizer Tapped="OnHabitosTapped" />
                     </Frame.GestureRecognizers>
                     <VerticalStackLayout Spacing="8" VerticalOptions="Center">
-                        <Label Text="🩺" FontSize="28" HorizontalOptions="Center" />
-                        <Label Text="Especialistas"
-                               FontSize="13"
+                        <Label Text="🏃" FontSize="32" HorizontalOptions="Center" />
+                        <Label Text="Hábitos"
+                               FontSize="14"
                                HorizontalTextAlignment="Center"
                                TextColor="#403A5F" />
                     </VerticalStackLayout>
@@ -50,35 +60,17 @@
 
                 <Frame Grid.Row="0" Grid.Column="1"
                        CornerRadius="18"
-                       Padding="12"
+                       Padding="18"
                        BackgroundColor="#EDE9FF"
                        HasShadow="False"
-                       HeightRequest="110">
+                       HeightRequest="120">
                     <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnVacinasTapped" />
+                        <TapGestureRecognizer Tapped="OnLembretesTapped" />
                     </Frame.GestureRecognizers>
                     <VerticalStackLayout Spacing="8" VerticalOptions="Center">
-                        <Label Text="💉" FontSize="28" HorizontalOptions="Center" />
-                        <Label Text="Vacinas"
-                               FontSize="13"
-                               HorizontalTextAlignment="Center"
-                               TextColor="#403A5F" />
-                    </VerticalStackLayout>
-                </Frame>
-
-                <Frame Grid.Row="0" Grid.Column="2"
-                       CornerRadius="18"
-                       Padding="12"
-                       BackgroundColor="#EDE9FF"
-                       HasShadow="False"
-                       HeightRequest="110">
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnExamesTapped" />
-                    </Frame.GestureRecognizers>
-                    <VerticalStackLayout Spacing="8" VerticalOptions="Center">
-                        <Label Text="🧪" FontSize="28" HorizontalOptions="Center" />
-                        <Label Text="Exames"
-                               FontSize="13"
+                        <Label Text="⏰" FontSize="32" HorizontalOptions="Center" />
+                        <Label Text="Lembretes"
+                               FontSize="14"
                                HorizontalTextAlignment="Center"
                                TextColor="#403A5F" />
                     </VerticalStackLayout>
@@ -86,17 +78,17 @@
 
                 <Frame Grid.Row="1" Grid.Column="0"
                        CornerRadius="18"
-                       Padding="12"
+                       Padding="18"
                        BackgroundColor="#EDE9FF"
                        HasShadow="False"
-                       HeightRequest="110">
+                       HeightRequest="120">
                     <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnMedicamentosTapped" />
+                        <TapGestureRecognizer Tapped="OnConteudosTapped" />
                     </Frame.GestureRecognizers>
                     <VerticalStackLayout Spacing="8" VerticalOptions="Center">
-                        <Label Text="💊" FontSize="28" HorizontalOptions="Center" />
-                        <Label Text="Medicamentos"
-                               FontSize="13"
+                        <Label Text="📚" FontSize="32" HorizontalOptions="Center" />
+                        <Label Text="Conteúdos"
+                               FontSize="14"
                                HorizontalTextAlignment="Center"
                                TextColor="#403A5F" />
                     </VerticalStackLayout>
@@ -104,35 +96,17 @@
 
                 <Frame Grid.Row="1" Grid.Column="1"
                        CornerRadius="18"
-                       Padding="12"
+                       Padding="18"
                        BackgroundColor="#EDE9FF"
                        HasShadow="False"
-                       HeightRequest="110">
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnHabitosTapped" />
-                    </Frame.GestureRecognizers>
-                    <VerticalStackLayout Spacing="8" VerticalOptions="Center">
-                        <Label Text="🏃" FontSize="28" HorizontalOptions="Center" />
-                        <Label Text="Hábitos"
-                               FontSize="13"
-                               HorizontalTextAlignment="Center"
-                               TextColor="#403A5F" />
-                    </VerticalStackLayout>
-                </Frame>
-
-                <Frame Grid.Row="1" Grid.Column="2"
-                       CornerRadius="18"
-                       Padding="12"
-                       BackgroundColor="#EDE9FF"
-                       HasShadow="False"
-                       HeightRequest="110">
+                       HeightRequest="120">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnUbsTapped" />
                     </Frame.GestureRecognizers>
                     <VerticalStackLayout Spacing="8" VerticalOptions="Center">
-                        <Label Text="🏥" FontSize="28" HorizontalOptions="Center" />
+                        <Label Text="🏥" FontSize="32" HorizontalOptions="Center" />
                         <Label Text="UBS"
-                               FontSize="13"
+                               FontSize="14"
                                HorizontalTextAlignment="Center"
                                TextColor="#403A5F" />
                     </VerticalStackLayout>
@@ -140,17 +114,17 @@
 
                 <Frame Grid.Row="2" Grid.Column="0"
                        CornerRadius="18"
-                       Padding="12"
+                       Padding="18"
                        BackgroundColor="#EDE9FF"
                        HasShadow="False"
-                       HeightRequest="110">
+                       HeightRequest="120">
                     <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnConteudosTapped" />
+                        <TapGestureRecognizer Tapped="OnFaqTapped" />
                     </Frame.GestureRecognizers>
                     <VerticalStackLayout Spacing="8" VerticalOptions="Center">
-                        <Label Text="📚" FontSize="28" HorizontalOptions="Center" />
-                        <Label Text="Conteúdos"
-                               FontSize="13"
+                        <Label Text="❓" FontSize="32" HorizontalOptions="Center" />
+                        <Label Text="FAQ"
+                               FontSize="14"
                                HorizontalTextAlignment="Center"
                                TextColor="#403A5F" />
                     </VerticalStackLayout>
@@ -158,41 +132,24 @@
 
                 <Frame Grid.Row="2" Grid.Column="1"
                        CornerRadius="18"
-                       Padding="12"
+                       Padding="18"
                        BackgroundColor="#EDE9FF"
                        HasShadow="False"
-                       HeightRequest="110">
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnLembretesTapped" />
-                    </Frame.GestureRecognizers>
-                    <VerticalStackLayout Spacing="8" VerticalOptions="Center">
-                        <Label Text="⏰" FontSize="28" HorizontalOptions="Center" />
-                        <Label Text="Lembretes"
-                               FontSize="13"
-                               HorizontalTextAlignment="Center"
-                               TextColor="#403A5F" />
-                    </VerticalStackLayout>
-                </Frame>
-
-                <Frame Grid.Row="2" Grid.Column="2"
-                       CornerRadius="18"
-                       Padding="12"
-                       BackgroundColor="#EDE9FF"
-                       HasShadow="False"
-                       HeightRequest="110">
+                       HeightRequest="120">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnBemEstarTapped" />
                     </Frame.GestureRecognizers>
                     <VerticalStackLayout Spacing="8" VerticalOptions="Center">
-                        <Label Text="❤️" FontSize="28" HorizontalOptions="Center" />
+                        <Label Text="❤️" FontSize="32" HorizontalOptions="Center" />
                         <Label Text="Bem-estar"
-                               FontSize="13"
+                               FontSize="14"
                                HorizontalTextAlignment="Center"
                                TextColor="#403A5F" />
                     </VerticalStackLayout>
                 </Frame>
 
             </Grid>
+
         </VerticalStackLayout>
     </ScrollView>
 

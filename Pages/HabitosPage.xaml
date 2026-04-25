@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="MauiAppAMASBE.Pages.HabitosPage"
+    Title="Hábitos">
+
+    <Grid>
+
+        <!-- Estado vazio -->
+        <VerticalStackLayout 
+            x:Name="EmptyState"
+            Spacing="20"
+            VerticalOptions="Center"
+            HorizontalOptions="Center">
+
+            <Label Text="📋"
+                       FontSize="50"
+                       HorizontalOptions="Center" />
+
+            <Label Text="Crie novos hábitos!"
+                       FontSize="16"
+                       TextColor="#666"
+                       HorizontalTextAlignment="Center" />
+
+            <Button 
+                Text="+ Novo Hábito"
+                Clicked="OnNovoHabitoClicked"
+                BackgroundColor="#6A0DAD"
+                TextColor="White"/>
+        </VerticalStackLayout>
+
+        <!-- Card de cadastro -->
+        <Frame 
+            x:Name="CadastroCard"
+            IsVisible="False"
+            Padding="20"
+            CornerRadius="15"
+            BackgroundColor="#F5F5F5"
+            Margin="20"
+            VerticalOptions="Center">
+
+            <VerticalStackLayout Spacing="10">
+
+                <Label 
+                    Text="Novo Hábito"
+                    FontSize="20"
+                    FontAttributes="Bold"/>
+
+                <Entry 
+                    x:Name="NomeEntry"
+                    Placeholder="Nome do hábito"/>
+
+                <Entry 
+                    x:Name="TipoEntry"
+                    Placeholder="Tipo (Ex: Exercício)"/>
+
+                <Entry 
+                    x:Name="MetaEntry"
+                    Placeholder="Meta diária"/>
+
+                <Button 
+                    Text="Salvar"
+                    Clicked="OnSalvarHabitoClicked"
+                    BackgroundColor="#6A0DAD"
+                    TextColor="White"/>
+
+                <Button 
+                    Text="Cancelar"
+                    Clicked="OnCancelarClicked"
+                    BackgroundColor="Gray"
+                    TextColor="White"/>
+
+            </VerticalStackLayout>
+        </Frame>
+
+    </Grid>
+
+</ContentPage>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAppAMASBE.Pages.FAQPage"
+             Title="FAQ"
+             BackgroundColor="#F6F7FB">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="18">
+
+            <Label Text="Perguntas Frequentes"
+                   FontSize="26"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <Frame BackgroundColor="#EDE9FF"
+                   CornerRadius="18"
+                   Padding="15">
+                <VerticalStackLayout>
+                    <Label Text="Como melhorar minha saúde?"
+                           FontAttributes="Bold" />
+                    <Label Text="Adotando hábitos saudáveis como alimentação equilibrada e exercícios."
+                           FontSize="13"
+                           TextColor="#666"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="#EDE9FF"
+                   CornerRadius="18"
+                   Padding="15">
+                <VerticalStackLayout>
+                    <Label Text="Quantos litros de água devo beber?"
+                           FontAttributes="Bold" />
+                    <Label Text="Em média 2 litros por dia, podendo variar."
+                           FontSize="13"
+                           TextColor="#666"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="#EDE9FF"
+                   CornerRadius="18"
+                   Padding="15">
+                <VerticalStackLayout>
+                    <Label Text="Por que fazer exercícios?"
+                           FontAttributes="Bold" />
+                    <Label Text="Ajuda na saúde física e mental."
+                           FontSize="13"
+                           TextColor="#666"/>
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
