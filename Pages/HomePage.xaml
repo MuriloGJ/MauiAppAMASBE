@@ -105,7 +105,7 @@
                     </Frame.GestureRecognizers>
                     <VerticalStackLayout Spacing="8" VerticalOptions="Center">
                         <Label Text="🏥" FontSize="32" HorizontalOptions="Center" />
-                        <Label Text="UBS"
+                        <Label Text=" Maps UBS"
                                FontSize="14"
                                HorizontalTextAlignment="Center"
                                TextColor="#403A5F" />

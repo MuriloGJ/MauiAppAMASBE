@@ -30,9 +30,10 @@ namespace MauiAppAMASBE.Pages
             await Navigation.PushAsync(new FAQPage());
         }
 
+        // ✅ Maps UBS — navega para a página real
         private async void OnUbsTapped(object sender, TappedEventArgs e)
         {
-            await DisplayAlert("Em desenvolvimento", "A tela de UBS será implementada nas próximas etapas.", "OK");
+            await Navigation.PushAsync(new MapsUBSPage());
         }
 
         private async void OnBemEstarTapped(object sender, TappedEventArgs e)

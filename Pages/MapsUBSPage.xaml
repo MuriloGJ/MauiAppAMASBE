@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAppAMASBE.Pages.MapsUBSPage"
+             Title="Maps UBS"
+             BackgroundColor="#F6F7FB">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+
+        <!-- ── CABEÇALHO / FILTROS ──────────────────────────────────── -->
+        <VerticalStackLayout Grid.Row="0"
+                             Padding="20,16,20,12"
+                             Spacing="12"
+                             BackgroundColor="White">
+
+            <!-- Título -->
+            <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                <Label Text="🏥" FontSize="24" VerticalOptions="Center"/>
+                <Label Text="Locais próximos"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="#1E1E1E"
+                       VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+
+            <!-- Barra de busca -->
+            <Frame Padding="10,6" CornerRadius="20"
+                   BackgroundColor="#F0F4F8" BorderColor="Transparent"
+                   HasShadow="False">
+                <Grid ColumnDefinitions="Auto,*">
+                    <Label Grid.Column="0" Text="🔍" FontSize="15"
+                           VerticalOptions="Center" Margin="0,0,6,0"/>
+                    <Entry Grid.Column="1"
+                           x:Name="EntryBusca"
+                           Placeholder="Buscar por nome ou bairro..."
+                           PlaceholderColor="#9BA8B7"
+                           TextColor="#1E1E1E"
+                           BackgroundColor="Transparent"
+                           TextChanged="OnBuscaTextChanged"/>
+                </Grid>
+            </Frame>
+
+            <!-- Filtros e raio -->
+            <Grid ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="8">
+
+                <Frame x:Name="FrameFiltroUbs"
+                       Grid.Column="0"
+                       Padding="12,6" CornerRadius="20"
+                       BackgroundColor="#2E86AB" BorderColor="Transparent"
+                       HasShadow="False">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnFiltroUbsTapped"/>
+                    </Frame.GestureRecognizers>
+                    <HorizontalStackLayout Spacing="4">
+                        <Label Text="🏥" FontSize="13" VerticalOptions="Center"/>
+                        <Label x:Name="LblFiltroUbs" Text="UBS"
+                               TextColor="White" FontAttributes="Bold"
+                               FontSize="13" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </Frame>
+
+                <Frame x:Name="FrameFiltroParques"
+                       Grid.Column="1"
+                       Padding="12,6" CornerRadius="20"
+                       BackgroundColor="#4CAF50" BorderColor="Transparent"
+                       HasShadow="False">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnFiltroParquesTapped"/>
+                    </Frame.GestureRecognizers>
+                    <HorizontalStackLayout Spacing="4">
+                        <Label Text="🌳" FontSize="13" VerticalOptions="Center"/>
+                        <Label x:Name="LblFiltroParques" Text="Parques"
+                               TextColor="White" FontAttributes="Bold"
+                               FontSize="13" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </Frame>
+
+                <Label x:Name="LblStatus"
+                       Grid.Column="2"
+                       Text="Carregando..."
+                       TextColor="#9BA8B7" FontSize="12"
+                       VerticalOptions="Center"
+                       HorizontalOptions="End"/>
+
+                <Frame Grid.Column="3"
+                       Padding="10,6" CornerRadius="20"
+                       BackgroundColor="#EDE9FF" BorderColor="Transparent"
+                       HasShadow="False">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnRaioTapped"/>
+                    </Frame.GestureRecognizers>
+                    <Label x:Name="LblRaio" Text="5 km"
+                           TextColor="#403A5F" FontSize="12"
+                           FontAttributes="Bold" VerticalOptions="Center"/>
+                </Frame>
+
+            </Grid>
+        </VerticalStackLayout>
+
+        <!-- ── LOADING ──────────────────────────────────────────────── -->
+        <ActivityIndicator x:Name="Loading"
+                           Grid.Row="1"
+                           Color="#6A0DAD"
+                           IsRunning="False"
+                           IsVisible="False"
+                           HeightRequest="30"
+                           Margin="0,6"/>
+
+        <!-- ── LISTA ─────────────────────────────────────────────────── -->
+        <CollectionView x:Name="ListaLocais"
+                        Grid.Row="2"
+                        Margin="20,8"
+                        SelectionMode="None">
+
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center"
+                                     HorizontalOptions="Center"
+                                     Spacing="12" Padding="32">
+                    <Label Text="🗺️" FontSize="50" HorizontalOptions="Center"/>
+                    <Label Text="Nenhum local encontrado."
+                           TextColor="#666"
+                           FontSize="16"
+                           HorizontalTextAlignment="Center"/>
+                    <Label Text="Tente aumentar o raio de busca."
+                           TextColor="#999"
+                           FontSize="13"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,5" Padding="14,12"
+                           CornerRadius="18"
+                           BackgroundColor="#EDE9FF"
+                           BorderColor="Transparent"
+                           HasShadow="False">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Tapped="OnLocalTapped"
+                                CommandParameter="{Binding .}"/>
+                        </Frame.GestureRecognizers>
+                        <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="10">
+
+                            <!-- Ícone -->
+                            <Frame Grid.Column="0"
+                                   Padding="8" CornerRadius="25"
+                                   BackgroundColor="White"
+                                   BorderColor="Transparent"
+                                   HasShadow="False"
+                                   HeightRequest="46" WidthRequest="46"
+                                   HorizontalOptions="Center" VerticalOptions="Center">
+                                <Label Text="{Binding Icone}"
+                                       FontSize="20"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                            </Frame>
+
+                            <!-- Info -->
+                            <VerticalStackLayout Grid.Column="1" Spacing="2"
+                                                 VerticalOptions="Center">
+                                <Label Text="{Binding Nome}"
+                                       TextColor="#1E1E1E"
+                                       FontAttributes="Bold"
+                                       FontSize="14"
+                                       LineBreakMode="TailTruncation"/>
+                                <Label Text="{Binding Tipo}"
+                                       FontSize="11"
+                                       FontAttributes="Bold"
+                                       TextColor="#403A5F"/>
+                                <Label Text="{Binding Endereco}"
+                                       TextColor="#666"
+                                       FontSize="12"
+                                       LineBreakMode="TailTruncation"/>
+                            </VerticalStackLayout>
+
+                            <!-- Seta -->
+                            <Label Grid.Column="2" Text="›"
+                                   TextColor="#403A5F" FontSize="26"
+                                   VerticalOptions="Center"/>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- ── PAINEL DE DETALHE (mesmo estilo do CadastroCard) ──────── -->
+        <Frame x:Name="PainelDetalhe"
+               Grid.Row="3"
+               IsVisible="False"
+               Padding="20"
+               CornerRadius="15"
+               BackgroundColor="#F5F5F5"
+               Margin="20,0,20,16"
+               HasShadow="True">
+
+            <VerticalStackLayout Spacing="10">
+
+                <!-- Cabeçalho -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                        <Label x:Name="LblDetalheNome"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="#1E1E1E"
+                               LineBreakMode="WordWrap"/>
+                        <Label x:Name="LblDetalheTipo"
+                               FontSize="12"
+                               FontAttributes="Bold"
+                               TextColor="#403A5F"/>
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1"
+                            Text="✕"
+                            Clicked="OnFecharDetalheTapped"
+                            BackgroundColor="Transparent"
+                            TextColor="#666"
+                            FontSize="18"
+                            Padding="0"
+                            HeightRequest="36" WidthRequest="36"
+                            VerticalOptions="Start"/>
+                </Grid>
+
+                <BoxView Color="#E0E0E0" HeightRequest="1"/>
+
+                <!-- Endereço -->
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="📍" FontSize="14" VerticalOptions="Center"/>
+                    <Label x:Name="LblDetalheEndereco"
+                           TextColor="#444" FontSize="14"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+                <!-- Telefone -->
+                <HorizontalStackLayout x:Name="RowTelefone" Spacing="8" IsVisible="False">
+                    <Label Text="📞" FontSize="14" VerticalOptions="Center"/>
+                    <Label x:Name="LblDetalheTelefone"
+                           TextColor="#444" FontSize="14"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+                <!-- Horário -->
+                <HorizontalStackLayout x:Name="RowHorario" Spacing="8" IsVisible="False">
+                    <Label Text="🕐" FontSize="14" VerticalOptions="Center"/>
+                    <Label x:Name="LblDetalheHorario"
+                           TextColor="#444" FontSize="14"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+
+                <!-- Botão navegar — mesma cor dos outros botões do projeto -->
+                <Button Text="🗺️  Como chegar"
+                        Clicked="OnNavegacaoTapped"
+                        BackgroundColor="#6A0DAD"
+                        TextColor="White"
+                        CornerRadius="10"
+                        HeightRequest="46"/>
+
+            </VerticalStackLayout>
+        </Frame>
+
+    </Grid>
+</ContentPage>

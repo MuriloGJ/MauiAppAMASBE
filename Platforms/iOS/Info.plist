@@ -30,3 +30,5 @@
 	<string>Assets.xcassets/appicon.appiconset</string>
 </dict>
 </plist>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>O AMASBE usa sua localização para mostrar UBSs e parques próximos.</string>
