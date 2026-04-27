@@ -3,21 +3,15 @@ using System.Text.Json;
 
 namespace MauiAppAMASBE.Services
 {
-    /// <summary>
-    /// Busca UBSs (OpenDataSUS/CNES) e Parques (Overpass/OpenStreetMap).
-    /// Usa cache em Preferences por 24h para funcionar offline.
-    /// </summary>
     public class MapaService
     {
         private static readonly HttpClient _http = new() { Timeout = TimeSpan.FromSeconds(12) };
 
-        private const string CacheUbs     = "mapa_cache_ubs";
-        private const string CacheUbsTs   = "mapa_cache_ubs_ts";
+        private const string CacheUbs      = "mapa_cache_ubs";
+        private const string CacheUbsTs    = "mapa_cache_ubs_ts";
         private const string CacheParques  = "mapa_cache_parques";
         private const string CacheParquesTs = "mapa_cache_parques_ts";
         private static readonly TimeSpan ValidadeCache = TimeSpan.FromHours(24);
-
-        // ── Busca combinada ───────────────────────────────────────────
 
         public async Task<List<LocalizacaoItem>> BuscarTodosAsync(double lat, double lon, double raioKm)
         {
@@ -25,19 +19,15 @@ namespace MauiAppAMASBE.Services
                 BuscarUBSsAsync(lat, lon, raioKm),
                 BuscarParquesAsync(lat, lon, raioKm)
             );
-
             return resultados[0].Concat(resultados[1])
                 .OrderBy(l => Distancia(lat, lon, l.Latitude, l.Longitude))
                 .ToList();
         }
 
-        // ── UBSs — OpenDataSUS / CNES ─────────────────────────────────
-
         public async Task<List<LocalizacaoItem>> BuscarUBSsAsync(double lat, double lon, double raioKm)
         {
             var cache = LerCache<List<LocalizacaoItem>>(CacheUbs, CacheUbsTs);
-            if (cache != null)
-                return FiltrarRaio(cache, lat, lon, raioKm);
+            if (cache != null) return FiltrarRaio(cache, lat, lon, raioKm);
 
             try
             {
@@ -56,31 +46,28 @@ namespace MauiAppAMASBE.Services
                         .Where(i => i.NuLatitude != 0 && i.NuLongitude != 0)
                         .Select(i => new LocalizacaoItem
                         {
-                            Nome     = i.NoFantasia ?? i.NoRazaoSocial ?? "UBS",
-                            Endereco = $"{i.DsLogradouro}, {i.NuEndereco} — {i.NoBairro}",
-                            Latitude = i.NuLatitude,
+                            Nome      = i.NoFantasia ?? i.NoRazaoSocial ?? "UBS",
+                            Endereco  = $"{i.DsLogradouro}, {i.NuEndereco} — {i.NoBairro}",
+                            Latitude  = i.NuLatitude,
                             Longitude = i.NuLongitude,
-                            Telefone = i.NuTelefone ?? "",
-                            Horario  = "Seg–Sex: 07h às 19h",
-                            Tipo     = "UBS"
+                            Telefone  = i.NuTelefone ?? "",
+                            Horario   = "Seg–Sex: 07h às 19h",
+                            Tipo      = "UBS"
                         }).ToList();
 
                     SalvarCache(CacheUbs, CacheUbsTs, lista);
                     return lista;
                 }
             }
-            catch { /* Offline ou API indisponível */ }
+            catch { }
 
             return new List<LocalizacaoItem>();
         }
 
-        // ── Parques — Overpass API (OpenStreetMap) — gratuita, sem chave ──
-
         public async Task<List<LocalizacaoItem>> BuscarParquesAsync(double lat, double lon, double raioKm)
         {
             var cache = LerCache<List<LocalizacaoItem>>(CacheParques, CacheParquesTs);
-            if (cache != null)
-                return FiltrarRaio(cache, lat, lon, raioKm);
+            if (cache != null) return FiltrarRaio(cache, lat, lon, raioKm);
 
             try
             {
@@ -115,15 +102,14 @@ out center 30;";
                             if (eLat == 0) return null;
                             return new LocalizacaoItem
                             {
-                                Nome     = el.Tags?.GetValueOrDefault("name") ?? "Parque",
-                                Endereco = el.Tags?.GetValueOrDefault("addr:full") ?? "Ver no mapa",
-                                Latitude = eLat,
+                                Nome      = el.Tags?.GetValueOrDefault("name") ?? "Parque",
+                                Endereco  = el.Tags?.GetValueOrDefault("addr:full") ?? "Ver no mapa",
+                                Latitude  = eLat,
                                 Longitude = eLon,
-                                Tipo     = "Parque"
+                                Tipo      = "Parque"
                             };
                         })
-                        .Where(p => p != null)
-                        .Cast<LocalizacaoItem>()
+                        .Where(p => p != null).Cast<LocalizacaoItem>()
                         .ToList();
 
                     SalvarCache(CacheParques, CacheParquesTs, lista);
@@ -136,7 +122,6 @@ out center 30;";
         }
 
         // ── Cache ─────────────────────────────────────────────────────
-
         private static void SalvarCache<T>(string chave, string chaveTs, T dados)
         {
             try
@@ -153,8 +138,8 @@ out center 30;";
             {
                 var tsStr = Preferences.Get(chaveTs, "");
                 if (string.IsNullOrEmpty(tsStr)) return default;
-                var salvo = new DateTime(long.Parse(tsStr), DateTimeKind.Utc);
-                if (DateTime.UtcNow - salvo > ValidadeCache) return default;
+                if (DateTime.UtcNow - new DateTime(long.Parse(tsStr), DateTimeKind.Utc) > ValidadeCache)
+                    return default;
                 var json = Preferences.Get(chave, "");
                 return string.IsNullOrEmpty(json) ? default : JsonSerializer.Deserialize<T>(json);
             }
@@ -162,7 +147,6 @@ out center 30;";
         }
 
         // ── Utilitários ───────────────────────────────────────────────
-
         public static List<LocalizacaoItem> FiltrarRaio(
             List<LocalizacaoItem> lista, double lat, double lon, double raioKm) =>
             lista.Where(l => Distancia(lat, lon, l.Latitude, l.Longitude) <= raioKm).ToList();
@@ -179,39 +163,27 @@ out center 30;";
         }
     }
 
-    // ── DTOs OpenDataSUS ──────────────────────────────────────────────
-    public class DadosSusResposta
-    {
-        public List<DadosSusItem> Items { get; set; } = new();
-    }
+    // DTOs
+    public class DadosSusResposta { public List<DadosSusItem> Items { get; set; } = new(); }
     public class DadosSusItem
     {
-        public string? NoFantasia    { get; set; }
+        public string? NoFantasia { get; set; }
         public string? NoRazaoSocial { get; set; }
-        public string? DsLogradouro  { get; set; }
-        public string? NuEndereco    { get; set; }
-        public string? NoBairro      { get; set; }
-        public double  NuLatitude    { get; set; }
-        public double  NuLongitude   { get; set; }
-        public string? NuTelefone    { get; set; }
+        public string? DsLogradouro { get; set; }
+        public string? NuEndereco { get; set; }
+        public string? NoBairro { get; set; }
+        public double NuLatitude { get; set; }
+        public double NuLongitude { get; set; }
+        public string? NuTelefone { get; set; }
     }
-
-    // ── DTOs Overpass ─────────────────────────────────────────────────
-    public class OverpassResposta
-    {
-        public List<OverpassElement> Elements { get; set; } = new();
-    }
+    public class OverpassResposta { public List<OverpassElement> Elements { get; set; } = new(); }
     public class OverpassElement
     {
-        public long    Id      { get; set; }
-        public double? Lat     { get; set; }
-        public double? Lon     { get; set; }
+        public long Id { get; set; }
+        public double? Lat { get; set; }
+        public double? Lon { get; set; }
         public OverpassCenter? Center { get; set; }
         public Dictionary<string, string>? Tags { get; set; }
     }
-    public class OverpassCenter
-    {
-        public double Lat { get; set; }
-        public double Lon { get; set; }
-    }
+    public class OverpassCenter { public double Lat { get; set; } public double Lon { get; set; } }
 }
