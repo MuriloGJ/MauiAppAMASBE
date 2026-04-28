@@ -14,6 +14,51 @@
             VerticalOptions="Center"
             HorizontalOptions="Center">
 
+            <StackLayout>
+                <Frame Padding="0" Margin="10" VerticalOptions="FillAndExpand">
+                    <ListView x:Name="lst_habito" 
+                 IsPullToRefreshEnabled="True"
+                  Refreshing="lst_habito_Refreshing"
+                              ItemSelected="lst_habito_ItemSelected">
+                        <ListView.Header>
+                            <Grid ColumnDefinitions="50, *, *, 100, 60, *, *,*,70"
+                                  BackgroundColor="{StaticResource Gray100}">
+                                <Label Grid.Column="0" Text="ID" Padding="5" FontAttributes="Bold"/>
+                                <Label Grid.Column="1" Text="Nome do Hábito" FontAttributes="Bold"/>
+                                <Label Grid.Column="2" Text="Descrição" FontAttributes="Bold"/>
+                                <Label Grid.Column="3" Text="Frequencia" FontAttributes="Bold"/>
+                                <Label Grid.Column="4" Text="Meta(n°)" FontAttributes="Bold"/>
+                                <Label Grid.Column="5" Text="Meta(unidade)" FontAttributes="Bold"/>
+                                <Label Grid.Column="6" Text="Hora" FontAttributes="Bold"/>
+                                <Label Grid.Column="7" Text="Status" FontAttributes="Bold"/>
+                                <Label Grid.Column="8" Text="Progresso" FontAttributes="Bold"/>
+                            </Grid>
+                        </ListView.Header>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <ViewCell.ContextActions>
+                                        <MenuItem Text="Remover" Clicked="MenuItem_Remover_Habito"/>
+                                        <MenuItem Text=" Editar" Clicked="MenuItem_Editar_Habito"/>
+                                    </ViewCell.ContextActions>
+                                    <Grid ColumnDefinitions="50, *, *, 100, 60, *, *,*,70">
+                                        <Label Grid.Column="0" Text="{Binding IdHabito}" Padding="5"/>
+                                        <Label Grid.Column="1" Text="{Binding NomeHabito}" />
+                                        <Label Grid.Column="2" Text="{Binding DescricaoHabito}" />
+                                        <Label Grid.Column="3" Text="{Binding FrequenciaHabito}" />
+                                        <Label Grid.Column="4" Text="{Binding MetaValor}" />
+                                        <Label Grid.Column="5" Text="{Binding MetaUnidade}" />
+                                        <Label Grid.Column="6" Text="{Binding HorarioHabito}" />
+                                        <Label Grid.Column="7" Text="{Binding StatusHabito}" />
+                                        <Label Grid.Column="8" Text="{Binding Progresso, StringFormat='{0}%'}"  />
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Frame>
+            </StackLayout>
+
             <Label Text="📋"
                        FontSize="50"
                        HorizontalOptions="Center" />
@@ -40,7 +85,11 @@
             Margin="20"
             VerticalOptions="Center">
 
-            <VerticalStackLayout Spacing="10">
+            <VerticalStackLayout Spacing="10"
+              BackgroundColor="{StaticResource Gray100}"
+                                 Padding="10"
+Margin="10">
+
 
                 <Label 
                     Text="Novo Hábito"
@@ -54,10 +103,31 @@
                 <Entry 
                     x:Name="TipoEntry"
                     Placeholder="Tipo (Ex: Exercício)"/>
-
                 <Entry 
-                    x:Name="MetaEntry"
-                    Placeholder="Meta diária"/>
+                    x:Name="DescricaoEntry"
+                    Placeholder="Descrição(Ex: Caminhar por 1h hora)"/>
+                <TimePicker 
+                      x:Name="timeHorario"
+                      Format="HH:mm"/>
+                <HorizontalStackLayout
+                    Padding="0"
+                    Margin="10"
+                    Spacing="20">
+                    <Entry 
+                x:Name="MetaEntry"
+                Placeholder="Meta N° (Ex:5.5)"
+                    Keyboard="Numeric"/>
+                    <Picker 
+                Title="Unidade"
+                    BackgroundColor="{StaticResource Gray100}"
+                 ItemsSource="{Binding Unidades}"
+                SelectedItem="{Binding UnidadeSelecionada}" />
+
+                <Picker x:Name="pck_frequencia"
+                Title="Selecione a frequência"
+                ItemsSource="{Binding Frequencias}"
+                SelectedItem="{Binding FrequenciaSelecionada}" />
+                </HorizontalStackLayout>
 
                 <Button 
                     Text="Salvar"
@@ -70,6 +140,76 @@
                     Clicked="OnCancelarClicked"
                     BackgroundColor="Gray"
                     TextColor="White"/>
+
+            </VerticalStackLayout>
+        </Frame>
+        
+        <!--Card de edição-->
+        <Frame 
+    x:Name="EditCard"
+    IsVisible="False"
+    Padding="20"
+    CornerRadius="15"
+    BackgroundColor="#F5F5F5"
+    Margin="20"
+    VerticalOptions="Center">
+
+            <VerticalStackLayout 
+        Spacing="10"
+        BackgroundColor="{StaticResource Gray100}"
+        Padding="10"
+        Margin="10">
+
+                <Label 
+            Text="Editar Hábito"
+            FontSize="20"
+            FontAttributes="Bold"/>
+
+                <!-- Nome (IMPORTANTE adicionar) -->
+                <Label 
+            Text="{Binding NomeHabito}"/>
+
+                <!-- Horário -->
+                <TimePicker 
+            x:Name="Edit_timeHorario"
+            Format="HH:mm"/>
+
+                <HorizontalStackLayout
+            Padding="0"
+            Margin="10"
+            Spacing="20">
+                    <VerticalStackLayout>
+                    <!-- Meta -->
+                    <Label
+                        Text= "N° de vezes"/>
+                        <Entry 
+                x:Name="Edit_MetaEntry"
+                Placeholder="Meta (Ex: 5.5)"
+                Keyboard="Numeric"/>
+                    </VerticalStackLayout>
+
+
+                    <!-- Frequência -->
+                    <Picker 
+                x:Name="Edit_pck_frequencia"
+                Title="Selecione a frequência"
+                ItemsSource="{Binding Frequencias}"
+                SelectedItem="{Binding FrequenciaSelecionada}" />
+                </HorizontalStackLayout>
+
+                <!-- Botão salvar -->
+                <Button 
+            Text="Salvar"
+            Clicked="Button_Editar_Habito"
+            BackgroundColor="#6A0DAD"
+            TextColor="White"/>
+
+                <!-- Cancelar -->
+                <Button 
+            Text="Cancelar Edição"
+            Clicked="Button_Cancelar_edicao"
+            BackgroundColor="Gray"
+            TextColor="White"/>
 
             </VerticalStackLayout>
         </Frame>

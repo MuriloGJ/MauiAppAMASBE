@@ -23,7 +23,7 @@ public partial class CadastroPage : ContentPage
             return;
         }
 
-        var usuario = new CadastroSaudeUsuario
+        CadastroSaudeUsuario usuario = new CadastroSaudeUsuario
         {
             Nome = txtNome.Text,
             Email = txtEmail.Text,

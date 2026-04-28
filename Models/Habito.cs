@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using MauiAppAMASBE.ViewModel;
 
 namespace MauiAppAMASBE.Models
 {
@@ -14,8 +15,11 @@ namespace MauiAppAMASBE.Models
         public int IdCadastro { get; set; }
 
         public string NomeHabito { get; set; }
+        public string TipoHabito { get; set; }
         public string DescricaoHabito { get; set; }
 
+        public double MetaValor { get; set; }
+        public string MetaUnidade { get; set; }
         public string FrequenciaHabito { get; set; }
 
         public TimeSpan HorarioHabito { get; set; }
