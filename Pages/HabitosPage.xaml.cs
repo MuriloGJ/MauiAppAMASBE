@@ -75,7 +75,7 @@ namespace MauiAppAMASBE.Pages
                     HorarioHabito = timeHorario.Time ?? TimeSpan.Zero,
                     FrequenciaHabito = viewModel.FrequenciaSelecionada,
 
-                    // ✅ AGORA SIM
+                    
                     MetaValor = meta,
                     MetaUnidade = viewModel.UnidadeSelecionada,
                 };
@@ -217,6 +217,21 @@ namespace MauiAppAMASBE.Pages
         {
             EditCard.IsVisible = false;
             EmptyState.IsVisible = true;
+        }
+
+        private async void Stepper_ValueChanged(object sender, ValueChangedEventArgs e)
+        {
+            var stepper = sender as Stepper;
+            var habito = stepper?.BindingContext as Habito;
+
+            if (habito == null)
+                return;
+
+            // Atualiza o valor atual
+            habito.ValorAtual = e.NewValue;
+
+          
+            await App.Db.UpdateHabito(habito);
         }
     }
 }

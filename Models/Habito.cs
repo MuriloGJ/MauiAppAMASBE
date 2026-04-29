@@ -3,11 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using MauiAppAMASBE.ViewModel;
+using System.ComponentModel;
 
 namespace MauiAppAMASBE.Models
 {
-    public class Habito
+    public class Habito : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
         [PrimaryKey, AutoIncrement]
         public int IdHabito { get; set; }
 
@@ -24,8 +26,27 @@ namespace MauiAppAMASBE.Models
 
         public TimeSpan HorarioHabito { get; set; }
 
-        public string StatusHabito { get; set; } = "pendente";
+        private double valorAtual;
+        public double ValorAtual
+        {
+            get => valorAtual;
+            set
+            {
+                valorAtual = value;
+                OnPropertyChanged(nameof(ValorAtual));
+                OnPropertyChanged(nameof(Progresso));
+            }
+        }
 
-        public double Progresso { get; set; }
+        public double Progresso => MetaValor == 0 ? 0 : (ValorAtual / MetaValor) * 100;
+        protected void OnPropertyChanged(string nome)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nome));
+        }
     }
+
+    //public string StatusHabito { get; set; } = "pendente";
+
+
 }
+
