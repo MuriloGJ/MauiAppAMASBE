@@ -12,10 +12,12 @@ namespace MauiAppAMASBE.Pages
     
     public partial class HabitosPage : ContentPage
     {
+
         ObservableCollection<Habito> lista = new ObservableCollection<Habito>();
 
         HabitoViewModel viewModel = new HabitoViewModel();
         Habito habitoSelecionado;
+        
 
         public HabitosPage()
         {
@@ -27,13 +29,13 @@ namespace MauiAppAMASBE.Pages
         }
         protected async override void OnAppearing()
         {
-
+            CadastroSaudeUsuario usuario = App.UsuarioLogado;
 
             try
             {
                 lista.Clear();
 
-                List<Habito> tmp = await App.Db.GetHabitos();
+                List<Habito> tmp = await App.Db.GetHabitosPorUsuario(usuario.IdCadastro);
                 tmp.ForEach(i => lista.Add(i));
             }
             catch (Exception ex)
@@ -44,7 +46,7 @@ namespace MauiAppAMASBE.Pages
 
         private void OnNovoHabitoClicked(object sender, EventArgs e)
         {
-
+            CadastroSaudeUsuario usuario = App.UsuarioLogado;
 
             CadastroCard.IsVisible = true;
             EmptyState.IsVisible = false;
@@ -52,9 +54,17 @@ namespace MauiAppAMASBE.Pages
 
         private async void OnSalvarHabitoClicked(object sender, EventArgs e)
         {
+
            
             try
             {
+                CadastroSaudeUsuario usuario = App.UsuarioLogado;
+
+                if (usuario == null)
+                {
+                    await DisplayAlert("Erro", "Usuário não está logado", "OK");
+                    return;
+                }
                 double meta;
 
                 if (!double.TryParse(
@@ -75,7 +85,7 @@ namespace MauiAppAMASBE.Pages
                     HorarioHabito = timeHorario.Time ?? TimeSpan.Zero,
                     FrequenciaHabito = viewModel.FrequenciaSelecionada,
 
-                    
+                    IdCadastro = usuario.IdCadastro,
                     MetaValor = meta,
                     MetaUnidade = viewModel.UnidadeSelecionada,
                 };
@@ -98,7 +108,7 @@ namespace MauiAppAMASBE.Pages
             CadastroCard.IsVisible = false;
             EmptyState.IsVisible = true;
 
-            // 🔥 importante pra atualizar lista
+            // 🔥 importante pra atualizar lista 
             OnAppearing();
         }
 
@@ -109,6 +119,7 @@ namespace MauiAppAMASBE.Pages
         }
         private async void lst_habito_Refreshing(object sender, EventArgs e)
         {
+            CadastroSaudeUsuario usuario = App.UsuarioLogado;
             try
             {
                 lista.Clear();
@@ -127,6 +138,7 @@ namespace MauiAppAMASBE.Pages
         }
         private void lst_habito_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
+            CadastroSaudeUsuario usuario = App.UsuarioLogado;
             try
             {
                 Habito h = e.SelectedItem as Habito;
@@ -143,6 +155,7 @@ namespace MauiAppAMASBE.Pages
         }
         private async void MenuItem_Remover_Habito(object sender, EventArgs e)
         {
+            CadastroSaudeUsuario usuario = App.UsuarioLogado;
             try
             {
                 MenuItem item = sender as MenuItem;
@@ -190,8 +203,14 @@ namespace MauiAppAMASBE.Pages
         }
         private async void Button_Editar_Habito(object sender, EventArgs e)
         {
-            if (habitoSelecionado == null)
+            CadastroSaudeUsuario usuario = App.UsuarioLogado;
+            if (usuario == null)
+            {
+                await DisplayAlert("Erro", "Usuário não está logado", "OK");
                 return;
+                if (habitoSelecionado == null)
+                    return;
+            }
 
             double meta;
 

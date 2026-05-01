@@ -44,6 +44,13 @@ namespace MauiAppAMASBE.Helpers
         {
             return _conn.Table<CadastroSaudeUsuario>().ToListAsync();
         }
+        public async Task<CadastroSaudeUsuario> GetUsuario(string email, string cpf, string senha)
+        {
+            return await _conn.Table<CadastroSaudeUsuario>()
+                .Where(u => ((email != null && u.Email == email) ||(cpf != null && u.Cpf == cpf)) && u.Senha == senha)
+                .FirstOrDefaultAsync();
+        }
+
         public Task<CadastroSaudeUsuario> GetUsuarioSenha(string login, string senha)
         {
             return _conn.Table<CadastroSaudeUsuario>()

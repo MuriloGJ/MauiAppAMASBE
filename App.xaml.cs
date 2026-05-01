@@ -1,11 +1,14 @@
 ﻿using MauiAppAMASBE.Helpers;
+using MauiAppAMASBE.Models;
 using MauiAppAMASBE.Pages;
 using System.Globalization;
 
 namespace MauiAppAMASBE
 {
     public partial class App : Application
+
     {
+        public static CadastroSaudeUsuario UsuarioLogado { get; set; }
         static SQLiteDatabaseHelper _db;
         public static SQLiteDatabaseHelper Db
         {

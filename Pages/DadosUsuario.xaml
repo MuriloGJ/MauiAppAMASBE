@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAppAMASBE.Pages.DadosUsuario"
+             Title="Dados do Usuário">
+
+    <Grid>
+
+        <!-- 🔵 VISUALIZAÇÃO -->
+        <VerticalStackLayout x:Name="EmptyState"
+                             Padding="30"
+                             Spacing="10">
+
+            <Label Text="Dados de Usuário"
+                   FontSize="24"
+                   HorizontalOptions="Start" />
+            
+      
+
+            <Label Text="{Binding Usuario.Nome, StringFormat='Nome: {0}'}"
+                   FontAttributes="Bold" />
+
+            <Label Text="{Binding Usuario.Email, StringFormat='Email: {0}'}"
+                   FontAttributes="Bold" />
+
+            <Label Text="{Binding Usuario.Cpf, StringFormat='CPF: {0}'}"
+                   FontAttributes="Bold" />
+
+            <Label Text="{Binding Usuario.DataNascimento, StringFormat='Data: {0:dd/MM/yyyy}'}"
+                   FontAttributes="Bold" />
+            <Label Text="{Binding Usuario.Sexo, StringFormat='Sexo: {0}'}" />
+            
+            <Label Text="{Binding Usuario.RuaUsuario, StringFormat='Rua: {0}'}" />
+            <Label Text="{Binding Usuario.NumeroUsuario, StringFormat='Número: {0}'}" />
+            <Label Text="{Binding Usuario.BairroUsuario, StringFormat='Bairro: {0}'}" />
+            <Label Text="{Binding Usuario.ComplementoUsuario, StringFormat='Complemento: {0}'}" />
+            <Label Text="{Binding Usuario.CidadeUsuario, StringFormat='Cidade: {0}'}" />
+            <Label Text="{Binding Usuario.EstadoUsuario, StringFormat='Estado: {0}'}" />
+            <Label Text="{Binding Usuario.CepUsuario, StringFormat='CEP: {0}'}" />
+            <Label Text="{Binding Usuario.TelefoneUsuario, StringFormat='Telefone: {0}'}" />
+            <Label Text="{Binding Usuario.ContatoEmergencia, StringFormat='Telefone de Emergência: {0}'}" />
+            <Label Text="{Binding Usuario.Peso, StringFormat='Peso: {0} Kg'}" />
+            <Label Text="{Binding Usuario.Altura, StringFormat='Altura: {0} cm'}" />
+
+            <Button Text="+ Atualizar"
+                    Clicked="Button_Atualizar"
+                    BackgroundColor="#6A0DAD"
+                    TextColor="White"/>
+
+        </VerticalStackLayout>
+
+        <!-- 🟣 EDIÇÃO -->
+        <Frame x:Name="CadastroCard"
+               IsVisible="False"
+               Padding="20"
+               CornerRadius="15"
+               BackgroundColor="Gray"
+               Margin="20">
+
+            <VerticalStackLayout Spacing="10">
+
+                <Label Text="Editar Dados" FontAttributes="Bold"/>
+
+                <Grid ColumnDefinitions="*,*"
+                      RowDefinitions="*,*,*,*,*,*,*"
+                      Padding="10,10,10,10"
+                      RowSpacing="15"
+                      ColumnSpacing="30">
+                        
+                    <DatePicker
+                    
+                            Grid.Column="0"
+                            Grid.Row="0"
+                            x:Name="dtp_nascimento"
+                            Format="dd/MM/yyyy"
+                            MaximumDate="{x:Static sys:DateTime.Now}"
+                            MinimumDate="01/01/1900"/>
+
+                    <Picker 
+                    Grid.Column="0"
+                    Grid.Row="1"
+                    Title="Sexo"
+                        ItemsSource="{Binding Sexos}"
+                        SelectedItem="{Binding SexoSelecionado}" />
+
+                    <Entry Grid.Column="0" Grid.Row="2" Text="{Binding Usuario.RuaUsuario}" Placeholder="Rua" />
+                    <Entry Grid.Column="0" Grid.Row="3" Text="{Binding Usuario.NumeroUsuario}" Placeholder="Número" Keyboard="Numeric" />
+                    <Entry Grid.Column="0" Grid.Row="4" Text="{Binding Usuario.BairroUsuario}" Placeholder = "Bairro:" />
+                    <Entry Grid.Column="0" Grid.Row="5" Text="{Binding Usuario.ComplementoUsuario}" Placeholder = "Complemento:" />
+                    <Entry Grid.Column="0" Grid.Row="6" Text="{Binding Usuario.CidadeUsuario}" Placeholder = "Cidade:" />
+
+                    <Picker Grid.Column="1" Grid.Row="0"
+                            Title="Estado"
+                        ItemsSource="{Binding Estados}"
+                        SelectedItem="{Binding EstadoSelecionado}" />
+
+                    <Entry Grid.Column="1" Grid.Row="1" Text="{Binding Usuario.CepUsuario}" Placeholder = "CEP:" />
+                    <Entry Grid.Column="1" Grid.Row="2" Text="{Binding Usuario.TelefoneUsuario}" Placeholder = "Telefone:" />
+                    <Entry Grid.Column="1" Grid.Row="3" Text="{Binding Usuario.ContatoEmergencia}" Placeholder = "Telefone de Emergência:" />
+                    <Entry Grid.Column="1" Grid.Row="4" Text="{Binding Usuario.Peso}" Placeholder = "Peso:" />
+                    <Entry Grid.Column="1" Grid.Row="5" Text="{Binding Usuario.Altura}" Placeholder = "Altura:" />
+                </Grid>
+                <Button Text="Salvar"
+                        
+                        Clicked="Button_Salvar"/>
+
+                <Button Text="Voltar"
+                        Clicked="Button_Voltar"/>
+
+                <Label x:Name="lblMensagem" TextColor="Red" />
+
+            </VerticalStackLayout>
+
+        </Frame>
+
+    </Grid>
+
+</ContentPage>

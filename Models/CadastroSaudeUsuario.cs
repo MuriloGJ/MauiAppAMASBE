@@ -11,8 +11,12 @@ namespace MauiAppAMASBE.Models
         public int IdCadastro { get; set; }
 
         public string Nome { get; set; }
+
+        public string TipoUsuario { get; set; } = "Padrão";
         public DateTime DataNascimento { get; set; }
         public string Sexo { get; set; }
+
+        [Indexed(Unique = true)]
         public string Cpf { get; set; }
         public string RuaUsuario { get; set; }
         public string NumeroUsuario { get; set; }
@@ -22,6 +26,7 @@ namespace MauiAppAMASBE.Models
         public string CepUsuario { get; set; }
         public string ComplementoUsuario { get; set; }
         public string TelefoneUsuario { get; set; }
+        [Indexed(Unique = true)]
         public string Email { get; set; }
         public string ContatoEmergencia { get; set; }
         public string TipoSanguineo { get; set; }

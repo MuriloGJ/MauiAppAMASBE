@@ -36,7 +36,7 @@
             </Frame>
 
             <Grid ColumnDefinitions="*,*"
-                  RowDefinitions="Auto,Auto,Auto"
+                  RowDefinitions="Auto,Auto,Auto,Auto"
                   ColumnSpacing="14"
                   RowSpacing="14">
 
@@ -145,6 +145,23 @@
                                FontSize="14"
                                HorizontalTextAlignment="Center"
                                TextColor="#403A5F" />
+                    </VerticalStackLayout>
+                </Frame>
+                <Frame Grid.Row="3" Grid.Column="0"
+        CornerRadius="18"
+        Padding="18"
+        BackgroundColor="#EDE9FF"
+        HasShadow="False"
+        HeightRequest="120">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnDadosUsuarioTapped" />
+                    </Frame.GestureRecognizers>
+                    <VerticalStackLayout Spacing="8" VerticalOptions="Center">
+                        <Label Text="🏃" FontSize="32" HorizontalOptions="Center" />
+                        <Label Text="Dados Usuário"
+                FontSize="14"
+                HorizontalTextAlignment="Center"
+                TextColor="#403A5F" />
                     </VerticalStackLayout>
                 </Frame>
 

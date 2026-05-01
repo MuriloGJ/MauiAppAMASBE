@@ -22,33 +22,30 @@ public partial class CadastroPage : ContentPage
             lblMensagem.Text = "Preencha todos os campos";
             return;
         }
+        
 
         CadastroSaudeUsuario usuario = new CadastroSaudeUsuario
         {
             Nome = txtNome.Text,
             Email = txtEmail.Text,
             Cpf = txtCpf.Text,
-            Senha = txtSenha.Text,
+            Senha = txtSenha.Text
 
-            DataNascimento = new DateTime(2000, 1, 1),
-            Sexo = "N/A",
-            RuaUsuario = "",
-            NumeroUsuario = "",
-            BairroUsuario = "",
-            CidadeUsuario = "",
-            EstadoUsuario = "",
-            CepUsuario = "",
-            ComplementoUsuario = "",
-            TelefoneUsuario = "",
-            ContatoEmergencia = "",
-            TipoSanguineo = "",
-            Peso = 0,
-            Altura = 0
+         
         };
+        var existente = await App.Db.GetUsuario(txtEmail.Text, txtCpf.Text, txtSenha.Text);
+        if (existente != null)
+        {
+            await DisplayAlert("Erro", "Usuário já cadastrado", "OK");
+            return;
+        }
 
         await App.Db.InsertUsuario(usuario);
+        
+
+       
 
         await DisplayAlert("Sucesso", "Cadastro realizado!", "OK");
         await Navigation.PopAsync();
     }
-}
+}   
