@@ -38,7 +38,7 @@ namespace MauiAppAMASBE.Pages
 
         private async void OnBemEstarTapped(object sender, TappedEventArgs e)
         {
-            await DisplayAlert("Em desenvolvimento", "A tela de bem-estar será implementada nas próximas etapas.", "OK");
+            await Navigation.PushAsync(new BemEstarPage());
         }
 
         private async void OnDadosUsuarioTapped(object sender, TappedEventArgs e)

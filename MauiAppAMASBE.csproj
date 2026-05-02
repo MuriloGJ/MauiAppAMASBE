@@ -42,6 +42,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Pages\BemEstarPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\CadastroPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
