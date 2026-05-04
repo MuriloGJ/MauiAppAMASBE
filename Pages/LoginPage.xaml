@@ -3,29 +3,67 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiAppAMASBE.Pages.LoginPage"
              Title="Login">
+    <Grid>
+        <!-- Estado vazio -->
+        <VerticalStackLayout 
+         Padding="30" Spacing="15"
+     x:Name="EmptyState">
 
-    <VerticalStackLayout Padding="30" Spacing="15">
 
-        <Label Text="Login"
+
+            <Label Text="Login"
                FontSize="28"
                HorizontalOptions="Center" />
 
-        <Entry x:Name="txtLogin"
+            <Entry x:Name="txtLogin"
                Placeholder="Email ou CPF" />
 
-        <Entry x:Name="txtSenha"
+            <Entry x:Name="txtSenha"
                Placeholder="Senha"
                IsPassword="True" />
 
-        <Button Text="Entrar"
+            <Button Text="Entrar"
                 Clicked="OnEntrarClicked" />
 
-        <Button Text="Cadastrar"
+            <Button Text="Cadastrar"
                 Clicked="OnCadastrarClicked" />
+            <Button Text="Esqueci a Senha"
+                Clicked="Button_RecuperarSenha"/>
+        </VerticalStackLayout>
 
-        <Label x:Name="lblMensagem"
-               TextColor="Red" />
+        <!--Card de edição-->
+        <Frame 
+x:Name="SenhaCard"
+IsVisible="False"
+Padding="20"
+CornerRadius="15"
+BackgroundColor="#898989"
+Margin="20"
+VerticalOptions="Center">
+            <VerticalStackLayout>
 
-    </VerticalStackLayout>
+                <Label 
+            Text="Qual seu Email"
+            FontSize="20"
+            FontAttributes="Bold"/>
+                <Entry x:Name="txtEmail2"/>
+                <Label 
+Text="Qual seu CPF"
+FontSize="20"
+FontAttributes="Bold"/>
+                <Entry x:Name="txtCpf"/>
+                <Label 
+Text="Qual Nova Senha "
+FontSize="20"
+FontAttributes="Bold"/>
+                <Entry x:Name="txtNovaSenha"/>
 
+                <Button Text="Definir Nova Senha"
+        Clicked="Button_DefinirNovaSenha"/>
+
+            </VerticalStackLayout>
+
+        </Frame>
+        
+    </Grid>
 </ContentPage>

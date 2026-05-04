@@ -43,11 +43,17 @@ public partial class DadosUsuario : ContentPage
     {
         try
         {
-            var usuario = App.UsuarioLogado;
+            CadastroSaudeUsuario usuario = App.UsuarioLogado;
 
             if(usuario == null)
             {
                 await DisplayAlert("Erro", "Usuário não está logado", "OK");
+                return;
+
+            }
+            if (usuario == null)
+            {
+                await DisplayAlert("Erro", "Usuário não logado", "OK");
                 return;
             }
             if (dtp_nascimento.Date == null) { 
@@ -59,19 +65,33 @@ public partial class DadosUsuario : ContentPage
                 await DisplayAlert("Erro", "Telefone é obrigatório", "OK");
                 return;
             }
+            // 🔹 TELEFONE
+            if (string.IsNullOrWhiteSpace(usuario.TelefoneUsuario) || usuario.TelefoneUsuario.Length < 10||usuario.TelefoneUsuario.Length > 11)
+            {
+                await DisplayAlert("Erro", "Telefone inválido", "OK");
+                return;
+            }
 
-            if (usuario.Peso > 0)
+            // 🔹 PESO
+            if ( usuario.Peso <= 0 || usuario.Peso > 500)
             {
                 await DisplayAlert("Erro", "Peso inválido", "OK");
                 return;
             }
 
-            // 🔹 VALIDAR ALTURA
-            if (usuario.Altura < 0)
+            // 🔹 ALTURA
+            if ( usuario.Altura <= 20 || usuario.Altura > 300)
             {
                 await DisplayAlert("Erro", "Altura inválida", "OK");
                 return;
             }
+            // 🔹 SEXO
+            if (string.IsNullOrEmpty(viewModel.SexoSelecionado))
+            {
+                await DisplayAlert("Erro", "Selecione o sexo", "OK");
+                return;
+            }
+
 
             // 🔹 ATRIBUIR DADOS
             usuario.DataNascimento = dtp_nascimento.Date.Value;

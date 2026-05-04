@@ -55,7 +55,7 @@
                IsVisible="False"
                Padding="20"
                CornerRadius="15"
-               BackgroundColor="Gray"
+               BackgroundColor="#404040"
                Margin="20">
 
             <VerticalStackLayout Spacing="10">
@@ -96,10 +96,10 @@
                         SelectedItem="{Binding EstadoSelecionado}" />
 
                     <Entry Grid.Column="1" Grid.Row="1" Text="{Binding Usuario.CepUsuario}" Placeholder = "CEP:" />
-                    <Entry Grid.Column="1" Grid.Row="2" Text="{Binding Usuario.TelefoneUsuario}" Placeholder = "Telefone:" />
-                    <Entry Grid.Column="1" Grid.Row="3" Text="{Binding Usuario.ContatoEmergencia}" Placeholder = "Telefone de Emergência:" />
-                    <Entry Grid.Column="1" Grid.Row="4" Text="{Binding Usuario.Peso}" Placeholder = "Peso:" />
-                    <Entry Grid.Column="1" Grid.Row="5" Text="{Binding Usuario.Altura}" Placeholder = "Altura:" />
+                    <Entry Grid.Column="1" Grid.Row="2" Text="{Binding Usuario.TelefoneUsuario}" Placeholder = "Telefone:" MaxLength="11" Keyboard="Numeric"/>
+                    <Entry Grid.Column="1" Grid.Row="3" Text="{Binding Usuario.ContatoEmergencia}" Placeholder = "Telefone de Emergência:" MaxLength="11" Keyboard="Numeric" />
+                    <Entry Grid.Column="1" Grid.Row="4" Text="{Binding Usuario.Peso}" Placeholder = "Peso:" Keyboard="Numeric"/>
+                    <Entry Grid.Column="1" Grid.Row="5" Text="{Binding Usuario.Altura}" Placeholder = "Altura:" Keyboard="Numeric"/>
                 </Grid>
                 <Button Text="Salvar"
                         
