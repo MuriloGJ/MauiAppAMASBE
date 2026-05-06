@@ -158,6 +158,10 @@ namespace MauiAppAMASBE.Helpers
         {
             return _conn.InsertAsync(l);
         }
+        public Task<List<Lembrete>> GetLembrete()
+        {
+            return _conn.Table<Lembrete>().ToListAsync();
+        }
         public Task<List<Lembrete>> GetLembretePorUsuario(int idUsuario)
         {
             return _conn.Table<Lembrete>()

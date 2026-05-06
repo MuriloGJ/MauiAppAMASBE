@@ -23,6 +23,7 @@ namespace MauiAppAMASBE.ViewModel
             {
                 "Diário",
                 "Semanal",
+                "Quinzenal",
                 "Mensal"
             };
 
@@ -31,7 +32,9 @@ namespace MauiAppAMASBE.ViewModel
                 "Litros",
                 "Kilometros",
                 "Repetições",
-                "Minutos"
+                "Minutos",
+                "Horas",
+                "Exercícios"
             };
         }
     }

@@ -42,7 +42,8 @@
             <Label Text="{Binding Usuario.ContatoEmergencia, StringFormat='Telefone de Emergência: {0}'}" />
             <Label Text="{Binding Usuario.Peso, StringFormat='Peso: {0} Kg'}" />
             <Label Text="{Binding Usuario.Altura, StringFormat='Altura: {0} cm'}" />
-
+            <Label Text="{Binding Usuario.TipoSanguineo, StringFormat='Tipo Sanguíneo: {0}'}" />
+            
             <Button Text="+ Atualizar"
                     Clicked="Button_Atualizar"
                     BackgroundColor="#6A0DAD"
@@ -100,6 +101,13 @@
                     <Entry Grid.Column="1" Grid.Row="3" Text="{Binding Usuario.ContatoEmergencia}" Placeholder = "Telefone de Emergência:" MaxLength="11" Keyboard="Numeric" />
                     <Entry Grid.Column="1" Grid.Row="4" Text="{Binding Usuario.Peso}" Placeholder = "Peso:" Keyboard="Numeric"/>
                     <Entry Grid.Column="1" Grid.Row="5" Text="{Binding Usuario.Altura}" Placeholder = "Altura:" Keyboard="Numeric"/>
+                    
+                    <Picker 
+                        Grid.Column="1"
+                        Grid.Row="6" Title="Tipo Sanguíneo"
+                        ItemsSource="{Binding TiposSanguineos}"
+                        SelectedItem="{Binding TipoSanguineoSelecionado}"/>
+
                 </Grid>
                 <Button Text="Salvar"
                         

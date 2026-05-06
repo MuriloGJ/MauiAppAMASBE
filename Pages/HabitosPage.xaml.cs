@@ -65,21 +65,55 @@ namespace MauiAppAMASBE.Pages
                     await DisplayAlert("Erro", "Usuário não está logado", "OK");
                     return;
                 }
-                double meta;
 
-                if (!double.TryParse(
-                    MetaEntry.Text,
-                    NumberStyles.Any,
-                    CultureInfo.CurrentCulture,
-                    out meta))
+
+
+
+                #region validação_das_entradas
+                // 🔹 NOME
+                var lista = await App.Db.GetHabitosPorUsuario(usuario.IdCadastro);
+
+                if (lista.Any(h => h.NomeHabito == NomeEntry.Text))
                 {
-                    await DisplayAlert("Erro", "Digite uma meta válida", "OK");
+                    await DisplayAlert("Erro", "Você já tem um hábito com esse nome", "OK");
                     return;
                 }
 
+                if (string.IsNullOrWhiteSpace(NomeEntry.Text))
+                {
+                    await DisplayAlert("Erro", "Nome do hábito é obrigatório", "OK");
+                    return;
+                }
+                //Meta
+                double meta;
+
+                if (!double.TryParse(MetaEntry.Text, out meta) || meta <= 0)
+                {
+                    await DisplayAlert("Erro", "Meta inválida", "OK");
+                    return;
+                }
+
+                // 🔹 FREQUÊNCIA
+                if (string.IsNullOrEmpty(viewModel.FrequenciaSelecionada))
+                {
+                    await DisplayAlert("Erro", "Selecione a frequência", "OK");
+                    return;
+                }
+
+                // 🔹 UNIDADE
+                if (string.IsNullOrEmpty(viewModel.UnidadeSelecionada))
+                {
+                    await DisplayAlert("Erro", "Selecione a unidade", "OK");
+                    return;
+                }
+
+                // 🔹 HORÁRIO (opcional mas seguro)
+                var horario = timeHorario.Time ?? TimeSpan.Zero;
+#endregion
                 Habito habito = new Habito
                 {
                     NomeHabito = NomeEntry.Text,
+                    
                     TipoHabito = TipoEntry.Text,
                     DescricaoHabito = DescricaoEntry.Text,
                     HorarioHabito = timeHorario.Time ?? TimeSpan.Zero,
@@ -208,8 +242,7 @@ namespace MauiAppAMASBE.Pages
             {
                 await DisplayAlert("Erro", "Usuário não está logado", "OK");
                 return;
-                if (habitoSelecionado == null)
-                    return;
+                
             }
 
             double meta;

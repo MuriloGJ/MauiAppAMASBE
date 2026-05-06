@@ -21,25 +21,26 @@
                   Refreshing="lst_habito_Refreshing"
                               ItemSelected="lst_habito_ItemSelected">
                         <ListView.Header>
-                            <Grid ColumnDefinitions="*, *, *, *, *, *, *,*"
-                                  BackgroundColor="{StaticResource Gray100}">
-                                <Label Grid.Column="0" Text="ID" Padding="5" FontAttributes="Bold" HorizontalOptions="Center"/>
-                                <Label Grid.Column="1" Text="Nome do Hábito" FontAttributes="Bold" HorizontalOptions="Center"/>
-                                <Label Grid.Column="2" Text="Descrição" FontAttributes="Bold" HorizontalOptions="Center"/>
-                                <Label Grid.Column="3" Text="Frequencia" FontAttributes="Bold" HorizontalOptions="Center"/>
-                                <VerticalStackLayout  Grid.Column="4" >
+                            <Grid ColumnDefinitions="*, *, *, *, *, *, *,*,*"
+                                  BackgroundColor="#666666">
+                                <Label Grid.Column="7" Text="ID Hábito" Padding="5" FontAttributes="Bold" HorizontalOptions="Center"/>
+                                <Label Grid.Column="0" Text="Nome do Hábito" FontAttributes="Bold" HorizontalOptions="Center"/>
+                                <Label Grid.Column="1" Text="Descrição" FontAttributes="Bold" HorizontalOptions="Center"/>
+                                <Label Grid.Column="2" Text="Frequencia" FontAttributes="Bold" HorizontalOptions="Center"/>
+                                <VerticalStackLayout  Grid.Column="3" >
                                     <Label Text="Meta" FontAttributes="Bold" HorizontalOptions="Center"/>
 
                                     <Label Text="(n°/unidade)" FontAttributes="Bold" HorizontalOptions="Center"/>
                                 </VerticalStackLayout>
-                                <Label Grid.Column="5" Text="Início" FontAttributes="Bold" HorizontalOptions="Center"/>
-                                <VerticalStackLayout Grid.Column="6">
+                                <Label Grid.Column="4" Text="Início" FontAttributes="Bold" HorizontalOptions="Center"/>
+                                <VerticalStackLayout Grid.Column="5">
                                     <Label  Text="Nº etapas " FontAttributes="Bold"
                                             HorizontalOptions="Center"/>
-                                <Label Text="concluidas" FontAttributes="Bold"
+                                    <Label Text="concluidas" FontAttributes="Bold"
                                        HorizontalOptions="Center"/>
                                 </VerticalStackLayout>
-                                <Label Grid.Column="7" Text="Progresso" FontAttributes="Bold" HorizontalOptions="Center"/>
+                                <Label Grid.Column="6" Text="Progresso" FontAttributes="Bold" HorizontalOptions="Center"/>
+                                <Label Grid.Column="8" Text="ID Usuário" FontAttributes="Bold" HorizontalOptions="Center"/>
                             </Grid>
                         </ListView.Header>
                         <ListView.ItemTemplate>
@@ -49,31 +50,31 @@
                                         <MenuItem Text="Remover" Clicked="MenuItem_Remover_Habito"/>
                                         <MenuItem Text=" Editar" Clicked="MenuItem_Editar_Habito"/>
                                     </ViewCell.ContextActions>
-                                    <Grid ColumnDefinitions="*, *, *, *, *, *, *,*">
-                                        <Label Grid.Column="0" Text="{Binding IdHabito}"
+                                    <Grid ColumnDefinitions="*, *, *, *, *, *, *,*,*">
+                                        <Label Grid.Column="7" Text="{Binding IdHabito}"
                                                HorizontalOptions="Center"
                                                VerticalOptions="Center"/>
-                                        <Label Grid.Column="1" Text="{Binding NomeHabito}"
+                                        <Label Grid.Column="0" Text="{Binding NomeHabito}"
                                                HorizontalOptions="Center"
                                                VerticalOptions="Center"/>
-                                            <Label Grid.Column="2" Text="{Binding DescricaoHabito}"
+                                        <Label Grid.Column="1" Text="{Binding DescricaoHabito}"
                                                    HorizontalOptions="Center"
                                                    VerticalOptions="Center"/>
-                                        <Label Grid.Column="3" Text="{Binding FrequenciaHabito}"
+                                        <Label Grid.Column="2" Text="{Binding FrequenciaHabito}"
                                                HorizontalOptions="Center"
                                                VerticalOptions="Center"/>
-                                        <HorizontalStackLayout HorizontalOptions="Center" Grid.Column="4">
-                                        <Label  Text="{Binding MetaValor}" Margin="5"
+                                        <HorizontalStackLayout HorizontalOptions="Center" Grid.Column="3">
+                                            <Label  Text="{Binding MetaValor}" Margin="5"
                                               
                                                VerticalOptions="Center"/>
-                                        <Label Text="{Binding MetaUnidade}"
+                                            <Label Text="{Binding MetaUnidade}"
                                                
                                                VerticalOptions="Center"/>
                                         </HorizontalStackLayout>
-                                        <Label Grid.Column="5" Text="{Binding HorarioHabito}"
+                                        <Label Grid.Column="4" Text="{Binding HorarioHabito}"
                                                            HorizontalOptions="Center"
                                                            VerticalOptions="Center"/>
-                                        <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="6">
+                                        <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="5">
                                             <Label  Text="{Binding ValorAtual}"
                                                     HorizontalOptions="Center" Margin="5"/>
                                             <Stepper   Minimum="0"
@@ -82,11 +83,14 @@
                                                   Value="{Binding ValorAtual}"
                                                   ValueChanged="Stepper_ValueChanged"
                                                        HorizontalOptions="Center"/>
-                                            
+
                                         </HorizontalStackLayout>
-                                         <Label Grid.Column="7" Text="{Binding Progresso, StringFormat='{0:F0}%'}"
+                                        <Label Grid.Column="6" Text="{Binding Progresso, StringFormat='{0:F0}%'}"
                                                 HorizontalOptions="Center"
                                                 VerticalOptions="Center"/>
+                                        <Label Grid.Column="8" Text="{Binding IdCadastro}"
+         HorizontalOptions="Center"
+         VerticalOptions="Center"/>
                                     </Grid>
                                 </ViewCell>
                             </DataTemplate>
@@ -122,9 +126,9 @@
             VerticalOptions="Center">
 
             <VerticalStackLayout Spacing="10"
-              BackgroundColor="{StaticResource Gray100}"
+              BackgroundColor="#666666"
                                  Padding="10"
-Margin="10">
+                                    Margin="10">
 
 
                 <Label 
@@ -133,16 +137,29 @@ Margin="10">
                     FontAttributes="Bold"/>
 
                 <Entry 
+                     TextColor="White"
+ PlaceholderColor="White"
                     x:Name="NomeEntry"
                     Placeholder="Nome do hábito"/>
 
                 <Entry 
                     x:Name="TipoEntry"
+                                        TextColor="White"
+PlaceholderColor="White"
                     Placeholder="Tipo (Ex: Exercício)"/>
                 <Entry 
+                     TextColor="White"
+ PlaceholderColor="White"
                     x:Name="DescricaoEntry"
                     Placeholder="Descrição(Ex: Caminhar por 1h hora)"/>
-                <TimePicker 
+                <Label
+                    Text="Hora do Hábito"
+                    TextColor="White"
+                    FontSize="20"
+                    FontAttributes="Bold"/>
+
+                    <TimePicker 
+                    
                       x:Name="timeHorario"
                       Format="HH:mm"/>
                 <HorizontalStackLayout
@@ -151,16 +168,21 @@ Margin="10">
                     Spacing="20">
                     <Entry 
                 x:Name="MetaEntry"
+                        TextColor="White"
+                        PlaceholderColor="White"
                 Placeholder="Meta N° (Ex:5.5)"
                     Keyboard="Numeric"/>
                     <Picker 
                 Title="Unidade"
+                        TextColor="White"
                     BackgroundColor="{StaticResource Gray100}"
                  ItemsSource="{Binding Unidades}"
                 SelectedItem="{Binding UnidadeSelecionada}" />
 
-                <Picker x:Name="pck_frequencia"
+                    <Picker x:Name="pck_frequencia"
                 Title="Selecione a frequência"
+                        TextColor="White"
+
                 ItemsSource="{Binding Frequencias}"
                 SelectedItem="{Binding FrequenciaSelecionada}" />
                 </HorizontalStackLayout>
@@ -179,7 +201,7 @@ Margin="10">
 
             </VerticalStackLayout>
         </Frame>
-        
+
         <!--Card de edição-->
         <Frame 
     x:Name="EditCard"
@@ -215,10 +237,12 @@ Margin="10">
             Margin="10"
             Spacing="20">
                     <VerticalStackLayout>
-                    <!-- Meta -->
-                    <Label
+                        <!-- Meta -->
+                        <Label
                         Text= "N° de vezes"/>
                         <Entry 
+                             TextColor="White"
+ PlaceholderColor="White"
                 x:Name="Edit_MetaEntry"
                 Placeholder="Meta (Ex: 5.5)"
                 Keyboard="Numeric"/>
