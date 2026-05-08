@@ -1,5 +1,6 @@
 using Microsoft.Maui.Controls;
 using MauiAppAMASBE.Models;
+using Microsoft.Maui.Storage;
 
 
 namespace MauiAppAMASBE.Pages;
@@ -9,6 +10,8 @@ public partial class LoginPage : ContentPage
     public LoginPage()
     {
         InitializeComponent();
+        txtLogin.Text = Preferences.Get("login", "");
+        txtSenha.Text = Preferences.Get("senha", "");
     }
 
     private async void OnEntrarClicked(object sender, EventArgs e)
@@ -34,7 +37,9 @@ public partial class LoginPage : ContentPage
                 await DisplayAlert("Erro", "Digite a senha", "OK");
                 return;
             }
-
+            // 🔥 salva dados
+            Preferences.Set("login", txtLogin.Text);
+            Preferences.Set("senha", txtSenha.Text);
 
             // 🔹 define usuário logado
             App.UsuarioLogado = usuario;

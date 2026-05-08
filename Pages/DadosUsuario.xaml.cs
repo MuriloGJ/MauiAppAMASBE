@@ -25,12 +25,15 @@ public partial class DadosUsuario : ContentPage
     {
         base.OnAppearing();
 
-        var usuario = App.UsuarioLogado;
+        
 
-       /* if (usuario != null)
-        {
-            DisplayAlert("OK", usuario.Nome, "OK");
-        }*/
+        CadastroSaudeUsuario usuario = App.UsuarioLogado;
+
+        viewModel.SexoSelecionado = usuario.Sexo;
+        viewModel.EstadoSelecionado = usuario.EstadoUsuario;
+        viewModel.TipoSanguineoSelecionado = usuario.TipoSanguineo;
+
+        dtp_nascimento.Date = usuario.DataNascimento;
 
         viewModel.Usuario = usuario;
     }
@@ -43,9 +46,10 @@ public partial class DadosUsuario : ContentPage
     {
         try
         {
+            #region validações
             CadastroSaudeUsuario usuario = App.UsuarioLogado;
 
-            if(usuario == null)
+            if (usuario == null)
             {
                 await DisplayAlert("Erro", "Usuário não está logado", "OK");
                 return;
@@ -91,24 +95,14 @@ public partial class DadosUsuario : ContentPage
                 await DisplayAlert("Erro", "Selecione o sexo", "OK");
                 return;
             }
+            #endregion
 
 
             // 🔹 ATRIBUIR DADOS
             usuario.DataNascimento = dtp_nascimento.Date.Value;
-            //usuario.RuaUsuario = txtRua.Text;
-            //usuario.NumeroUsuario = txtNumero.Text;
-            //usuario.BairroUsuario = txtBairro.Text;
-            //usuario.CidadeUsuario = txtCidade.Text;
             usuario.EstadoUsuario = viewModel.EstadoSelecionado;
-            //usuario.CepUsuario = txtCep.Text;
-           // usuario.ComplementoUsuario = txtComplemento.Text;
-            //usuario.TelefoneUsuario = txtFone.Text;
-            //usuario.ContatoEmergencia = txtFoneEmer.Text;
-            //usuario.Peso = peso;
-            //usuario.Altura = altura;
-
             usuario.Sexo = viewModel.SexoSelecionado;
-
+            usuario.TipoSanguineo = viewModel.TipoSanguineoSelecionado;
             await App.Db.UpdateUsuario(usuario);
 
             await DisplayAlert("Sucesso!", "Dados atualizados", "OK");

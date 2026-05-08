@@ -22,6 +22,8 @@
            FontAttributes="Bold"
            TextColor="#1E1E1E"
            VerticalOptions="Center"/>
+                <Button Clicked="Button_Logout"
+                        Text="Sair"/>
             </HorizontalStackLayout>
 
             <Frame BackgroundColor="#FFF3CD"

@@ -64,49 +64,135 @@
                 <Label Text="Editar Dados" FontAttributes="Bold"/>
 
                 <Grid ColumnDefinitions="*,*"
-                      RowDefinitions="*,*,*,*,*,*,*"
-                      Padding="10,10,10,10"
-                      RowSpacing="15"
-                      ColumnSpacing="30">
-                        
-                    <DatePicker
-                    
-                            Grid.Column="0"
-                            Grid.Row="0"
-                            x:Name="dtp_nascimento"
-                            Format="dd/MM/yyyy"
-                            MaximumDate="{x:Static sys:DateTime.Now}"
-                            MinimumDate="01/01/1900"/>
+      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+      Padding="10"
+      RowSpacing="15"
+      ColumnSpacing="30">
 
-                    <Picker 
-                    Grid.Column="0"
-                    Grid.Row="1"
-                    Title="Sexo"
-                        ItemsSource="{Binding Sexos}"
-                        SelectedItem="{Binding SexoSelecionado}" />
+                    <!-- Data de nascimento -->
+                    <VerticalStackLayout Grid.Column="0" Grid.Row="0" Spacing="5">
+                        <Label Text="Data de Nascimento:" />
+                        <DatePicker
+            x:Name="dtp_nascimento"
+            Format="dd/MM/yyyy"
+            MaximumDate="{x:Static sys:DateTime.Now}"
+            MinimumDate="01/01/1900"/>
+                    </VerticalStackLayout>
 
-                    <Entry Grid.Column="0" Grid.Row="2" Text="{Binding Usuario.RuaUsuario}" Placeholder="Rua" />
-                    <Entry Grid.Column="0" Grid.Row="3" Text="{Binding Usuario.NumeroUsuario}" Placeholder="Número" Keyboard="Numeric" />
-                    <Entry Grid.Column="0" Grid.Row="4" Text="{Binding Usuario.BairroUsuario}" Placeholder = "Bairro:" />
-                    <Entry Grid.Column="0" Grid.Row="5" Text="{Binding Usuario.ComplementoUsuario}" Placeholder = "Complemento:" />
-                    <Entry Grid.Column="0" Grid.Row="6" Text="{Binding Usuario.CidadeUsuario}" Placeholder = "Cidade:" />
+                    <!-- Estado -->
+                    <VerticalStackLayout Grid.Column="1" Grid.Row="0" Spacing="5">
+                        <Label Text="Estado:" />
+                        <Picker
+            
+            ItemsSource="{Binding Estados}"
+            SelectedItem="{Binding EstadoSelecionado}" />
+                    </VerticalStackLayout>
 
-                    <Picker Grid.Column="1" Grid.Row="0"
-                            Title="Estado"
-                        ItemsSource="{Binding Estados}"
-                        SelectedItem="{Binding EstadoSelecionado}" />
+                    <!-- Sexo -->
+                    <VerticalStackLayout Grid.Column="0" Grid.Row="1" Spacing="5">
+                        <Label Text="Sexo:" />
+                        <Picker
+            
+            ItemsSource="{Binding Sexos}"
+            SelectedItem="{Binding SexoSelecionado}" />
+                    </VerticalStackLayout>
 
-                    <Entry Grid.Column="1" Grid.Row="1" Text="{Binding Usuario.CepUsuario}" Placeholder = "CEP:" />
-                    <Entry Grid.Column="1" Grid.Row="2" Text="{Binding Usuario.TelefoneUsuario}" Placeholder = "Telefone:" MaxLength="11" Keyboard="Numeric"/>
-                    <Entry Grid.Column="1" Grid.Row="3" Text="{Binding Usuario.ContatoEmergencia}" Placeholder = "Telefone de Emergência:" MaxLength="11" Keyboard="Numeric" />
-                    <Entry Grid.Column="1" Grid.Row="4" Text="{Binding Usuario.Peso}" Placeholder = "Peso:" Keyboard="Numeric"/>
-                    <Entry Grid.Column="1" Grid.Row="5" Text="{Binding Usuario.Altura}" Placeholder = "Altura:" Keyboard="Numeric"/>
-                    
-                    <Picker 
-                        Grid.Column="1"
-                        Grid.Row="6" Title="Tipo Sanguíneo"
-                        ItemsSource="{Binding TiposSanguineos}"
-                        SelectedItem="{Binding TipoSanguineoSelecionado}"/>
+                    <!-- CEP -->
+                    <VerticalStackLayout Grid.Column="1" Grid.Row="1" Spacing="5">
+                        <Label Text="C.E.P:" />
+                        <Entry
+            Text="{Binding Usuario.CepUsuario}"
+            Placeholder="CEP"
+            Keyboard="Numeric"/>
+                    </VerticalStackLayout>
+
+                    <!-- Rua -->
+                    <VerticalStackLayout Grid.Column="0" Grid.Row="2" Spacing="5">
+                        <Label Text="Rua:" />
+                        <Entry
+            Text="{Binding Usuario.RuaUsuario}"
+            Placeholder="Rua" />
+                    </VerticalStackLayout>
+
+                    <!-- Telefone -->
+                    <VerticalStackLayout Grid.Column="1" Grid.Row="2" Spacing="5">
+                        <Label Text="Telefone:" />
+                        <Entry
+            Text="{Binding Usuario.TelefoneUsuario}"
+            Placeholder="Telefone"
+            MaxLength="11"
+            Keyboard="Numeric"/>
+                    </VerticalStackLayout>
+
+                    <!-- Número -->
+                    <VerticalStackLayout Grid.Column="0" Grid.Row="3" Spacing="5">
+                        <Label Text="Nº:" />
+                        <Entry
+            Text="{Binding Usuario.NumeroUsuario}"
+            Placeholder="Número"
+            Keyboard="Numeric" />
+                    </VerticalStackLayout>
+
+                    <!-- Telefone de Emergência -->
+                    <VerticalStackLayout Grid.Column="1" Grid.Row="3" Spacing="5">
+                        <Label Text="Telefone de Emergência:" />
+                        <Entry
+            Text="{Binding Usuario.ContatoEmergencia}"
+            Placeholder="Telefone de Emergência"
+            MaxLength="11"
+            Keyboard="Numeric" />
+                    </VerticalStackLayout>
+
+                    <!-- Bairro -->
+                    <VerticalStackLayout Grid.Column="0" Grid.Row="4" Spacing="5">
+                        <Label Text="Bairro:" />
+                        <Entry
+            Text="{Binding Usuario.BairroUsuario}"
+            Placeholder="Bairro" />
+                    </VerticalStackLayout>
+
+                    <!-- Peso -->
+                    <VerticalStackLayout Grid.Column="1" Grid.Row="4" Spacing="5">
+                        <Label Text="Peso:" />
+                        <Entry
+            Text="{Binding Usuario.Peso, StringFormat='Peso: {0} Kg'}"
+            Placeholder="Peso"
+            Keyboard="Numeric"/>
+                    </VerticalStackLayout>
+
+                    <!-- Complemento -->
+                    <VerticalStackLayout Grid.Column="0" Grid.Row="5" Spacing="5">
+                        <Label Text="Complemento:" />
+                        <Entry
+            Text="{Binding Usuario.ComplementoUsuario}"
+            Placeholder="Complemento" />
+                    </VerticalStackLayout>
+
+                    <!-- Altura -->
+                    <VerticalStackLayout Grid.Column="1" Grid.Row="5" Spacing="5">
+                        <Label Text="Altura:" />
+                        <Entry
+            Text="{Binding Usuario.Altura, StringFormat='Altura: {0} cm'}"
+            Placeholder="Altura"
+            Keyboard="Numeric"/>
+                    </VerticalStackLayout>
+
+                    <!-- Cidade -->
+                    <VerticalStackLayout Grid.Column="0" Grid.Row="6" Spacing="5">
+                        <Label Text="Cidade:" />
+                        <Entry
+            Text="{Binding Usuario.CidadeUsuario}"
+            Placeholder="Cidade" />
+                    </VerticalStackLayout>
+
+                    <!-- Tipo sanguíneo -->
+                    <VerticalStackLayout Grid.Column="1" Grid.Row="6" Spacing="5">
+                        <Label Text="Tipo Sanguíneo:" />
+                        <Picker
+            
+            ItemsSource="{Binding TiposSanguineos}"
+            SelectedItem="{Binding TipoSanguineoSelecionado}"/>
+                    </VerticalStackLayout>
 
                 </Grid>
                 <Button Text="Salvar"

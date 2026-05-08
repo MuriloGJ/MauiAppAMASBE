@@ -149,7 +149,7 @@ PlaceholderColor="White"
                     Placeholder="Tipo (Ex: Exercício)"/>
                 <Entry 
                      TextColor="White"
- PlaceholderColor="White"
+                    PlaceholderColor="White"
                     x:Name="DescricaoEntry"
                     Placeholder="Descrição(Ex: Caminhar por 1h hora)"/>
                 <Label
@@ -158,7 +158,7 @@ PlaceholderColor="White"
                     FontSize="20"
                     FontAttributes="Bold"/>
 
-                    <TimePicker 
+                <TimePicker 
                     
                       x:Name="timeHorario"
                       Format="HH:mm"/>
@@ -208,13 +208,13 @@ PlaceholderColor="White"
     IsVisible="False"
     Padding="20"
     CornerRadius="15"
-    BackgroundColor="#F5F5F5"
+    BackgroundColor="#666666"
     Margin="20"
     VerticalOptions="Center">
 
             <VerticalStackLayout 
         Spacing="10"
-        BackgroundColor="{StaticResource Gray100}"
+        BackgroundColor="#666666"
         Padding="10"
         Margin="10">
 
@@ -224,10 +224,25 @@ PlaceholderColor="White"
             FontAttributes="Bold"/>
 
                 <!-- Nome (IMPORTANTE adicionar) -->
-                <Label 
-            Text="{Binding NomeHabito}"/>
+
+                <Label
+                    Text="Nome do Hábito"/>
+                <Entry 
+                    Text="{Binding NomeHabito}"
+                    TextColor="White"
+                    PlaceholderColor="White"
+                   x:Name="Edit_NomeEntry"/>
+
+                <Label Text="Descrição do Hábito"/>
+                <Entry 
+                     x:Name="Edit_DescricaoEntry"
+                    TextColor="White"
+                    PlaceholderColor="White"
+                     Text="{Binding DescricaoHabito}"
+                                                          />
 
                 <!-- Horário -->
+                <Label Text="Hora do Hábito"/>
                 <TimePicker 
             x:Name="Edit_timeHorario"
             Format="HH:mm"/>

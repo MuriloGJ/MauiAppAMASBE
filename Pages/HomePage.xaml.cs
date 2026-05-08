@@ -46,6 +46,18 @@ namespace MauiAppAMASBE.Pages
             await Navigation.PushAsync(new DadosUsuario());
         }
 
-        
+        private void Button_Logout(object sender, EventArgs e)
+        {
+            // limpa usuário logado
+            App.UsuarioLogado = null;
+
+            // limpa dados salvos
+            Preferences.Remove("login");
+            Preferences.Remove("senha");
+
+            // volta pro login
+            Application.Current.MainPage =
+                new NavigationPage(new LoginPage());
+        }
     }
 }

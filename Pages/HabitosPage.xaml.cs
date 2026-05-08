@@ -221,6 +221,8 @@ namespace MauiAppAMASBE.Pages
 
         private void MenuItem_Editar_Habito(object sender, EventArgs e)
         {
+
+
             BindingContext = null;
             BindingContext = viewModel;
             var menuItem = sender as MenuItem;
@@ -229,7 +231,8 @@ namespace MauiAppAMASBE.Pages
             EditCard.IsVisible = true;
 
             // Preenche campos
-            
+            Edit_NomeEntry.Text = habitoSelecionado.NomeHabito;
+            Edit_DescricaoEntry.Text = habitoSelecionado.DescricaoHabito;
             Edit_MetaEntry.Text = habitoSelecionado.MetaValor.ToString();
             Edit_timeHorario.Time = habitoSelecionado.HorarioHabito;
 
@@ -237,6 +240,7 @@ namespace MauiAppAMASBE.Pages
         }
         private async void Button_Editar_Habito(object sender, EventArgs e)
         {
+            base.OnAppearing();
             CadastroSaudeUsuario usuario = App.UsuarioLogado;
             if (usuario == null)
             {

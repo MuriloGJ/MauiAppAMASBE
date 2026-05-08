@@ -1,22 +1,52 @@
 ﻿using MauiAppAMASBE.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace MauiAppAMASBE.ViewModel
 {
-    //classe criada para usar o picker e instanciar os atributos
-    public class HabitoViewModel
+    public class HabitoViewModel : INotifyPropertyChanged
     {
-        // 📌 Frequência
+        // 🔥 necessário pro Binding atualizar
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(
+            [CallerMemberName] string nome = null)
+        {
+            PropertyChanged?.Invoke(this,
+                new PropertyChangedEventArgs(nome));
+        }
+
+        // 📌 Frequências
         public List<string> Frequencias { get; set; }
-        public string FrequenciaSelecionada { get; set; }
 
-        // 📌 Unidade
+        private string frequenciaSelecionada;
+        public string FrequenciaSelecionada
+        {
+            get => frequenciaSelecionada;
+            set
+            {
+                frequenciaSelecionada = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // 📌 Unidades
         public List<string> Unidades { get; set; }
-        public string UnidadeSelecionada { get; set; }
 
-        // ✔️ ÚNICO construtor
+        private string unidadeSelecionada;
+        public string UnidadeSelecionada
+        {
+            get => unidadeSelecionada;
+            set
+            {
+                unidadeSelecionada = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // ✔️ Construtor
         public HabitoViewModel()
         {
             Frequencias = new List<string>
@@ -30,7 +60,7 @@ namespace MauiAppAMASBE.ViewModel
             Unidades = new List<string>
             {
                 "Litros",
-                "Kilometros",
+                "Kilômetros",
                 "Repetições",
                 "Minutos",
                 "Horas",
