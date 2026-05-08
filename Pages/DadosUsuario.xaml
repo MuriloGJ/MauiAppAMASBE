@@ -24,12 +24,13 @@
             <Label Text="{Binding Usuario.Email, StringFormat='Email: {0}'}"
                    FontAttributes="Bold" />
 
-            <Label Text="{Binding Usuario.Cpf, StringFormat='CPF: {0}'}"
+            <Label Text="{Binding Usuario.NomeUsuario, StringFormat='Nome de Usuário: {0}'}"
                    FontAttributes="Bold" />
 
             <Label Text="{Binding Usuario.DataNascimento, StringFormat='Data: {0:dd/MM/yyyy}'}"
                    FontAttributes="Bold" />
             <Label Text="{Binding Usuario.Sexo, StringFormat='Sexo: {0}'}" />
+            <Label Text="{Binding Usuario.Cpf, StringFormat='CPF: {0}'}" />
             
             <Label Text="{Binding Usuario.RuaUsuario, StringFormat='Rua: {0}'}" />
             <Label Text="{Binding Usuario.NumeroUsuario, StringFormat='Número: {0}'}" />
@@ -63,11 +64,13 @@
 
                 <Label Text="Editar Dados" FontAttributes="Bold"/>
 
-                <Grid ColumnDefinitions="*,*"
-      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                <Grid ColumnDefinitions="*,*,*"
+      RowDefinitions="Auto,Auto,Auto,Auto,Auto"
       Padding="10"
       RowSpacing="15"
       ColumnSpacing="30">
+
+                    <!-- LINHA 0 -->
 
                     <!-- Data de nascimento -->
                     <VerticalStackLayout Grid.Column="0" Grid.Row="0" Spacing="5">
@@ -83,28 +86,50 @@
                     <VerticalStackLayout Grid.Column="1" Grid.Row="0" Spacing="5">
                         <Label Text="Estado:" />
                         <Picker
-            
             ItemsSource="{Binding Estados}"
             SelectedItem="{Binding EstadoSelecionado}" />
                     </VerticalStackLayout>
 
                     <!-- Sexo -->
-                    <VerticalStackLayout Grid.Column="0" Grid.Row="1" Spacing="5">
+                    <VerticalStackLayout Grid.Column="2" Grid.Row="0" Spacing="5">
                         <Label Text="Sexo:" />
                         <Picker
-            
             ItemsSource="{Binding Sexos}"
             SelectedItem="{Binding SexoSelecionado}" />
                     </VerticalStackLayout>
 
+
+                    <!-- LINHA 1 -->
+
                     <!-- CEP -->
-                    <VerticalStackLayout Grid.Column="1" Grid.Row="1" Spacing="5">
+                    <VerticalStackLayout Grid.Column="0" Grid.Row="1" Spacing="5">
                         <Label Text="C.E.P:" />
                         <Entry
             Text="{Binding Usuario.CepUsuario}"
             Placeholder="CEP"
             Keyboard="Numeric"/>
                     </VerticalStackLayout>
+
+                    <!-- CPF -->
+                    <VerticalStackLayout Grid.Column="1" Grid.Row="1" Spacing="5">
+                        <Label Text="CPF:" />
+                        <Entry
+            Text="{Binding Usuario.Cpf}"
+            Placeholder="CPF" />
+                    </VerticalStackLayout>
+
+                    <!-- Telefone -->
+                    <VerticalStackLayout Grid.Column="2" Grid.Row="1" Spacing="5">
+                        <Label Text="Telefone:" />
+                        <Entry
+            Text="{Binding Usuario.TelefoneUsuario}"
+            Placeholder="Telefone"
+            MaxLength="11"
+            Keyboard="Numeric"/>
+                    </VerticalStackLayout>
+
+
+                    <!-- LINHA 2 -->
 
                     <!-- Rua -->
                     <VerticalStackLayout Grid.Column="0" Grid.Row="2" Spacing="5">
@@ -114,18 +139,8 @@
             Placeholder="Rua" />
                     </VerticalStackLayout>
 
-                    <!-- Telefone -->
-                    <VerticalStackLayout Grid.Column="1" Grid.Row="2" Spacing="5">
-                        <Label Text="Telefone:" />
-                        <Entry
-            Text="{Binding Usuario.TelefoneUsuario}"
-            Placeholder="Telefone"
-            MaxLength="11"
-            Keyboard="Numeric"/>
-                    </VerticalStackLayout>
-
                     <!-- Número -->
-                    <VerticalStackLayout Grid.Column="0" Grid.Row="3" Spacing="5">
+                    <VerticalStackLayout Grid.Column="1" Grid.Row="2" Spacing="5">
                         <Label Text="Nº:" />
                         <Entry
             Text="{Binding Usuario.NumeroUsuario}"
@@ -133,8 +148,35 @@
             Keyboard="Numeric" />
                     </VerticalStackLayout>
 
-                    <!-- Telefone de Emergência -->
+                    <!-- Bairro -->
+                    <VerticalStackLayout Grid.Column="2" Grid.Row="2" Spacing="5">
+                        <Label Text="Bairro:" />
+                        <Entry
+            Text="{Binding Usuario.BairroUsuario}"
+            Placeholder="Bairro" />
+                    </VerticalStackLayout>
+
+
+                    <!-- LINHA 3 -->
+
+                    <!-- Complemento -->
+                    <VerticalStackLayout Grid.Column="0" Grid.Row="3" Spacing="5">
+                        <Label Text="Complemento:" />
+                        <Entry
+            Text="{Binding Usuario.ComplementoUsuario}"
+            Placeholder="Complemento" />
+                    </VerticalStackLayout>
+
+                    <!-- Cidade -->
                     <VerticalStackLayout Grid.Column="1" Grid.Row="3" Spacing="5">
+                        <Label Text="Cidade:" />
+                        <Entry
+            Text="{Binding Usuario.CidadeUsuario}"
+            Placeholder="Cidade" />
+                    </VerticalStackLayout>
+
+                    <!-- Telefone Emergência -->
+                    <VerticalStackLayout Grid.Column="2" Grid.Row="3" Spacing="5">
                         <Label Text="Telefone de Emergência:" />
                         <Entry
             Text="{Binding Usuario.ContatoEmergencia}"
@@ -143,53 +185,31 @@
             Keyboard="Numeric" />
                     </VerticalStackLayout>
 
-                    <!-- Bairro -->
-                    <VerticalStackLayout Grid.Column="0" Grid.Row="4" Spacing="5">
-                        <Label Text="Bairro:" />
-                        <Entry
-            Text="{Binding Usuario.BairroUsuario}"
-            Placeholder="Bairro" />
-                    </VerticalStackLayout>
+
+                    <!-- LINHA 4 -->
 
                     <!-- Peso -->
-                    <VerticalStackLayout Grid.Column="1" Grid.Row="4" Spacing="5">
+                    <VerticalStackLayout Grid.Column="0" Grid.Row="4" Spacing="5">
                         <Label Text="Peso:" />
                         <Entry
-            Text="{Binding Usuario.Peso, StringFormat='Peso: {0} Kg'}"
+            Text="{Binding Usuario.Peso, StringFormat=' {0} kg'}"
             Placeholder="Peso"
             Keyboard="Numeric"/>
                     </VerticalStackLayout>
 
-                    <!-- Complemento -->
-                    <VerticalStackLayout Grid.Column="0" Grid.Row="5" Spacing="5">
-                        <Label Text="Complemento:" />
-                        <Entry
-            Text="{Binding Usuario.ComplementoUsuario}"
-            Placeholder="Complemento" />
-                    </VerticalStackLayout>
-
                     <!-- Altura -->
-                    <VerticalStackLayout Grid.Column="1" Grid.Row="5" Spacing="5">
+                    <VerticalStackLayout Grid.Column="1" Grid.Row="4" Spacing="5">
                         <Label Text="Altura:" />
                         <Entry
-            Text="{Binding Usuario.Altura, StringFormat='Altura: {0} cm'}"
+            Text="{Binding Usuario.Altura, StringFormat=' {0} cm'}"
             Placeholder="Altura"
             Keyboard="Numeric"/>
                     </VerticalStackLayout>
 
-                    <!-- Cidade -->
-                    <VerticalStackLayout Grid.Column="0" Grid.Row="6" Spacing="5">
-                        <Label Text="Cidade:" />
-                        <Entry
-            Text="{Binding Usuario.CidadeUsuario}"
-            Placeholder="Cidade" />
-                    </VerticalStackLayout>
-
                     <!-- Tipo sanguíneo -->
-                    <VerticalStackLayout Grid.Column="1" Grid.Row="6" Spacing="5">
+                    <VerticalStackLayout Grid.Column="2" Grid.Row="4" Spacing="5">
                         <Label Text="Tipo Sanguíneo:" />
                         <Picker
-            
             ItemsSource="{Binding TiposSanguineos}"
             SelectedItem="{Binding TipoSanguineoSelecionado}"/>
                     </VerticalStackLayout>

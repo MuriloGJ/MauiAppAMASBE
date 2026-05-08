@@ -44,10 +44,10 @@ namespace MauiAppAMASBE.Helpers
         {
             return _conn.Table<CadastroSaudeUsuario>().ToListAsync();
         }
-        public async Task<CadastroSaudeUsuario> GetUsuario(string email, string cpf, string senha)
+        public async Task<CadastroSaudeUsuario> GetUsuario(string email, string nomeUsuario, string senha)
         {
             return await _conn.Table<CadastroSaudeUsuario>()
-                .Where(u => ((email != null && u.Email == email) ||(cpf != null && u.Cpf == cpf)) && u.Senha == senha)
+                .Where(u => ((email != null && u.Email == email) ||(nomeUsuario != null && u.NomeUsuario == nomeUsuario)) && u.Senha == senha)
                 .FirstOrDefaultAsync();
         }
 
@@ -57,10 +57,10 @@ namespace MauiAppAMASBE.Helpers
                 .Where(u => (u.Email == login || u.Cpf == login) && u.Senha == senha)
                 .FirstOrDefaultAsync();
         }
-        public Task<CadastroSaudeUsuario> GetUsuarioPorCpf(string cpf)
+        public Task<CadastroSaudeUsuario> GetUsuarioPorNomeUsuario(string nomeUsuario)
         {
             return _conn.Table<CadastroSaudeUsuario>()
-                        .Where(u => u.Cpf == cpf)
+                        .Where(u => u.NomeUsuario == nomeUsuario)
                         .FirstOrDefaultAsync();
         }
 

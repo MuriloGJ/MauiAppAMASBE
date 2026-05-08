@@ -12,6 +12,8 @@ namespace MauiAppAMASBE.Models
 
         public string Nome { get; set; }
 
+        public string NomeUsuario { get; set; }
+
         public string TipoUsuario { get; set; } = "Padrão";
         public DateTime DataNascimento { get; set; }
         public string Sexo { get; set; }

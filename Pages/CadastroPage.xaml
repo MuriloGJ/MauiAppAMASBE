@@ -13,7 +13,8 @@
 
             <Entry x:Name="txtNome" Placeholder="Nome" />
             <Entry x:Name="txtEmail" Placeholder="Email" />
-            <Entry x:Name="txtCpf" Placeholder="CPF" MaxLength="11" Keyboard="Numeric"/>
+            <!--<Entry x:Name="txtCpf" Placeholder="CPF" MaxLength="11" Keyboard="Numeric"/>-->
+            <Entry x:Name="txtNomeUsuario" Placeholder="Nome de Usuário(Apelido):"/>
             <Entry x:Name="txtSenha" Placeholder="Senha" IsPassword="True" />
 
             <Button Text="Salvar"
