@@ -1,175 +1,88 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MauiAppAMASBE.Pages.HomePage"
-             Title="Início"
-             BackgroundColor="#F6F7FB">
-
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"             x:Class="MauiAppAMASBE.Pages.HomePage"             Title=""             NavigationPage.HasBackButton="False"             Shell.BackButtonBehavior="{StaticResource NoBackButton}"             Shell.NavBarIsVisible="False"             BackgroundColor="#F6F7FB">
     <ScrollView>
-        <VerticalStackLayout Padding="20,20,20,30" Spacing="20">
-
-            <HorizontalStackLayout Spacing="10"
-                       HorizontalOptions="Center"
-                       VerticalOptions="Center">
-
-                <Image Source="logo.png"
-           HeightRequest="40"
-           WidthRequest="40"
-           Aspect="AspectFit" />
-
-                <Label Text="Minha Saúde"
-           FontSize="24"
-           FontAttributes="Bold"
-           TextColor="#1E1E1E"
-           VerticalOptions="Center"/>
-                <Button Clicked="Button_Logout"
-                        Text="Sair"/>
-            </HorizontalStackLayout>
-
-            <Frame BackgroundColor="#FFF3CD"
-                   CornerRadius="12"
-                   Padding="10"
-                   HasShadow="False"
-                   BorderColor="#FFE69C">
-                <Label Text="⚠️ Algumas funcionalidades ainda estão em desenvolvimento."
-                       TextColor="#856404"
-                       FontSize="13"
-                       HorizontalTextAlignment="Center" />
+        <VerticalStackLayout Padding="20,20,20,30"                             Spacing="20">
+            <!-- Card topo -->
+            <Frame Style="{StaticResource CardTopo}">
+                <Grid ColumnDefinitions="Auto,*,Auto"                      VerticalOptions="Center">
+                    <!-- Logo -->
+                    <Image Grid.Column="0"                           Source="logo.png"                           HeightRequest="42"                           WidthRequest="42"                           Aspect="AspectFit"                           VerticalOptions="Center"/>
+                    <!-- Textos -->
+                    <VerticalStackLayout Grid.Column="1"                                         Margin="12,0"                                         VerticalOptions="Center">
+                        <Label Text="Minha Saúde"                               FontSize="24"                               FontAttributes="Bold"                               TextColor="#1E1E1E"/>
+                        <Label Text="Cuide da sua rotina"                               FontSize="13"                               TextColor="#777"/>
+                    </VerticalStackLayout>
+                    <!-- Botão sair -->
+                    <Button Grid.Column="2"                            Text="Sair"                            Clicked="Button_Logout"                            BackgroundColor="#6C63FF"                            TextColor="White"                            CornerRadius="12"                            FontAttributes="Bold"                            Padding="14,6"                            HeightRequest="40"                            VerticalOptions="Center"/>
+                </Grid>
             </Frame>
-
-            <Grid ColumnDefinitions="*,*"
-                  RowDefinitions="Auto,Auto,Auto,Auto"
-                  ColumnSpacing="14"
-                  RowSpacing="14">
-
-                <Frame Grid.Row="0" Grid.Column="0"
-                       CornerRadius="18"
-                       Padding="18"
-                       BackgroundColor="#EDE9FF"
-                       HasShadow="False"
-                       HeightRequest="120">
+            <!-- Aviso -->
+            <Frame BackgroundColor="#FFF3CD"                   CornerRadius="14"                   Padding="10"                   HasShadow="False"                   BorderColor="#FFE69C">
+                <Label Text="⚠ Algumas funcionalidades ainda estão em desenvolvimento."                       TextColor="#856404"                       FontSize="13"                       HorizontalTextAlignment="Center" />
+            </Frame>
+            <!-- Grid principal -->
+            <Grid ColumnDefinitions="*,*"                  RowDefinitions="Auto,Auto,Auto"                  ColumnSpacing="14"                  RowSpacing="14">
+                <!-- Hábitos -->
+                <Frame Grid.Row="0"                       Grid.Column="0"                       Style="{StaticResource CardMenu}">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnHabitosTapped" />
                     </Frame.GestureRecognizers>
-                    <VerticalStackLayout Spacing="8" VerticalOptions="Center">
-                        <Label Text="🏃" FontSize="32" HorizontalOptions="Center" />
-                        <Label Text="Hábitos"
-                               FontSize="14"
-                               HorizontalTextAlignment="Center"
-                               TextColor="#403A5F" />
+                    <VerticalStackLayout Spacing="8"                                         VerticalOptions="Center">
+                        <Label Text="🏃"                               Style="{StaticResource IconeCardMenu}" />
+                        <Label Text="Hábitos"                               Style="{StaticResource TextoCardMenu}" />
                     </VerticalStackLayout>
                 </Frame>
-
-                <Frame Grid.Row="0" Grid.Column="1"
-                       CornerRadius="18"
-                       Padding="18"
-                       BackgroundColor="#EDE9FF"
-                       HasShadow="False"
-                       HeightRequest="120">
+                <!-- Lembretes -->
+                <Frame Grid.Row="0"                       Grid.Column="1"                       Style="{StaticResource CardMenu}">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnLembretesTapped" />
                     </Frame.GestureRecognizers>
-                    <VerticalStackLayout Spacing="8" VerticalOptions="Center">
-                        <Label Text="⏰" FontSize="32" HorizontalOptions="Center" />
-                        <Label Text="Lembretes"
-                               FontSize="14"
-                               HorizontalTextAlignment="Center"
-                               TextColor="#403A5F" />
+                    <VerticalStackLayout Spacing="8"                                         VerticalOptions="Center">
+                        <Label Text="⏰"                               Style="{StaticResource IconeCardMenu}" />
+                        <Label Text="Lembretes"                               Style="{StaticResource TextoCardMenu}" />
                     </VerticalStackLayout>
                 </Frame>
-
-                <Frame Grid.Row="1" Grid.Column="0"
-                       CornerRadius="18"
-                       Padding="18"
-                       BackgroundColor="#EDE9FF"
-                       HasShadow="False"
-                       HeightRequest="120">
+                <!-- Conteúdos -->
+                <Frame Grid.Row="1"                       Grid.Column="0"                       Style="{StaticResource CardMenu}">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnConteudosTapped" />
                     </Frame.GestureRecognizers>
-                    <VerticalStackLayout Spacing="8" VerticalOptions="Center">
-                        <Label Text="📚" FontSize="32" HorizontalOptions="Center" />
-                        <Label Text="Conteúdos"
-                               FontSize="14"
-                               HorizontalTextAlignment="Center"
-                               TextColor="#403A5F" />
+                    <VerticalStackLayout Spacing="8"                                         VerticalOptions="Center">
+                        <Label Text="📚"                               Style="{StaticResource IconeCardMenu}" />
+                        <Label Text="Conteúdos"                               Style="{StaticResource TextoCardMenu}" />
                     </VerticalStackLayout>
                 </Frame>
-
-                <Frame Grid.Row="1" Grid.Column="1"
-                       CornerRadius="18"
-                       Padding="18"
-                       BackgroundColor="#EDE9FF"
-                       HasShadow="False"
-                       HeightRequest="120">
+                <!-- UBS -->
+                <Frame Grid.Row="1"                       Grid.Column="1"                       Style="{StaticResource CardMenu}">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnUbsTapped" />
                     </Frame.GestureRecognizers>
-                    <VerticalStackLayout Spacing="8" VerticalOptions="Center">
-                        <Label Text="🏥" FontSize="32" HorizontalOptions="Center" />
-                        <Label Text=" Maps UBS"
-                               FontSize="14"
-                               HorizontalTextAlignment="Center"
-                               TextColor="#403A5F" />
+                    <VerticalStackLayout Spacing="8"                                         VerticalOptions="Center">
+                        <Label Text="🏥"                               Style="{StaticResource IconeCardMenu}" />
+                        <Label Text="Mapa UBS"                               Style="{StaticResource TextoCardMenu}" />
                     </VerticalStackLayout>
                 </Frame>
-
-                <Frame Grid.Row="2" Grid.Column="0"
-                       CornerRadius="18"
-                       Padding="18"
-                       BackgroundColor="#EDE9FF"
-                       HasShadow="False"
-                       HeightRequest="120">
+                <!-- FAQ -->
+                <Frame Grid.Row="2"                       Grid.Column="0"                       Style="{StaticResource CardMenu}">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnFaqTapped" />
                     </Frame.GestureRecognizers>
-                    <VerticalStackLayout Spacing="8" VerticalOptions="Center">
-                        <Label Text="❓" FontSize="32" HorizontalOptions="Center" />
-                        <Label Text="FAQ"
-                               FontSize="14"
-                               HorizontalTextAlignment="Center"
-                               TextColor="#403A5F" />
+                    <VerticalStackLayout Spacing="8"                                         VerticalOptions="Center">
+                        <Label Text="❓"                               Style="{StaticResource IconeCardMenu}" />
+                        <Label Text="FAQ"                               Style="{StaticResource TextoCardMenu}" />
                     </VerticalStackLayout>
                 </Frame>
-
-                <Frame Grid.Row="2" Grid.Column="1"
-                       CornerRadius="18"
-                       Padding="18"
-                       BackgroundColor="#EDE9FF"
-                       HasShadow="False"
-                       HeightRequest="120">
+                <!-- Bem-estar -->
+                <Frame Grid.Row="2"                       Grid.Column="1"                       Style="{StaticResource CardMenu}">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnBemEstarTapped" />
                     </Frame.GestureRecognizers>
-                    <VerticalStackLayout Spacing="8" VerticalOptions="Center">
-                        <Label Text="❤️" FontSize="32" HorizontalOptions="Center" />
-                        <Label Text="Bem-estar"
-                               FontSize="14"
-                               HorizontalTextAlignment="Center"
-                               TextColor="#403A5F" />
+                    <VerticalStackLayout Spacing="8"                                         VerticalOptions="Center">
+                        <Label Text="❤️"                               Style="{StaticResource IconeCardMenu}" />
+                        <Label Text="Bem-estar"                               Style="{StaticResource TextoCardMenu}" />
                     </VerticalStackLayout>
                 </Frame>
-                <Frame Grid.Row="3" Grid.Column="0"
-        CornerRadius="18"
-        Padding="18"
-        BackgroundColor="#EDE9FF"
-        HasShadow="False"
-        HeightRequest="120">
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnDadosUsuarioTapped" />
-                    </Frame.GestureRecognizers>
-                    <VerticalStackLayout Spacing="8" VerticalOptions="Center">
-                        <Label Text="🏃" FontSize="32" HorizontalOptions="Center" />
-                        <Label Text="Dados Usuário"
-                FontSize="14"
-                HorizontalTextAlignment="Center"
-                TextColor="#403A5F" />
-                    </VerticalStackLayout>
-                </Frame>
-
             </Grid>
-
         </VerticalStackLayout>
     </ScrollView>
-
 </ContentPage>

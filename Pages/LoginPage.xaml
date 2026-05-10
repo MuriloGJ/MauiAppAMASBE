@@ -2,74 +2,142 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiAppAMASBE.Pages.LoginPage"
-             Title="Login">
-    <Grid>
-        <!-- Estado vazio -->
-        <VerticalStackLayout 
-         Padding="30" Spacing="15"
-     x:Name="EmptyState">
+             Title="Login"
+             BackgroundColor="#F6F7FB">
 
+    <Grid Padding="30">
 
+        <!-- LOGIN -->
+        <VerticalStackLayout x:Name="EmptyState"
+                             Spacing="18"
+                             VerticalOptions="Start"
+Margin="0,120,0,0">
+            <!-- Título -->
+            <Label Text="Bem-vindo"
+                   FontSize="30"
+                   FontAttributes="Bold"
+                   TextColor="#6C63FF" />
 
-            <Label Text="Login"
-               FontSize="28"
-               HorizontalOptions="Center" />
+            <Label Text="Faça login para continuar"
+                   FontSize="14"
+                   TextColor="#777" />
 
+            <!-- Campo email -->
             <Entry x:Name="txtLogin"
-               Placeholder="Email ou CPF" />
+                   Placeholder="Email"
+                   Style="{StaticResource EntryPadrao}" />
 
+            <!-- Campo senha -->
             <Entry x:Name="txtSenha"
-               Placeholder="Senha"
-               IsPassword="True" />
+                   Placeholder="Senha"
+                   IsPassword="True"
+                   Style="{StaticResource EntryPadrao}" />
 
-            <Button Text="Entrar"
-                Clicked="OnEntrarClicked" />
+            <!-- Linha esquecer senha -->
+            <Grid ColumnDefinitions="Auto,*,Auto"
+      VerticalOptions="Center">
 
-            <Button Text="Cadastrar"
-                Clicked="OnCadastrarClicked" />
-            <Button Text="Esqueci a Senha"
-                Clicked="Button_RecuperarSenha"/>
+                <HorizontalStackLayout Grid.Column="0"
+                           Spacing="6"
+                           VerticalOptions="Center">
+
+                    <CheckBox Color="#6C63FF"
+                  WidthRequest="22"
+                  HeightRequest="22"
+                  VerticalOptions="Center"/>
+
+                    <Label Text="Lembrar da senha"
+               TextColor="#777"
+               FontSize="13"
+               VerticalOptions="Center"/>
+
+                </HorizontalStackLayout>
+
+                <Label Grid.Column="2"
+           Text="Esqueci minha senha"
+           TextColor="#6C63FF"
+           FontSize="13"
+           VerticalOptions="Center">
+
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="Button_RecuperarSenha"/>
+                    </Label.GestureRecognizers>
+
+                </Label>
+
+            </Grid>
+
+            <!-- Botão login -->
+            <Button Text="Login"
+                    Clicked="OnEntrarClicked"
+                    Style="{StaticResource BotaoPadrao}" />
+
+            <!-- Cadastro -->
+            <HorizontalStackLayout HorizontalOptions="Center"
+                                   Spacing="4">
+
+                <Label Text="Não tem uma conta?"
+                       TextColor="#777"
+                       FontSize="13"/>
+
+                <Label Text="Cadastre-se"
+                       TextColor="#6C63FF"
+                       FontAttributes="Bold"
+                       FontSize="13">
+
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCadastrarClicked"/>
+                    </Label.GestureRecognizers>
+
+                </Label>
+
+            </HorizontalStackLayout>
+
         </VerticalStackLayout>
 
-        <!--Card de edição-->
-        <Frame 
-x:Name="SenhaCard"
-IsVisible="False"
-Padding="20"
-CornerRadius="15"
-BackgroundColor="#898989"
-Margin="20"
-VerticalOptions="Center">
-            <VerticalStackLayout>
+        <!-- RECUPERAR SENHA -->
+        <Frame x:Name="SenhaCard"
+               IsVisible="False"
+               Style="{StaticResource CardLogin}"
+               Margin="20"
+               VerticalOptions="Center">
 
-                <Label 
-            Text="Qual seu Email"
-            FontSize="20"
-            FontAttributes="Bold"/>
-                <Entry x:Name="txtEmail2"/>
-                <Label 
-Text="Qual seu Nome de Usuário(Apelido)"
-FontSize="20"
-FontAttributes="Bold"/>
-                <Entry x:Name="txtNomeUsuario"/>
-                <Label 
-Text="Qual Nova Senha "
-FontSize="20"
-FontAttributes="Bold"/>
-                <Entry x:Name="txtNovaSenha"/>
+            <VerticalStackLayout Spacing="15">
+
+                <Image Source="logo.png"
+                       HeightRequest="65"
+                       WidthRequest="65"
+                       HorizontalOptions="Center"
+                       Aspect="AspectFit" />
+
+                <Label Text="Recuperar Senha"
+                       Style="{StaticResource TituloPagina}" />
+
+                <Entry x:Name="txtEmail2"
+                       Placeholder="Email"
+                       Style="{StaticResource EntryPadrao}" />
+
+                <Entry x:Name="txtNomeUsuario"
+                       Placeholder="Nome de Usuário (Apelido)"
+                       Style="{StaticResource EntryPadrao}" />
+
+                <Entry x:Name="txtNovaSenha"
+                       Placeholder="Nova senha"
+                       IsPassword="True"
+                       Style="{StaticResource EntryPadrao}" />
 
                 <Button Text="Definir Nova Senha"
-        Clicked="Button_DefinirNovaSenha"
-                        
-                        Margin="5"/>
+                        Clicked="Button_DefinirNovaSenha"
+                        Style="{StaticResource BotaoPadrao}" />
+
                 <Button Text="Voltar"
                         Clicked="Button_Voltar_Login"
-                        Margin="5"/>
-
+                        Style="{StaticResource BotaoSecundario}" />
 
             </VerticalStackLayout>
 
         </Frame>
-        
+
     </Grid>
+
 </ContentPage>

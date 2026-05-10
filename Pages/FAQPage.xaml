@@ -6,49 +6,61 @@
              BackgroundColor="#F6F7FB">
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="18">
 
+        <VerticalStackLayout Padding="20"
+                             Spacing="18">
+
+            <!-- Título -->
             <Label Text="Perguntas Frequentes"
-                   FontSize="26"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center" />
+                   Style="{StaticResource TituloPagina}" />
 
-            <Frame BackgroundColor="#EDE9FF"
-                   CornerRadius="18"
-                   Padding="15">
-                <VerticalStackLayout>
-                    <Label Text="Como melhorar minha saúde?"
-                           FontAttributes="Bold" />
+            <!-- Card 1 -->
+            <Frame Style="{StaticResource CardItem}">
+
+                <VerticalStackLayout Spacing="5">
+
+                    <Label Text="❓ Como melhorar minha saúde?"
+                           Style="{StaticResource LabelTituloItem}" />
+
                     <Label Text="Adotando hábitos saudáveis como alimentação equilibrada e exercícios."
-                           FontSize="13"
-                           TextColor="#666"/>
+                           Style="{StaticResource LabelInfoItem}" />
+
                 </VerticalStackLayout>
+
             </Frame>
 
-            <Frame BackgroundColor="#EDE9FF"
-                   CornerRadius="18"
-                   Padding="15">
-                <VerticalStackLayout>
-                    <Label Text="Quantos litros de água devo beber?"
-                           FontAttributes="Bold" />
+            <!-- Card 2 -->
+            <Frame Style="{StaticResource CardItem}">
+
+                <VerticalStackLayout Spacing="5">
+
+                    <Label Text="💧 Quantos litros de água devo beber?"
+                           Style="{StaticResource LabelTituloItem}" />
+
                     <Label Text="Em média 2 litros por dia, podendo variar."
-                           FontSize="13"
-                           TextColor="#666"/>
+                           Style="{StaticResource LabelInfoItem}" />
+
                 </VerticalStackLayout>
+
             </Frame>
 
-            <Frame BackgroundColor="#EDE9FF"
-                   CornerRadius="18"
-                   Padding="15">
-                <VerticalStackLayout>
-                    <Label Text="Por que fazer exercícios?"
-                           FontAttributes="Bold" />
+            <!-- Card 3 -->
+            <Frame Style="{StaticResource CardItem}">
+
+                <VerticalStackLayout Spacing="5">
+
+                    <Label Text="🏃 Por que fazer exercícios?"
+                           Style="{StaticResource LabelTituloItem}" />
+
                     <Label Text="Ajuda na saúde física e mental."
-                           FontSize="13"
-                           TextColor="#666"/>
+                           Style="{StaticResource LabelInfoItem}" />
+
                 </VerticalStackLayout>
+
             </Frame>
 
         </VerticalStackLayout>
+
     </ScrollView>
+
 </ContentPage>

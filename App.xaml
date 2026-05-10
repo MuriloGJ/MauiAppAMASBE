@@ -1,14 +1,290 @@
-﻿<?xml version = "1.0" encoding = "UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:MauiAppAMASBE"
              x:Class="MauiAppAMASBE.App">
+
     <Application.Resources>
+
         <ResourceDictionary>
+
+            <!-- Arquivos padrão -->
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- Remove botão voltar -->
+            <BackButtonBehavior x:Key="NoBackButton"
+                                IsEnabled="False"
+                                IsVisible="False" />
+
+            <!-- CARD PADRÃO -->
+            <Style x:Key="CardPadrao"
+                   TargetType="Frame">
+
+                <Setter Property="BackgroundColor"
+                        Value="#EDE9FF"/>
+
+                <Setter Property="CornerRadius"
+                        Value="18"/>
+
+                <Setter Property="Padding"
+                        Value="18"/>
+
+                <Setter Property="HasShadow"
+                        Value="False"/>
+
+            </Style>
+
+            <!-- CARD MENU HOME -->
+            <Style x:Key="CardMenu"
+                   TargetType="Frame">
+
+                <Setter Property="BackgroundColor"
+                        Value="#EDE9FF"/>
+
+                <Setter Property="CornerRadius"
+                        Value="22"/>
+
+                <Setter Property="Padding"
+                        Value="18"/>
+
+                <Setter Property="HasShadow"
+                        Value="False"/>
+
+                <Setter Property="HeightRequest"
+                        Value="120"/>
+
+            </Style>
+
+            <!-- CARD TOPO -->
+            <Style x:Key="CardTopo"
+                   TargetType="Frame">
+
+                <Setter Property="BackgroundColor"
+                        Value="White"/>
+
+                <Setter Property="CornerRadius"
+                        Value="22"/>
+
+                <Setter Property="Padding"
+                        Value="15"/>
+
+                <Setter Property="HasShadow"
+                        Value="True"/>
+
+            </Style>
+
+            <!-- CARD LOGIN -->
+            <Style x:Key="CardLogin"
+                   TargetType="Frame">
+
+                <Setter Property="BackgroundColor"
+                        Value="White"/>
+
+                <Setter Property="CornerRadius"
+                        Value="22"/>
+
+                <Setter Property="Padding"
+                        Value="22"/>
+
+                <Setter Property="HasShadow"
+                        Value="True"/>
+
+            </Style>
+
+            <!-- CARD LISTA -->
+            <Style x:Key="CardLista"
+                   TargetType="Frame">
+
+                <Setter Property="BackgroundColor"
+                        Value="White"/>
+
+                <Setter Property="CornerRadius"
+                        Value="15"/>
+
+                <Setter Property="Padding"
+                        Value="0"/>
+
+                <Setter Property="HasShadow"
+                        Value="True"/>
+
+            </Style>
+
+            <!-- CARD ITEM -->
+            <Style x:Key="CardItem"
+                   TargetType="Frame">
+
+                <Setter Property="BackgroundColor"
+                        Value="#F4F1FF"/>
+
+                <Setter Property="CornerRadius"
+                        Value="15"/>
+
+                <Setter Property="Padding"
+                        Value="15"/>
+
+                <Setter Property="HasShadow"
+                        Value="True"/>
+
+            </Style>
+
+            <!-- CARD FORMULÁRIO -->
+            <Style x:Key="CardFormulario"
+                   TargetType="Frame">
+
+                <Setter Property="BackgroundColor"
+                        Value="#F4F1FF"/>
+
+                <Setter Property="CornerRadius"
+                        Value="18"/>
+
+                <Setter Property="Padding"
+                        Value="18"/>
+
+                <Setter Property="HasShadow"
+                        Value="True"/>
+
+            </Style>
+
+            <!-- BOTÃO PADRÃO -->
+            <Style x:Key="BotaoPadrao"
+                   TargetType="Button">
+
+                <Setter Property="BackgroundColor"
+                        Value="#6C63FF"/>
+
+                <Setter Property="TextColor"
+                        Value="White"/>
+
+                <Setter Property="CornerRadius"
+                        Value="12"/>
+
+                <Setter Property="FontAttributes"
+                        Value="Bold"/>
+
+                <Setter Property="HeightRequest"
+                        Value="50"/>
+
+            </Style>
+
+            <!-- BOTÃO SECUNDÁRIO -->
+            <Style x:Key="BotaoSecundario"
+                   TargetType="Button">
+
+                <Setter Property="BackgroundColor"
+                        Value="Transparent"/>
+
+                <Setter Property="TextColor"
+                        Value="#6C63FF"/>
+
+                <Setter Property="FontAttributes"
+                        Value="Bold"/>
+
+            </Style>
+
+            <!-- ENTRY PADRÃO -->
+            <Style x:Key="EntryPadrao"
+                   TargetType="Entry">
+
+                <Setter Property="TextColor"
+                        Value="#333"/>
+
+                <Setter Property="PlaceholderColor"
+                        Value="#777"/>
+
+                <Setter Property="BackgroundColor"
+                        Value="Transparent"/>
+
+            </Style>
+
+            <!-- PICKER PADRÃO -->
+            <Style x:Key="PickerPadrao"
+                   TargetType="Picker">
+
+                <Setter Property="TextColor"
+                        Value="#333"/>
+
+                <Setter Property="TitleColor"
+                        Value="#777"/>
+
+            </Style>
+
+            <!-- LABEL TÍTULO -->
+            <Style x:Key="TituloPagina"
+                   TargetType="Label">
+
+                <Setter Property="FontSize"
+                        Value="26"/>
+
+                <Setter Property="FontAttributes"
+                        Value="Bold"/>
+
+                <Setter Property="TextColor"
+                        Value="#1E1E1E"/>
+
+                <Setter Property="HorizontalOptions"
+                        Value="Center"/>
+
+            </Style>
+
+            <!-- LABEL CARD MENU -->
+            <Style x:Key="TextoCardMenu"
+                   TargetType="Label">
+
+                <Setter Property="FontSize"
+                        Value="14"/>
+
+                <Setter Property="HorizontalTextAlignment"
+                        Value="Center"/>
+
+                <Setter Property="TextColor"
+                        Value="#403A5F"/>
+
+            </Style>
+
+            <!-- ÍCONE CARD MENU -->
+            <Style x:Key="IconeCardMenu"
+                   TargetType="Label">
+
+                <Setter Property="FontSize"
+                        Value="32"/>
+
+                <Setter Property="HorizontalOptions"
+                        Value="Center"/>
+
+            </Style>
+
+            <!-- TÍTULO ITEM -->
+            <Style x:Key="LabelTituloItem"
+                   TargetType="Label">
+
+                <Setter Property="FontSize"
+                        Value="18"/>
+
+                <Setter Property="FontAttributes"
+                        Value="Bold"/>
+
+                <Setter Property="TextColor"
+                        Value="#1E1E1E"/>
+
+            </Style>
+
+            <!-- TEXTO ITEM -->
+            <Style x:Key="LabelInfoItem"
+                   TargetType="Label">
+
+                <Setter Property="FontSize"
+                        Value="14"/>
+
+                <Setter Property="TextColor"
+                        Value="#666"/>
+
+            </Style>
+
         </ResourceDictionary>
+
     </Application.Resources>
+
 </Application>

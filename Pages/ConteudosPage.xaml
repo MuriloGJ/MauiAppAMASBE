@@ -6,96 +6,83 @@
              BackgroundColor="#F6F7FB">
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="18">
+
+        <VerticalStackLayout Padding="20"
+                             Spacing="18">
 
             <Label Text="Conteúdos Educativos"
-                   FontSize="26"
-                   FontAttributes="Bold"
-                   TextColor="#1E1E1E"
-                   HorizontalOptions="Center" />
+                   Style="{StaticResource TituloPagina}" />
 
             <Label Text="Artigos e vídeos sobre saúde preventiva e bem-estar."
-                   FontSize="14"
-                   TextColor="#666"
+                   Style="{StaticResource LabelInfoItem}"
                    HorizontalTextAlignment="Center" />
 
-            <Frame BackgroundColor="#EDE9FF" CornerRadius="18" Padding="16" HasShadow="False">
+            <Frame Style="{StaticResource CardItem}">
                 <VerticalStackLayout Spacing="8">
+
                     <Label Text="📄 Artigo | Alimentação saudável"
-                           FontSize="17"
-                           FontAttributes="Bold"
-                           TextColor="#403A5F" />
+                           Style="{StaticResource LabelTituloItem}" />
 
                     <Label Text="Entenda como uma alimentação equilibrada ajuda na prevenção de doenças e melhora a qualidade de vida."
-                           FontSize="13"
-                           TextColor="#666" />
+                           Style="{StaticResource LabelInfoItem}" />
 
                     <Button Text="Abrir artigo"
-                            BackgroundColor="#6C63FF"
-                            TextColor="White"
-                            CornerRadius="10"
-                            Clicked="OnAbrirArtigoAlimentacaoClicked" />
+                            Clicked="OnAbrirArtigoAlimentacaoClicked"
+                            Style="{StaticResource BotaoPadrao}" />
+
                 </VerticalStackLayout>
             </Frame>
 
-            <Frame BackgroundColor="#EDE9FF" CornerRadius="18" Padding="16" HasShadow="False">
+            <Frame Style="{StaticResource CardItem}">
                 <VerticalStackLayout Spacing="8">
+
                     <Label Text="🎥 Vídeo | Atividade física"
-                           FontSize="17"
-                           FontAttributes="Bold"
-                           TextColor="#403A5F" />
+                           Style="{StaticResource LabelTituloItem}" />
 
                     <Label Text="Vídeo educativo sobre a importância dos exercícios físicos para a saúde do corpo e da mente."
-                           FontSize="13"
-                           TextColor="#666" />
+                           Style="{StaticResource LabelInfoItem}" />
 
                     <Button Text="Abrir vídeo"
-                            BackgroundColor="#6C63FF"
-                            TextColor="White"
-                            CornerRadius="10"
-                            Clicked="OnAbrirVideoAtividadeClicked" />
+                            Clicked="OnAbrirVideoAtividadeClicked"
+                            Style="{StaticResource BotaoPadrao}" />
+
                 </VerticalStackLayout>
             </Frame>
 
-            <Frame BackgroundColor="#EDE9FF" CornerRadius="18" Padding="16" HasShadow="False">
+            <Frame Style="{StaticResource CardItem}">
                 <VerticalStackLayout Spacing="8">
+
                     <Label Text="📄 Artigo | Hidratação"
-                           FontSize="17"
-                           FontAttributes="Bold"
-                           TextColor="#403A5F" />
+                           Style="{StaticResource LabelTituloItem}" />
 
                     <Label Text="Conheça a importância da hidratação para o funcionamento do organismo e para o bem-estar diário."
-                           FontSize="13"
-                           TextColor="#666" />
+                           Style="{StaticResource LabelInfoItem}" />
 
                     <Button Text="Abrir artigo"
-                            BackgroundColor="#6C63FF"
-                            TextColor="White"
-                            CornerRadius="10"
-                            Clicked="OnAbrirArtigoHidratacaoClicked" />
+                            Clicked="OnAbrirArtigoHidratacaoClicked"
+                            Style="{StaticResource BotaoPadrao}" />
+
                 </VerticalStackLayout>
             </Frame>
 
-            <Frame BackgroundColor="#EDE9FF" CornerRadius="18" Padding="16" HasShadow="False">
+            <Frame Style="{StaticResource CardItem}">
                 <VerticalStackLayout Spacing="8">
+
                     <Label Text="🎥 Vídeo | Saúde mental"
-                           FontSize="17"
-                           FontAttributes="Bold"
-                           TextColor="#403A5F" />
+                           Style="{StaticResource LabelTituloItem}" />
 
                     <Label Text="Conteúdo em vídeo sobre a importância de cuidar da saúde mental no dia a dia."
-                           FontSize="13"
-                           TextColor="#666" />
+                           Style="{StaticResource LabelInfoItem}" />
 
                     <Button Text="Abrir vídeo"
-                            BackgroundColor="#6C63FF"
-                            TextColor="White"
-                            CornerRadius="10"
-                            Clicked="OnAbrirVideoSaudeMentalClicked" />
+                            Clicked="OnAbrirVideoSaudeMentalClicked"
+                            Style="{StaticResource BotaoPadrao}" />
+
                 </VerticalStackLayout>
             </Frame>
 
         </VerticalStackLayout>
+
     </ScrollView>
 
 </ContentPage>

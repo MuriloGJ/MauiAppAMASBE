@@ -4,240 +4,225 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiAppAMASBE.Pages.LembretesPage"
              Title="Lembretes"
-             
-             
              BackgroundColor="#F6F7FB">
 
-    <Grid>
-        <!-- Estado vazio -->
-        <VerticalStackLayout 
-        x:Name="EmptyState"
-        Spacing="20"
-        VerticalOptions="Center"
-        HorizontalOptions="Center">
+    <Grid Padding="10">
 
-            <StackLayout>
-                <Label Text="Meus Lembretes"
-    FontSize="26"
-    FontAttributes="Bold"
-    TextColor="#1E1E1E"
-    HorizontalOptions="Center" />
-                <Frame Padding="0" Margin="10" VerticalOptions="FillAndExpand">
-                    <ListView x:Name="lst_lembrete" 
-        IsPullToRefreshEnabled="True"
-         Refreshing="lst_lembrete_Refreshing"
-                     ItemSelected="lst_lembrete_ItemSelected">
-                        <ListView.Header>
-                            <Grid ColumnDefinitions="*,*,*,*,*,*,*"
-                         BackgroundColor="#666666">
-                                
-                                <Label Grid.Column="0" Text="Titulo do Lembrete" FontAttributes="Bold" HorizontalOptions="Center"/>
-                                <Label Grid.Column="1" Text="Tipo de Lembrete" FontAttributes="Bold" HorizontalOptions="Center"/>
-                                <Label Grid.Column="2" Text="Frequencia" FontAttributes="Bold" HorizontalOptions="Center"/>
-                                <Label Grid.Column="3" Text="Horário" FontAttributes="Bold" HorizontalOptions="Center"/>
-                                <Label Grid.Column="4" Text="Data" FontAttributes="Bold" HorizontalOptions="Center"/>
-                                <Label Grid.Column="5" Text="ID Usuário" Padding="5" FontAttributes="Bold" HorizontalOptions="Center"/>
-                                <Label Grid.Column="6" Text="ID Lembrete" Padding="5" FontAttributes="Bold" HorizontalOptions="Center"/>
+        <VerticalStackLayout Spacing="15">
 
-                            </Grid>
-                        </ListView.Header>
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <ViewCell.ContextActions>
-                                        <MenuItem Text="Remover" Clicked="MenuItem_RemoverLembrete"/>
-                                        <MenuItem Text=" Editar" Clicked="MenuItem_EditarLembrete"/>
-                                    </ViewCell.ContextActions>
-                                    <Grid ColumnDefinitions="*,*,*,*,*,*,*">
-                                        
-                                        <Label Grid.Column="0" Text="{Binding TituloLembrete}"
-                                      HorizontalOptions="Center"
-                                      VerticalOptions="Center"/>
-                                        <Label Grid.Column="1" Text="{Binding TipoLembrete}"
-                                          HorizontalOptions="Center"
-                                          VerticalOptions="Center"/>
-                                        <Label Grid.Column="2" Text="{Binding FrequenciaLembrete}"
-                                      HorizontalOptions="Center"
-                                      VerticalOptions="Center"/>
-                                       
-                                        <Label Grid.Column="3" Text="{Binding HorarioLembrete}"
-                                                  HorizontalOptions="Center"
-                                                  VerticalOptions="Center"/>
+            <Label Text="Meus Lembretes"
+                   Style="{StaticResource TituloPagina}" />
 
-                                        <Label Grid.Column="4" Text="{Binding DataLembrete, StringFormat='{0:dd/MM/yyyy}'}"
-                                       HorizontalOptions="Center"
-                                       VerticalOptions="Center"/>
-                                        <Label Grid.Column="5" Text="{Binding IdCadastro}"
-                                                HorizontalOptions="Center"
-                                                                VerticalOptions="Center"/>
-                                        <Label Grid.Column="6" Text="{Binding IdLembrete}"
-                                                            HorizontalOptions="Center"
-                                                            VerticalOptions="Center"/>
-                                    </Grid>
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </Frame>
-            </StackLayout>
+            <VerticalStackLayout x:Name="EmptyState"
+                                 Spacing="10"
+                                 HorizontalOptions="Center">
 
+                <Label Text="⏰"
+                       FontSize="50"
+                       HorizontalOptions="Center" />
 
+                <Label Text="Clique para criar lembretes de vacina, medicamento, exame ou consulta."
+                       FontSize="13"
+                       TextColor="#666"
+                       HorizontalTextAlignment="Center" />
 
-            <Label Text="⏰"
-                           FontSize="50"
-                           HorizontalOptions="Center" />
+            </VerticalStackLayout>
 
-            <Button Text="Adicionar novos lembretes!"                          
-                            BackgroundColor="#6C63FF"
-                            TextColor="White"
-                            CornerRadius="12"
-                          Clicked="OnNovoLembreteClicked" />
+            <Button Text="+ Novo Lembrete"
+                    Clicked="OnNovoLembreteClicked"
+                    Style="{StaticResource BotaoPadrao}" />
 
-            <Label Text="Clique para criar lembretes de vacina, medicamento, exame ou consulta."
-                           FontSize="13"
-                           TextColor="#666"
-                           HorizontalTextAlignment="Center" />
+            <Frame Style="{StaticResource CardLista}"
+                   Margin="0,10">
 
+                <ListView x:Name="lst_lembrete"
+                          IsPullToRefreshEnabled="True"
+                          Refreshing="lst_lembrete_Refreshing"
+                          ItemSelected="lst_lembrete_ItemSelected"
+                          HasUnevenRows="True"
+                          SeparatorVisibility="None"
+                          BackgroundColor="Transparent">
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+
+                                <ViewCell.ContextActions>
+                                    <MenuItem Text="Remover"
+                                              Clicked="MenuItem_RemoverLembrete"/>
+
+                                    <MenuItem Text="Editar"
+                                              Clicked="MenuItem_EditarLembrete"/>
+                                </ViewCell.ContextActions>
+
+                                <Frame Style="{StaticResource CardItem}"
+                                       Margin="10,8">
+
+                                    <VerticalStackLayout Spacing="6">
+
+                                        <Label Text="{Binding TituloLembrete}"
+                                               Style="{StaticResource LabelTituloItem}" />
+
+                                        <Label Text="{Binding TipoLembrete, StringFormat='Tipo: {0}'}"
+                                               Style="{StaticResource LabelInfoItem}" />
+
+                                        <Label Text="{Binding FrequenciaLembrete, StringFormat='Frequência: {0}'}"
+                                               Style="{StaticResource LabelInfoItem}" />
+
+                                        <Label Text="{Binding HorarioLembrete, StringFormat='Horário: {0}'}"
+                                               Style="{StaticResource LabelInfoItem}" />
+
+                                        <Label Text="{Binding DataLembrete, StringFormat='Data: {0:dd/MM/yyyy}'}"
+                                               Style="{StaticResource LabelInfoItem}" />
+
+                                    </VerticalStackLayout>
+
+                                </Frame>
+
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+
+                </ListView>
+
+            </Frame>
 
         </VerticalStackLayout>
 
+        <!-- Card de cadastro -->
         <Frame x:Name="CadastroCard"
-                   IsVisible="False"
-                   BackgroundColor="#666666"
-                   CornerRadius="18"
-                   Padding="18"
-                   HasShadow="True">
+               IsVisible="False"
+               Style="{StaticResource CardFormulario}"
+               Margin="20"
+               VerticalOptions="Center">
 
-                    <VerticalStackLayout Spacing="12">
+            <VerticalStackLayout Spacing="12"
+                                 BackgroundColor="#F4F1FF"
+                                 Padding="15"
+                                 Margin="5">
 
-                        <Label Text="Novo Lembrete"
-                           FontSize="20"
-                           FontAttributes="Bold"
-                           TextColor="#403A5F"
-                           HorizontalOptions="Center" />
+                <Label Text="Novo Lembrete"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="#1E1E1E"
+                       HorizontalOptions="Center" />
 
-                        <Picker 
-                          Title="Tipo de Lembrete"
-                             FontAttributes="Bold"
-                            ItemsSource="{Binding TiposL}"
-                             SelectedItem="{Binding TipoLSelecionada}" />
-
-                        <Entry x:Name="TituloEntry"
-                           Placeholder="Título do lembrete"
-                                        TextColor="White"
-                                        PlaceholderColor="White"/>
-                            
-                        <Label Text="Data do Lembrete"
-                                FontAttributes="Bold" HorizontalOptions="Start"/>   
-                        <DatePicker        
-                             x:Name="dtp_lembrete"
-                             Format="dd/MM/yyyy"
-                           MinimumDate="{x:Static sys:DateTime.Now}"/>
-
-
-                        <Label Text="Hora do Lembrete"
-                                FontAttributes="Bold" HorizontalOptions="Start"/>
-
-                        <TimePicker 
-    
-                              x:Name="HoraLembrete"
-                            Format="HH:mm"/>
-
-
-                        <Picker x:Name="pck_frequencia"
-                                Title="Selecione a frequência"
-                                TextColor="White"
-                                FontAttributes="Bold"
-
-                                    ItemsSource="{Binding FrequenciaL}"
-                                SelectedItem="{Binding FrequenciaLSelecionada}" />
-                     
-
-
-                        <Button Text="Salvar lembrete"
-                            BackgroundColor="#6C63FF"
-                            TextColor="White"
-                            CornerRadius="12"
-                            Clicked="OnSalvarLembreteClicked" />
-
-                        <Button Text="Cancelar"
-                            BackgroundColor="Transparent"
-                            TextColor="#6C63FF"
-                            Clicked="OnCancelarClicked" />
-
-                    </VerticalStackLayout>
-                </Frame>
-        <!--Card de edição-->
-        <Frame 
-   x:Name="EditCard"
-   IsVisible="False"
-   Padding="20"
-   CornerRadius="15"
-   BackgroundColor="#666666"
-   Margin="20"
-   VerticalOptions="Center">
-
-            <VerticalStackLayout 
-       Spacing="10"
-       BackgroundColor="#666666"
-       Padding="10"
-       Margin="10">
-
-                <Label 
-           Text="Editar Lembrete"
-           FontSize="20"
-           FontAttributes="Bold"/>
-
-                <!-- Nome (IMPORTANTE adicionar) -->
-                <Label Text="Título do Lembrete" />
-                <Entry x:Name="TituloEntryEdit"
-                    Placeholder="Título do lembrete" />
-
-                <Picker 
-                      Title="Tipo de Lembrete"
+                <Picker Title="Tipo de Lembrete"
+                        TextColor="#333"
+                        TitleColor="#777"
+                        FontAttributes="Bold"
                         ItemsSource="{Binding TiposL}"
-                     SelectedItem="{Binding TipoLSelecionada}" />
+                        SelectedItem="{Binding TipoLSelecionada}" />
 
-                <Label Text="Horário do Lembrete"
-       HorizontalOptions="Start"/>
-                <TimePicker 
-           x:Name="Edit_timeHorario"
-           Format="HH:mm"/>
+                <Entry x:Name="TituloEntry"
+                       Placeholder="Título do lembrete"
+                       TextColor="#333"
+                       PlaceholderColor="#777"/>
 
                 <Label Text="Data do Lembrete"
-        HorizontalOptions="Start"/>
-                <DatePicker
-                x:Name="Edit_Data"
-                Format="dd/MM/yyyy"
-                 MinimumDate="{x:Static sys:DateTime.Now}" />
+                       TextColor="#333"
+                       FontAttributes="Bold"/>
 
-                <HorizontalStackLayout
-           Padding="0"
-           Margin="10"
-           Spacing="20">
-                    
-                    
-                    <!-- Frequência -->
-                    <Picker 
-               
-               Title="Selecione a frequência"
-                     ItemsSource="{Binding FrequenciaL}"
+                <DatePicker x:Name="dtp_lembrete"
+                            Format="dd/MM/yyyy"
+                            TextColor="#333"
+                            MinimumDate="{x:Static sys:DateTime.Now}"/>
+
+                <Label Text="Hora do Lembrete"
+                       TextColor="#333"
+                       FontAttributes="Bold"/>
+
+                <TimePicker x:Name="HoraLembrete"
+                            Format="HH:mm"
+                            TextColor="#333"/>
+
+                <Picker x:Name="pck_frequencia"
+                        Title="Selecione a frequência"
+                        TextColor="#333"
+                        TitleColor="#777"
+                        FontAttributes="Bold"
+                        ItemsSource="{Binding FrequenciaL}"
                         SelectedItem="{Binding FrequenciaLSelecionada}" />
-                </HorizontalStackLayout>
-                <Button Clicked="Button_EditarLembrete"
-                        Text="Salvar"
-                        BackgroundColor="#6A0DAD"
-                        TextColor="White"/>
-                
-                
-                <Button Clicked="Button_Cancelar"
-                        Text="Cancelar"
-                        BackgroundColor="#6A0DAD"
-                        TextColor="White"/>
-                        
-              
+
+                <Button Text="Salvar lembrete"
+                        Clicked="OnSalvarLembreteClicked"
+                        Style="{StaticResource BotaoPadrao}" />
+
+                <Button Text="Cancelar"
+                        Clicked="OnCancelarClicked"
+                        Style="{StaticResource BotaoSecundario}" />
+
             </VerticalStackLayout>
+
+        </Frame>
+
+        <!-- Card de edição -->
+        <Frame x:Name="EditCard"
+               IsVisible="False"
+               Style="{StaticResource CardFormulario}"
+               Margin="20"
+               VerticalOptions="Center">
+
+            <VerticalStackLayout Spacing="12"
+                                 BackgroundColor="#F4F1FF"
+                                 Padding="15"
+                                 Margin="5">
+
+                <Label Text="Editar Lembrete"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="#1E1E1E"
+                       HorizontalOptions="Center" />
+
+                <Label Text="Título do Lembrete"
+                       TextColor="#333"/>
+
+                <Entry x:Name="TituloEntryEdit"
+                       Placeholder="Título do lembrete"
+                       TextColor="#333"
+                       PlaceholderColor="#777"/>
+
+                <Picker Title="Tipo de Lembrete"
+                        TextColor="#333"
+                        TitleColor="#777"
+                        ItemsSource="{Binding TiposL}"
+                        SelectedItem="{Binding TipoLSelecionada}" />
+
+                <Label Text="Horário do Lembrete"
+                       TextColor="#333"/>
+
+                <TimePicker x:Name="Edit_timeHorario"
+                            Format="HH:mm"
+                            TextColor="#333"/>
+
+                <Label Text="Data do Lembrete"
+                       TextColor="#333"/>
+
+                <DatePicker x:Name="Edit_Data"
+                            Format="dd/MM/yyyy"
+                            TextColor="#333"
+                            MinimumDate="{x:Static sys:DateTime.Now}" />
+
+                <Picker Title="Selecione a frequência"
+                        TextColor="#333"
+                        TitleColor="#777"
+                        ItemsSource="{Binding FrequenciaL}"
+                        SelectedItem="{Binding FrequenciaLSelecionada}" />
+
+                <Button Text="Salvar"
+                        Clicked="Button_EditarLembrete"
+                        BackgroundColor="#6A0DAD"
+                        TextColor="White"
+                        CornerRadius="10"/>
+
+                <Button Text="Cancelar"
+                        Clicked="Button_Cancelar"
+                        Style="{StaticResource BotaoSecundario}" />
+
+            </VerticalStackLayout>
+
         </Frame>
 
     </Grid>
+
 </ContentPage>
