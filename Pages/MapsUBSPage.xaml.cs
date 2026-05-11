@@ -12,13 +12,20 @@ namespace MauiAppAMASBE.Pages
         private List<LocalizacaoItem> _todosLocais = new();
         private LocalizacaoItem? _localSelecionado;
 
-        private bool _filtroUbs      = true;
-        private bool _filtroParques  = true;
-        private double _raioKm       = 5.0;
+        private bool _filtroUbs     = true;
+        private bool _filtroParques = true;
+        private double _raioKm      = 5.0;
 
         // Fallback: São Paulo (centro)
         private double _latUsuario = -23.5505;
         private double _lonUsuario = -46.6333;
+
+        // ── Cores dos filtros (futurista) ─────────────────────────────
+        private static readonly Color CorUbsAtivo      = Color.FromArgb("#00C2E0");
+        private static readonly Color CorParqueAtivo   = Color.FromArgb("#00E5A0");
+        private static readonly Color CorFiltroInativo = Color.FromArgb("#141C30");
+        private static readonly Color CorTextoAtivo    = Color.FromArgb("#0A0E1A");
+        private static readonly Color CorTextoInativo  = Color.FromArgb("#1E4060");
 
         public MapsUBSPage()
         {
@@ -62,7 +69,7 @@ namespace MauiAppAMASBE.Pages
         {
             Loading.IsRunning = true;
             Loading.IsVisible = true;
-            LblStatus.Text = "Buscando...";
+            LblStatus.Text    = "Escaneando...";
 
             _todosLocais = await _mapaService.BuscarTodosAsync(_latUsuario, _lonUsuario, _raioKm);
 
@@ -95,7 +102,7 @@ namespace MauiAppAMASBE.Pages
 
             LblFiltroUbs.Text     = $"UBS ({totalUbs})";
             LblFiltroParques.Text = $"Parques ({totalParques})";
-            LblStatus.Text        = $"{filtrado.Count} local(is)";
+            LblStatus.Text        = $"{filtrado.Count} detectado(s)";
         }
 
         // ── Eventos — filtros ─────────────────────────────────────────
@@ -103,20 +110,16 @@ namespace MauiAppAMASBE.Pages
         private void OnFiltroUbsTapped(object sender, TappedEventArgs e)
         {
             _filtroUbs = !_filtroUbs;
-            FrameFiltroUbs.BackgroundColor = _filtroUbs
-                ? Color.FromArgb("#2E86AB")
-                : Color.FromArgb("#E0E0E0");
-            LblFiltroUbs.TextColor = _filtroUbs ? Colors.White : Color.FromArgb("#403A5F");
+            FrameFiltroUbs.BackgroundColor = _filtroUbs ? CorUbsAtivo : CorFiltroInativo;
+            LblFiltroUbs.TextColor         = _filtroUbs ? CorTextoAtivo : CorTextoInativo;
             AplicarFiltros();
         }
 
         private void OnFiltroParquesTapped(object sender, TappedEventArgs e)
         {
             _filtroParques = !_filtroParques;
-            FrameFiltroParques.BackgroundColor = _filtroParques
-                ? Color.FromArgb("#4CAF50")
-                : Color.FromArgb("#E0E0E0");
-            LblFiltroParques.TextColor = _filtroParques ? Colors.White : Color.FromArgb("#403A5F");
+            FrameFiltroParques.BackgroundColor = _filtroParques ? CorParqueAtivo : CorFiltroInativo;
+            LblFiltroParques.TextColor         = _filtroParques ? CorTextoAtivo : CorTextoInativo;
             AplicarFiltros();
         }
 
@@ -126,12 +129,12 @@ namespace MauiAppAMASBE.Pages
         private async void OnRaioTapped(object sender, TappedEventArgs e)
         {
             var escolha = await DisplayActionSheet(
-                "Raio de busca", "Cancelar", null,
+                "Raio de varredura", "Cancelar", null,
                 "2 km", "5 km", "10 km", "20 km");
 
             if (escolha == null || escolha == "Cancelar") return;
 
-            _raioKm = double.Parse(escolha.Replace(" km", ""));
+            _raioKm      = double.Parse(escolha.Replace(" km", ""));
             LblRaio.Text = escolha;
 
             // Invalida cache e recarrega
@@ -148,15 +151,15 @@ namespace MauiAppAMASBE.Pages
 
             _localSelecionado = local;
 
-            LblDetalheNome.Text    = local.Nome;
-            LblDetalheTipo.Text    = $"{local.Icone}  {local.Tipo}";
+            LblDetalheNome.Text     = local.Nome;
+            LblDetalheTipo.Text     = $"{local.Icone}  {local.Tipo.ToUpper()}";
             LblDetalheEndereco.Text = local.Endereco;
 
-            RowTelefone.IsVisible       = !string.IsNullOrWhiteSpace(local.Telefone);
-            LblDetalheTelefone.Text     = local.Telefone;
+            RowTelefone.IsVisible   = !string.IsNullOrWhiteSpace(local.Telefone);
+            LblDetalheTelefone.Text = local.Telefone;
 
-            RowHorario.IsVisible        = !string.IsNullOrWhiteSpace(local.Horario);
-            LblDetalheHorario.Text      = local.Horario;
+            RowHorario.IsVisible    = !string.IsNullOrWhiteSpace(local.Horario);
+            LblDetalheHorario.Text  = local.Horario;
 
             PainelDetalhe.IsVisible = true;
         }
