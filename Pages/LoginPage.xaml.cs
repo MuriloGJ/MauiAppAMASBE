@@ -1,6 +1,7 @@
 using Microsoft.Maui.Controls;
 using MauiAppAMASBE.Models;
-using Microsoft.Maui.Storage;
+using Plugin.LocalNotification;
+using Plugin.LocalNotification.Core.Models;
 
 
 namespace MauiAppAMASBE.Pages;
@@ -12,6 +13,19 @@ public partial class LoginPage : ContentPage
         InitializeComponent();
         txtLogin.Text = Preferences.Get("login", "");
         txtSenha.Text = Preferences.Get("senha", "");
+    }
+
+    private async Task<bool> VerificarPerm()
+    // Verificar se a permissão de notificações está concedida
+    {
+        var status = await Permissions.CheckStatusAsync<Permissions.PostNotifications>();
+
+        if (status != PermissionStatus.Granted)
+        {
+            status = await Permissions.RequestAsync<Permissions.PostNotifications>();
+        }
+
+        return status == PermissionStatus.Granted;
     }
 
     private async void OnEntrarClicked(object sender, EventArgs e)
@@ -44,7 +58,31 @@ public partial class LoginPage : ContentPage
             // 🔹 define usuário logado
             App.UsuarioLogado = usuario;
 
-            await DisplayAlert("Sucesso", "Login realizado!", "OK");
+            // inserindo a notificação de login
+            bool permitido = await VerificarPerm();
+
+            if (!permitido)
+            {
+                await DisplayAlert("Permissão", "A permissão de notificação não foi concedida.", "OK");
+                return;
+            }
+            {
+                var notification = new NotificationRequest
+                {
+                    NotificationId = 100,
+                    Title = "Login realizado",
+                    Description = "Você entrou no app com sucesso. Não se esqueça de atualizar sua agenda médica!",
+                    Schedule = new NotificationRequestSchedule
+                    {
+                        NotifyTime = DateTime.Now.AddSeconds(3) // Notificar após 3 segundos
+                    }
+                };
+
+                 await LocalNotificationCenter.Current.Show(notification);
+            }
+            // fim da configuração de notificação
+
+            
 
             // 🔹 navega
             await Navigation.PushAsync(new HomePage());

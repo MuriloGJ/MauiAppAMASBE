@@ -1,25 +1,35 @@
-﻿using Microsoft.Extensions.Logging;
+﻿
+using MauiAppAMASBE;
+using Microsoft.Extensions.Logging;
+using Plugin.LocalNotification; // adicionado para usar o plugin de notificações locais
 
-namespace MauiAppAMASBE
+
+namespace MauiAppAMASBE;
+
+public static class MauiProgram
 {
-    public static class MauiProgram
+    public static MauiApp CreateMauiApp()
     {
-        public static MauiApp CreateMauiApp()
-        {
-            var builder = MauiApp.CreateBuilder();
-            builder
-                .UseMauiApp<App>()
-                .ConfigureFonts(fonts =>
-                {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
+        var builder = MauiApp.CreateBuilder();
+        builder
+            .UseMauiApp<App>()
+            .UseLocalNotification() // adicionado para usar o plugin de notificações locais
+            .ConfigureFonts(fonts =>
+            {
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+            });
 
-#if DEBUG
-    		builder.Logging.AddDebug();
+
+#if ANDROID
+        // Especifica explicitamente a interface do aplicativo para evitar ambiguidade com Plugin.LocalNotification.INotificationService
+        builder.Services.AddSingleton<MauiAppAMASBE.INotificationService, NotificationServiceAndroid>();
 #endif
 
-            return builder.Build();
-        }
+#if DEBUG
+        builder.Logging.AddDebug();
+#endif
+
+        return builder.Build();
     }
 }
