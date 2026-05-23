@@ -1,15 +1,10 @@
 using Microsoft.Maui.Controls;
 using MauiAppAMASBE.Models;
-<<<<<<< HEAD
-<<<<<<< HEAD
 using Plugin.LocalNotification;
 using Plugin.LocalNotification.Core.Models;
-=======
+
 using Microsoft.Maui.Storage;
->>>>>>> eadc1d619ce31373820fa63bc6deec17dc40b30c
-=======
-using Microsoft.Maui.Storage;
->>>>>>> eadc1d619ce31373820fa63bc6deec17dc40b30c
+
 
 
 namespace MauiAppAMASBE.Pages;
@@ -21,7 +16,7 @@ public partial class LoginPage : ContentPage
         InitializeComponent();
         txtLogin.Text = Preferences.Get("login", "");
         txtSenha.Text = Preferences.Get("senha", "");
-<<<<<<< HEAD
+
     }
 
     private async Task<bool> VerificarPerm()
@@ -35,8 +30,7 @@ public partial class LoginPage : ContentPage
         }
 
         return status == PermissionStatus.Granted;
-=======
->>>>>>> eadc1d619ce31373820fa63bc6deec17dc40b30c
+
     }
 
     private async void OnEntrarClicked(object sender, EventArgs e)
