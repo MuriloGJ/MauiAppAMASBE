@@ -9,5 +9,10 @@ namespace MauiAppAMASBE.Pages
         {
             InitializeComponent();
         }
+        private async void ButtonVoltar(object sender, EventArgs e)
+        {
+            await Navigation.PopAsync();
+        }
     }
+
 }

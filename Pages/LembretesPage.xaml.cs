@@ -177,35 +177,42 @@ namespace MauiAppAMASBE.Pages
             }
 
         }
-            
-            
+
+
 
         private async void MenuItem_EditarLembrete(object sender, EventArgs e)
         {
+            BindingContext = null;
+            BindingContext = viewModel;
+         
             CadastroSaudeUsuario usuario = App.UsuarioLogado;
+
             if (usuario == null)
             {
                 await DisplayAlert("Erro", "Usuário não está logado", "OK");
                 return;
-
             }
 
-            BindingContext = null;
-            BindingContext = viewModel;
             var menuItem = sender as MenuItem;
-           LembreteSelecionado = menuItem.BindingContext as Lembrete;
+
+            LembreteSelecionado = menuItem.BindingContext as Lembrete;
+
+            // PREENCHE CAMPOS
+            TituloEntryEdit.Text = LembreteSelecionado.TituloLembrete;
+
+            Edit_timeHorario.Time = LembreteSelecionado.HorarioLembrete;
+
+            // PICKERS
+            viewModel.FrequenciaLSelecionada =
+                LembreteSelecionado.FrequenciaLembrete;
+
+            viewModel.TipoLSelecionada =
+                LembreteSelecionado.TipoLembrete;
 
             EditCard.IsVisible = true;
 
-            // Preenche campos
-
-            TituloEntryEdit.Text = LembreteSelecionado.TituloLembrete;
-            Edit_timeHorario.Time = LembreteSelecionado.HorarioLembrete;
-
-            viewModel.FrequenciaLSelecionada = LembreteSelecionado.FrequenciaLembrete;
-            viewModel.TipoLSelecionada = LembreteSelecionado.TipoLembrete;
+            EmptyState.IsVisible = false;
         }
-
         private async void Button_EditarLembrete(object sender, EventArgs e)
         {
             CadastroSaudeUsuario usuario = App.UsuarioLogado;
@@ -234,6 +241,10 @@ namespace MauiAppAMASBE.Pages
         {
             EditCard.IsVisible = false;
             EmptyState.IsVisible = true;
+        }
+        private async void ButtonVoltar(object sender, EventArgs e)
+        {
+            await Navigation.PopAsync();
         }
     }
     }

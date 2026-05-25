@@ -39,6 +39,12 @@ public partial class DadosUsuario : ContentPage
     }
     private void Button_Atualizar(object sender, EventArgs e)
     {
+        CadastroSaudeUsuario usuario = App.UsuarioLogado;
+
+        viewModel.SexoSelecionado = usuario.Sexo;
+        viewModel.EstadoSelecionado = usuario.EstadoUsuario;
+        viewModel.TipoSanguineoSelecionado = usuario.TipoSanguineo;
+
         CadastroCard.IsVisible = true;
         EmptyState.IsVisible = false;
     }
@@ -49,7 +55,7 @@ public partial class DadosUsuario : ContentPage
             #region validações
             CadastroSaudeUsuario usuario = App.UsuarioLogado;
 
-           /* //Validação do CPF
+           //Validação do CPF
             bool CpfValido(string cpf)
             {
                 if (string.IsNullOrWhiteSpace(cpf))
@@ -95,8 +101,7 @@ public partial class DadosUsuario : ContentPage
             {
                 await DisplayAlert("Erro", "CPF inválido", "OK");
                 return;
-            }*/
-
+            }
             if (usuario == null)
             {
                 await DisplayAlert("Erro", "Usuário não está logado", "OK");
@@ -173,6 +178,10 @@ public partial class DadosUsuario : ContentPage
     {
         await Navigation.PushAsync(new HomePage());
     }
+    private async void ButtonVoltar(object sender, EventArgs e)
+    {
+        await Navigation.PopAsync();
+    }
 
-    
+
 }

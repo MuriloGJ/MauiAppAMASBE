@@ -86,7 +86,9 @@
                 </ListView>
 
             </Frame>
-
+            <Button Text="Voltar"
+                    Clicked="ButtonVoltar"
+                    Style="{StaticResource BotaoSecundario}" />
         </VerticalStackLayout>
 
         <!-- Card de cadastro -->
@@ -160,7 +162,8 @@
         <Frame x:Name="EditCard"
                IsVisible="False"
                Style="{StaticResource CardFormulario}"
-               Margin="20"
+               Margin="5"
+               BackgroundColor="#6A0DAD"
                VerticalOptions="Center">
 
             <VerticalStackLayout Spacing="12"
@@ -222,7 +225,7 @@
             </VerticalStackLayout>
 
         </Frame>
-
+       
     </Grid>
 
 </ContentPage>

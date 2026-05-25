@@ -1,5 +1,7 @@
-using System;
+using MauiAppAMASBE.Helpers.CalculosHelpers;
+using MauiAppAMASBE.Models;
 using Microsoft.Maui.Controls;
+using System;
 
 namespace MauiAppAMASBE.Pages
 {
@@ -8,6 +10,20 @@ namespace MauiAppAMASBE.Pages
         public HomePage()
         {
             InitializeComponent();
+            BindingContext = this;
+           
+        }
+        public string ResultadoIMCTexto
+        {
+            get
+            {
+                CadastroSaudeUsuario usuario = App.UsuarioLogado;
+
+                return CalculosHelper.ResultadoIMC(
+                    usuario.Peso,
+                    usuario.Altura
+                );
+            }
         }
 
         private async void OnHabitosTapped(object sender, TappedEventArgs e)
@@ -45,7 +61,7 @@ namespace MauiAppAMASBE.Pages
         {
             await Navigation.PushAsync(new DadosUsuario());
         }
-
+       
         private void Button_Logout(object sender, EventArgs e)
         {
             // limpa usuário logado
@@ -59,5 +75,7 @@ namespace MauiAppAMASBE.Pages
             Application.Current.MainPage =
                 new NavigationPage(new LoginPage());
         }
+
+      
     }
 }

@@ -45,5 +45,9 @@ namespace MauiAppAMASBE.Pages
         {
             await DisplayAlert("Autocuidado 🧘", "Tire um tempo só pra você hoje!", "OK");
         }
+        private async void ButtonVoltar(object sender, EventArgs e)
+        {
+            await Navigation.PopAsync();
+        }
     }
 }

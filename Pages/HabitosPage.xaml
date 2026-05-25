@@ -3,19 +3,26 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="MauiAppAMASBE.Pages.HabitosPage"
-    Title="Hábitos">
-
+    Title="Hábitos"
+ BackgroundColor="#F6F7FB">
+    <ScrollView>
+        
     <Grid Padding="10">
+        
 
         <VerticalStackLayout Spacing="15">
+                <Label Text="Meus Hábitos"
+         Style="{StaticResource TituloPagina}" />
 
-            <!-- Estado vazio -->
+
+                <!-- Estado vazio -->
             <VerticalStackLayout 
                 x:Name="EmptyState"
                 Spacing="10"
                 HorizontalOptions="Center"
                 VerticalOptions="Center">
-
+                    
+                
                 <Label Text="📋"
                        FontSize="50"
                        HorizontalOptions="Center" />
@@ -31,13 +38,14 @@
             <Button Text="+ Novo Hábito"
                     Clicked="OnNovoHabitoClicked"
                     Style="{StaticResource BotaoPadrao}" />
+                
 
-            <!-- Lista -->
-            <Frame Padding="0"
-                   Margin="0,10"
-                   CornerRadius="15"
-                   HasShadow="True"
-                   BackgroundColor="White">
+                <!-- Lista -->
+                <Frame Padding="0"
+       Margin="0,10"
+       CornerRadius="15"
+       HasShadow="True"
+       BackgroundColor="White">
 
                 <ListView x:Name="lst_habito"
                           IsPullToRefreshEnabled="True"
@@ -45,10 +53,10 @@
                           ItemSelected="lst_habito_ItemSelected"
                           HasUnevenRows="True"
                           SeparatorVisibility="None"
-                          BackgroundColor="Transparent">
+                    BackgroundColor="Transparent">
 
                     <ListView.ItemTemplate>
-                        <DataTemplate>
+                            <DataTemplate>
                             <ViewCell>
 
                                 <ViewCell.ContextActions>
@@ -59,82 +67,89 @@
                                               Clicked="MenuItem_Editar_Habito"/>
                                 </ViewCell.ContextActions>
 
-                                <Frame Margin="10,8"
-                                       Padding="15"
-                                       CornerRadius="15"
-                                       BackgroundColor="#F4F1FF"
-                                       HasShadow="True">
+                                    <Frame Margin="10,8"
+                           Padding="15"
+                           CornerRadius="15"
+                           BackgroundColor="White"
+                                           
+                           HasShadow="True">
 
-                                    <VerticalStackLayout Spacing="6">
+                                        <VerticalStackLayout Spacing="6">
 
-                                        <Label Text="{Binding NomeHabito}"
-                                               FontSize="18"
-                                               FontAttributes="Bold"
-                                               TextColor="#1E1E1E"/>
+                                            <Label Text="{Binding NomeHabito}"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   TextColor="#1E1E1E"/>
 
-                                        <Label Text="{Binding DescricaoHabito}"
-                                               FontSize="14"
-                                               TextColor="#666"/>
+                                            <Label Text="{Binding DescricaoHabito}"
+                                   FontSize="14"
+                                   TextColor="#666"/>
 
-                                        <Label Text="{Binding FrequenciaHabito, StringFormat='Frequência: {0}'}"
-                                               FontSize="14"
-                                               TextColor="#666"/>
+                                            <Label Text="{Binding FrequenciaHabito, StringFormat='Frequência: {0}'}"
+                                   FontSize="14"
+                                   TextColor="#666"/>
 
-                                        <Label Text="{Binding HorarioHabito, StringFormat='Horário: {0}'}"
-                                               FontSize="14"
-                                               TextColor="#666"/>
+                                            <Label Text="{Binding HorarioHabito, StringFormat='Horário: {0}'}"
+                                   FontSize="14"
+                                   TextColor="#666"/>
 
-                                        <HorizontalStackLayout Spacing="5">
+                                            <HorizontalStackLayout Spacing="5">
 
-                                            <Label Text="Meta:"
-                                                   FontAttributes="Bold"
-                                                   TextColor="#333"/>
+                                                <Label Text="Meta:"
+                                       FontAttributes="Bold"
+                                       TextColor="#333"/>
 
-                                            <Label Text="{Binding MetaValor}"
-                                                   TextColor="#333"/>
+                                                <Label Text="{Binding MetaValor}"
+                                       TextColor="#333"/>
 
-                                            <Label Text="{Binding MetaUnidade}"
-                                                   TextColor="#333"/>
+                                                <Label Text="{Binding MetaUnidade}"
+                                       TextColor="#333"/>
 
-                                        </HorizontalStackLayout>
+                                            </HorizontalStackLayout>
 
-                                        <HorizontalStackLayout Spacing="10">
+                                            <HorizontalStackLayout Spacing="10"
+                                                                   >
 
-                                            <Label Text="{Binding Progresso, StringFormat='Progresso: {0:F0}%'}"
-                                                   TextColor="#333"
-                                                   VerticalOptions="Center"/>
+                                                <Label Text="{Binding Progresso, StringFormat='Progresso: {0:F0}%'}"
+                                       TextColor="#333"
+                                       VerticalOptions="Center"/>
 
-                                            <Stepper Minimum="0"
+                                                <Stepper Minimum="0"
+                                                         BackgroundColor="#333"
                                                      Maximum="{Binding MetaValor}"
                                                      Increment="1"
                                                      Value="{Binding ValorAtual}"
                                                      ValueChanged="Stepper_ValueChanged"/>
 
-                                        </HorizontalStackLayout>
+                                            </HorizontalStackLayout>
 
-                                    </VerticalStackLayout>
+                                        </VerticalStackLayout>
 
-                                </Frame>
+                                    </Frame>
 
                             </ViewCell>
-                        </DataTemplate>
+                            </DataTemplate>
                     </ListView.ItemTemplate>
 
                 </ListView>
 
-            </Frame>
+                </Frame>
+                <Button Text="Voltar"
+                Clicked="ButtonVoltar"
+                 Style="{StaticResource BotaoSecundario}" />
 
-        </VerticalStackLayout>
+            </VerticalStackLayout>
 
         <!-- Card cadastro -->
         <Frame x:Name="CadastroCard"
                IsVisible="False"
                Style="{StaticResource CardFormulario}"
                Margin="20"
+               BackgroundColor="#777"
                VerticalOptions="Center">
 
             <VerticalStackLayout Spacing="12"
-                                 BackgroundColor="#F4F1FF"
+                                 BackgroundColor="#777"
                                  Padding="15"
                                  Margin="5">
 
@@ -204,7 +219,8 @@
         <Frame x:Name="EditCard"
                IsVisible="False"
                Style="{StaticResource CardFormulario}"
-               Margin="20"
+               Margin="5"
+               BackgroundColor="#6A0DAD"
                VerticalOptions="Center">
 
             <VerticalStackLayout Spacing="12"
@@ -273,5 +289,5 @@
         </Frame>
 
     </Grid>
-
+    </ScrollView>
 </ContentPage>

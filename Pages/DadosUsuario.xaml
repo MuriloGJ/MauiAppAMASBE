@@ -3,218 +3,495 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiAppAMASBE.Pages.DadosUsuario"
-             Title="Dados do Usuário">
+             Title="Dados do Usuário"
+             BackgroundColor="#F6F7FB">
+             
 
     <Grid>
-
+        <ScrollView>
         <!-- 🔵 VISUALIZAÇÃO -->
         <VerticalStackLayout x:Name="EmptyState"
                              Padding="30"
                              Spacing="10">
 
-            <Label Text="Dados de Usuário"
+            <Label Text="Dados do Usuário"
                    FontSize="24"
-                   HorizontalOptions="Start" />
-            
-      
+                   HorizontalOptions="Start"
+                   TextColor="#2E2A4D"/>
 
-            <Label Text="{Binding Usuario.Nome, StringFormat='Nome: {0}'}"
-                   FontAttributes="Bold" />
+            <Frame
+    CornerRadius="20"
+    Padding="10"
+    BackgroundColor="#EDE9FF">
 
-            <Label Text="{Binding Usuario.Email, StringFormat='Email: {0}'}"
-                   FontAttributes="Bold" />
+                <Label
+        Text="{Binding Usuario.Nome, StringFormat='Nome: {0}'}"
+        FontSize="12"
+        FontAttributes="Bold"
+        TextColor="#2E2A4D" />
 
-            <Label Text="{Binding Usuario.NomeUsuario, StringFormat='Nome de Usuário: {0}'}"
-                   FontAttributes="Bold" />
+            </Frame>
 
-            <Label Text="{Binding Usuario.DataNascimento, StringFormat='Data: {0:dd/MM/yyyy}'}"
-                   FontAttributes="Bold" />
-            <Label Text="{Binding Usuario.Sexo, StringFormat='Sexo: {0}'}" />
-            <Label Text="{Binding Usuario.Cpf, StringFormat='CPF: {0}'}" />
-            
-            <Label Text="{Binding Usuario.RuaUsuario, StringFormat='Rua: {0}'}" />
-            <Label Text="{Binding Usuario.NumeroUsuario, StringFormat='Número: {0}'}" />
-            <Label Text="{Binding Usuario.BairroUsuario, StringFormat='Bairro: {0}'}" />
-            <Label Text="{Binding Usuario.ComplementoUsuario, StringFormat='Complemento: {0}'}" />
-            <Label Text="{Binding Usuario.CidadeUsuario, StringFormat='Cidade: {0}'}" />
-            <Label Text="{Binding Usuario.EstadoUsuario, StringFormat='Estado: {0}'}" />
-            <Label Text="{Binding Usuario.CepUsuario, StringFormat='CEP: {0}'}" />
-            <Label Text="{Binding Usuario.TelefoneUsuario, StringFormat='Telefone: {0}'}" />
-            <Label Text="{Binding Usuario.ContatoEmergencia, StringFormat='Telefone de Emergência: {0}'}" />
-            <Label Text="{Binding Usuario.Peso, StringFormat='Peso: {0} Kg'}" />
-            <Label Text="{Binding Usuario.Altura, StringFormat='Altura: {0} cm'}" />
-            <Label Text="{Binding Usuario.TipoSanguineo, StringFormat='Tipo Sanguíneo: {0}'}" />
-            
-            <Button Text="+ Atualizar"
+            <Frame
+    CornerRadius="20"
+    Padding="10"
+    BackgroundColor="#EDE9FF">
+
+                <Label
+        Text="{Binding Usuario.Email, StringFormat='Email: {0}'}"
+        FontSize="12"
+        FontAttributes="Bold"
+        TextColor="#2E2A4D" />
+
+            </Frame>
+
+            <Frame
+    CornerRadius="20"
+    Padding="10"
+    BackgroundColor="#EDE9FF">
+
+                <Label
+        Text="{Binding Usuario.NomeUsuario, StringFormat='Nome de Usuário: {0}'}"
+        FontSize="12"
+        FontAttributes="Bold"
+        TextColor="#2E2A4D" />
+
+            </Frame>
+
+            <Frame
+    CornerRadius="20"
+    Padding="10"
+    BackgroundColor="#EDE9FF">
+
+                <Label
+        Text="{Binding Usuario.DataNascimento, StringFormat='Data: {0:dd/MM/yyyy}'}"
+        FontSize="12"
+        FontAttributes="Bold"
+        TextColor="#2E2A4D" />
+
+            </Frame>
+
+            <Frame
+    CornerRadius="20"
+    Padding="10"
+    BackgroundColor="#EDE9FF">
+
+                <Label
+        Text="{Binding Usuario.Sexo, StringFormat='Sexo: {0}'}"
+        FontSize="12"
+        FontAttributes="Bold"
+        TextColor="#2E2A4D" />
+
+            </Frame>
+
+            <Frame
+    CornerRadius="20"
+    Padding="10"
+    BackgroundColor="#EDE9FF">
+
+                <Label
+        Text="{Binding Usuario.Cpf, StringFormat='CPF: {0}'}"
+        FontSize="12"
+        FontAttributes="Bold"
+        TextColor="#2E2A4D" />
+
+            </Frame>
+
+            <Frame
+    CornerRadius="20"
+    Padding="10"
+    BackgroundColor="#EDE9FF">
+
+                <Label
+        Text="{Binding Usuario.RuaUsuario, StringFormat='Rua: {0}'}"
+        FontSize="12"
+        FontAttributes="Bold"
+        TextColor="#2E2A4D" />
+
+            </Frame>
+
+            <Frame
+    CornerRadius="20"
+    Padding="10"
+    BackgroundColor="#EDE9FF">
+
+                <Label
+        Text="{Binding Usuario.NumeroUsuario, StringFormat='Número: {0}'}"
+        FontSize="12"
+        FontAttributes="Bold"
+        TextColor="#2E2A4D" />
+
+            </Frame>
+
+            <Frame
+    CornerRadius="20"
+    Padding="10"
+    BackgroundColor="#EDE9FF">
+
+                <Label
+        Text="{Binding Usuario.BairroUsuario, StringFormat='Bairro: {0}'}"
+        FontSize="12"
+        FontAttributes="Bold"
+        TextColor="#2E2A4D" />
+
+            </Frame>
+
+            <Frame
+    CornerRadius="20"
+    Padding="10"
+    BackgroundColor="#EDE9FF">
+
+                <Label
+        Text="{Binding Usuario.ComplementoUsuario, StringFormat='Complemento: {0}'}"
+        FontSize="12"
+        FontAttributes="Bold"
+        TextColor="#2E2A4D" />
+
+            </Frame>
+
+            <Frame
+    CornerRadius="20"
+    Padding="10"
+    BackgroundColor="#EDE9FF">
+
+                <Label
+        Text="{Binding Usuario.CidadeUsuario, StringFormat='Cidade: {0}'}"
+        FontSize="12"
+        FontAttributes="Bold"
+        TextColor="#2E2A4D" />
+
+            </Frame>
+
+            <Frame
+    CornerRadius="20"
+    Padding="10"
+    BackgroundColor="#EDE9FF">
+
+                <Label
+        Text="{Binding Usuario.EstadoUsuario, StringFormat='Estado: {0}'}"
+        FontSize="12"
+        FontAttributes="Bold"
+        TextColor="#2E2A4D" />
+
+            </Frame>
+
+            <Frame
+    CornerRadius="20"
+    Padding="10"
+    BackgroundColor="#EDE9FF">
+
+                <Label
+        Text="{Binding Usuario.CepUsuario, StringFormat='CEP: {0}'}"
+        FontSize="12"
+        FontAttributes="Bold"
+        TextColor="#2E2A4D" />
+
+            </Frame>
+
+            <Frame
+    CornerRadius="20"
+    Padding="10"
+    BackgroundColor="#EDE9FF">
+
+                <Label
+        Text="{Binding Usuario.TelefoneUsuario, StringFormat='Telefone: {0}'}"
+        FontSize="12"
+        FontAttributes="Bold"
+        TextColor="#2E2A4D" />
+
+            </Frame>
+
+            <Frame
+    CornerRadius="20"
+    Padding="10"
+    BackgroundColor="#EDE9FF">
+
+                <Label
+        Text="{Binding Usuario.ContatoEmergencia, StringFormat='Telefone de Emergência: {0}'}"
+        FontSize="12"
+        FontAttributes="Bold"
+        TextColor="#2E2A4D" />
+
+            </Frame>
+
+                <Frame
+    CornerRadius="20"
+    Padding="10"
+    BackgroundColor="#EDE9FF">
+
+                    <Label
+        Text="{Binding Usuario.Peso, StringFormat=' {0} Kg'}"
+        FontSize="12"
+        FontAttributes="Bold"
+        TextColor="#2E2A4D" />
+
+                </Frame>
+                <Frame
+    CornerRadius="20"
+    Padding="10"
+    BackgroundColor="#EDE9FF">
+
+                    <Label
+        Text="{Binding Usuario.Altura, StringFormat='{0} cm'}"
+        FontSize="12"
+        FontAttributes="Bold"
+        TextColor="#2E2A4D" />
+
+                </Frame>
+                <Frame
+    CornerRadius="20"
+    Padding="10"
+    BackgroundColor="#EDE9FF">
+
+                    <Label
+        Text="{Binding Usuario.TipoSanguineo}"
+        FontSize="12"
+        FontAttributes="Bold"
+        TextColor="#2E2A4D" />
+
+                </Frame>
+
+                <Button Text="+ Atualizar"
                     Clicked="Button_Atualizar"
-                    BackgroundColor="#6A0DAD"
-                    TextColor="White"/>
+                  Style="{StaticResource BotaoPadrao}" />
+                <Button Text="Voltar"
+         Clicked="ButtonVoltar"
+         Style="{StaticResource BotaoSecundario}" />
 
-        </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
 
         <!-- 🟣 EDIÇÃO -->
         <Frame x:Name="CadastroCard"
-               IsVisible="False"
-               Padding="20"
-               CornerRadius="15"
-               BackgroundColor="#404040"
-               Margin="20">
+                IsVisible="False"
+                 Style="{StaticResource CardFormulario}"
+                 Margin="20"
+                 VerticalOptions="Center">
+            <ScrollView>
+            <VerticalStackLayout  Spacing="12"
+                                 BackgroundColor="#F4F1FF"
+                                 Padding="15"
+                                 Margin="5">
 
-            <VerticalStackLayout Spacing="10">
+                <Label Text="Editar Dados" 
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="#1E1E1E"/>
 
-                <Label Text="Editar Dados" FontAttributes="Bold"/>
-
-                <Grid ColumnDefinitions="*,*,*"
-      RowDefinitions="Auto,Auto,Auto,Auto,Auto"
-      Padding="10"
-      RowSpacing="15"
-      ColumnSpacing="30">
-
-                    <!-- LINHA 0 -->
+                <VerticalStackLayout
+    Padding="10"
+    Spacing="15">
 
                     <!-- Data de nascimento -->
-                    <VerticalStackLayout Grid.Column="0" Grid.Row="0" Spacing="5">
-                        <Label Text="Data de Nascimento:" />
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Data de Nascimento:"
+               FontSize="12"
+               FontAttributes="Bold"
+               TextColor="#1E1E1E"/>
+
                         <DatePicker
             x:Name="dtp_nascimento"
             Format="dd/MM/yyyy"
             MaximumDate="{x:Static sys:DateTime.Now}"
-            MinimumDate="01/01/1900"/>
+            MinimumDate="01/01/1900"
+            TextColor="#777"/>
                     </VerticalStackLayout>
 
                     <!-- Estado -->
-                    <VerticalStackLayout Grid.Column="1" Grid.Row="0" Spacing="5">
-                        <Label Text="Estado:" />
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Estado:"
+               FontSize="12"
+               FontAttributes="Bold"
+               TextColor="#1E1E1E"/>
+
                         <Picker
             ItemsSource="{Binding Estados}"
-            SelectedItem="{Binding EstadoSelecionado}" />
+            SelectedItem="{Binding EstadoSelecionado}"
+            TextColor="#1E1E1E"/>
                     </VerticalStackLayout>
 
                     <!-- Sexo -->
-                    <VerticalStackLayout Grid.Column="2" Grid.Row="0" Spacing="5">
-                        <Label Text="Sexo:" />
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Sexo:"
+               FontSize="12"
+               FontAttributes="Bold"
+               TextColor="#1E1E1E"/>
+
                         <Picker
             ItemsSource="{Binding Sexos}"
-            SelectedItem="{Binding SexoSelecionado}" />
+            SelectedItem="{Binding SexoSelecionado}"
+            TextColor="#1E1E1E"/>
                     </VerticalStackLayout>
 
-
-                    <!-- LINHA 1 -->
-
                     <!-- CEP -->
-                    <VerticalStackLayout Grid.Column="0" Grid.Row="1" Spacing="5">
-                        <Label Text="C.E.P:" />
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="C.E.P:"
+               FontSize="12"
+               FontAttributes="Bold"
+               TextColor="#1E1E1E"/>
+
                         <Entry
             Text="{Binding Usuario.CepUsuario}"
             Placeholder="CEP"
+            PlaceholderColor="#777"
+            TextColor="#1E1E1E"
             Keyboard="Numeric"/>
                     </VerticalStackLayout>
 
                     <!-- CPF -->
-                    <VerticalStackLayout Grid.Column="1" Grid.Row="1" Spacing="5">
-                        <Label Text="CPF:" />
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="CPF:"
+               FontSize="12"
+               FontAttributes="Bold"
+               TextColor="#1E1E1E"/>
+
                         <Entry
+            x:Name="txtCpf"
             Text="{Binding Usuario.Cpf}"
-            Placeholder="CPF" />
+            Placeholder="CPF"
+            TextColor="#1E1E1E"/>
                     </VerticalStackLayout>
 
                     <!-- Telefone -->
-                    <VerticalStackLayout Grid.Column="2" Grid.Row="1" Spacing="5">
-                        <Label Text="Telefone:" />
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Telefone:"
+               FontSize="12"
+               FontAttributes="Bold"
+               TextColor="#1E1E1E"/>
+
                         <Entry
             Text="{Binding Usuario.TelefoneUsuario}"
             Placeholder="Telefone"
             MaxLength="11"
-            Keyboard="Numeric"/>
+            Keyboard="Numeric"
+            TextColor="#1E1E1E"/>
                     </VerticalStackLayout>
 
-
-                    <!-- LINHA 2 -->
-
                     <!-- Rua -->
-                    <VerticalStackLayout Grid.Column="0" Grid.Row="2" Spacing="5">
-                        <Label Text="Rua:" />
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Rua:"
+               FontSize="12"
+               FontAttributes="Bold"
+               TextColor="#1E1E1E"/>
+
                         <Entry
             Text="{Binding Usuario.RuaUsuario}"
-            Placeholder="Rua" />
+            Placeholder="Rua"
+            TextColor="#1E1E1E"/>
                     </VerticalStackLayout>
 
                     <!-- Número -->
-                    <VerticalStackLayout Grid.Column="1" Grid.Row="2" Spacing="5">
-                        <Label Text="Nº:" />
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Nº:"
+               FontSize="12"
+               FontAttributes="Bold"
+               TextColor="#1E1E1E"/>
+
                         <Entry
             Text="{Binding Usuario.NumeroUsuario}"
             Placeholder="Número"
-            Keyboard="Numeric" />
+            Keyboard="Numeric"
+            TextColor="#1E1E1E"/>
                     </VerticalStackLayout>
 
                     <!-- Bairro -->
-                    <VerticalStackLayout Grid.Column="2" Grid.Row="2" Spacing="5">
-                        <Label Text="Bairro:" />
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Bairro:"
+               FontSize="12"
+               FontAttributes="Bold"
+               TextColor="#1E1E1E"/>
+
                         <Entry
             Text="{Binding Usuario.BairroUsuario}"
-            Placeholder="Bairro" />
+            Placeholder="Bairro"
+            TextColor="#1E1E1E"/>
                     </VerticalStackLayout>
 
-
-                    <!-- LINHA 3 -->
-
                     <!-- Complemento -->
-                    <VerticalStackLayout Grid.Column="0" Grid.Row="3" Spacing="5">
-                        <Label Text="Complemento:" />
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Complemento:"
+               FontSize="12"
+               FontAttributes="Bold"
+               TextColor="#1E1E1E"/>
+
                         <Entry
             Text="{Binding Usuario.ComplementoUsuario}"
-            Placeholder="Complemento" />
+            Placeholder="Complemento"
+            TextColor="#1E1E1E"/>
                     </VerticalStackLayout>
 
                     <!-- Cidade -->
-                    <VerticalStackLayout Grid.Column="1" Grid.Row="3" Spacing="5">
-                        <Label Text="Cidade:" />
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Cidade:"
+               FontSize="12"
+               FontAttributes="Bold"
+               TextColor="#1E1E1E"/>
+
                         <Entry
             Text="{Binding Usuario.CidadeUsuario}"
-            Placeholder="Cidade" />
+            Placeholder="Cidade"
+            TextColor="#1E1E1E"/>
                     </VerticalStackLayout>
 
                     <!-- Telefone Emergência -->
-                    <VerticalStackLayout Grid.Column="2" Grid.Row="3" Spacing="5">
-                        <Label Text="Telefone de Emergência:" />
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Telefone de Emergência:"
+               FontSize="12"
+               FontAttributes="Bold"
+               TextColor="#1E1E1E"/>
+
                         <Entry
             Text="{Binding Usuario.ContatoEmergencia}"
             Placeholder="Telefone de Emergência"
             MaxLength="11"
-            Keyboard="Numeric" />
+            Keyboard="Numeric"
+            TextColor="#1E1E1E"/>
                     </VerticalStackLayout>
 
-
-                    <!-- LINHA 4 -->
-
                     <!-- Peso -->
-                    <VerticalStackLayout Grid.Column="0" Grid.Row="4" Spacing="5">
-                        <Label Text="Peso:" />
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Peso:(Kg)"
+               FontSize="12"
+               FontAttributes="Bold"
+               TextColor="#1E1E1E"/>
+
                         <Entry
-            Text="{Binding Usuario.Peso, StringFormat=' {0} kg'}"
+            Text="{Binding Usuario.Peso}"
             Placeholder="Peso"
-            Keyboard="Numeric"/>
+            PlaceholderColor="#777"
+            Keyboard="Numeric"
+            TextColor="#1E1E1E"/>
                     </VerticalStackLayout>
 
                     <!-- Altura -->
-                    <VerticalStackLayout Grid.Column="1" Grid.Row="4" Spacing="5">
-                        <Label Text="Altura:" />
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Altura:(cm)"
+               FontSize="12"
+               FontAttributes="Bold"
+               TextColor="#1E1E1E"/>
+
                         <Entry
-            Text="{Binding Usuario.Altura, StringFormat=' {0} cm'}"
-            Placeholder="Altura"
-            Keyboard="Numeric"/>
+            Text="{Binding Usuario.Altura}"
+            Placeholder="Altura (cm)"
+            PlaceholderColor="#777"
+            Keyboard="Numeric"
+            TextColor="#1E1E1E"/>
                     </VerticalStackLayout>
 
                     <!-- Tipo sanguíneo -->
-                    <VerticalStackLayout Grid.Column="2" Grid.Row="4" Spacing="5">
-                        <Label Text="Tipo Sanguíneo:" />
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Tipo Sanguíneo:"
+               FontSize="12"
+               FontAttributes="Bold"
+               TextColor="#1E1E1E"/>
+
                         <Picker
             ItemsSource="{Binding TiposSanguineos}"
-            SelectedItem="{Binding TipoSanguineoSelecionado}"/>
+            SelectedItem="{Binding TipoSanguineoSelecionado}"
+            TextColor="#1E1E1E"/>
                     </VerticalStackLayout>
 
-                </Grid>
+                </VerticalStackLayout>
                 <Button Text="Salvar"
                         
                         Clicked="Button_Salvar"/>
@@ -225,7 +502,7 @@
                 <Label x:Name="lblMensagem" TextColor="Red" />
 
             </VerticalStackLayout>
-
+            </ScrollView>
         </Frame>
 
     </Grid>

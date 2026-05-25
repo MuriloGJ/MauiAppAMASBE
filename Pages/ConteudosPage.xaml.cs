@@ -30,5 +30,9 @@ namespace MauiAppAMASBE.Pages
         {
             await Launcher.OpenAsync("https://www.youtube.com/watch?v=t354E2Ot9eA");
         }
+        private async void ButtonVoltar(object sender, EventArgs e)
+        {
+            await Navigation.PopAsync();
+        }
     }
 }

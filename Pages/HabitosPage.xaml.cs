@@ -358,5 +358,10 @@ namespace MauiAppAMASBE.Pages
 
             await App.Db.UpdateHabito(habito);
         }
+
+        private async void ButtonVoltar(object sender, EventArgs e)
+        {
+            await Navigation.PopAsync();
+        }
     }
 }
