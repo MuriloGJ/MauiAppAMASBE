@@ -34,7 +34,8 @@
 
                 <Setter Property="HasShadow"
                         Value="False"/>
-
+                <Setter Property="MaximumWidthRequest" Value="430"/>
+                <Setter Property="HorizontalOptions" Value="Center"/>
             </Style>
 
             <!-- CARD MENU HOME -->
@@ -282,6 +283,9 @@
                         Value="#666"/>
 
             </Style>
+
+           
+
 
         </ResourceDictionary>
 

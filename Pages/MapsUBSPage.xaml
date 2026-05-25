@@ -10,7 +10,7 @@
 
         <!-- ══ CABEÇALHO FUTURISTA ══════════════════════════════════════ -->
         <VerticalStackLayout Grid.Row="0"
-                             Padding="{OnPlatform iOS='20,48,20,16', Android='20,28,20,16'}"
+                             Padding="{OnPlatform Android='20,28,20,16'}"
                              Spacing="14"
                              BackgroundColor="#87CEEB">
 
