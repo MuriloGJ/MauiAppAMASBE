@@ -61,7 +61,11 @@ namespace MauiAppAMASBE.Pages
         {
             await Navigation.PushAsync(new DadosUsuario());
         }
-       
+        private async void OnNotificacaoTapped(object sender, TappedEventArgs e)
+        {
+            await Navigation.PushAsync(new NotificacaoPage());
+        }
+
         private void Button_Logout(object sender, EventArgs e)
         {
             // limpa usuário logado

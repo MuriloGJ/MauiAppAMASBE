@@ -1,3 +1,4 @@
+using MauiAppAMASBE.Helpers.HelperNotificacao;
 using MauiAppAMASBE.Models;
 using MauiAppAMASBE.ViewModel;
 using Microsoft.Maui.Controls;
@@ -84,7 +85,11 @@ namespace MauiAppAMASBE.Pages
 
                 };
 
+                // Salva lembrete
                 await App.Db.InsertLembrete(lembrete);
+
+                // Cria notificação vinculada
+                await NotificacaoHelper.CriarNotificacao(lembrete);
 
                 await DisplayAlert("Sucesso!", "Lembrete Inserido", "OK");
             }

@@ -60,7 +60,7 @@
             </Frame>
             <!-- Grid principal -->
             <Grid ColumnDefinitions="*,*"  
-                  RowDefinitions="Auto,Auto,Auto,Auto"       
+                  RowDefinitions="Auto,Auto,Auto,Auto,Auto"       
                   ColumnSpacing="14"          
                   RowSpacing="14">
                 <!-- Hábitos -->
@@ -179,6 +179,21 @@
         Style="{StaticResource IconeCardMenu}" />
                         <Label  Text="{Binding ResultadoIMCTexto}"
     
+        Style="{StaticResource TextoCardMenu}" />
+                    </VerticalStackLayout>
+                </Frame>
+                <!-- Notificação -->
+                <Frame Grid.Row="4"
+               Grid.Column="0"
+              Style="{StaticResource CardMenu}">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnNotificacaoTapped"/>
+                    </Frame.GestureRecognizers>
+                    <VerticalStackLayout Spacing="8"   
+                  VerticalOptions="Center">
+                        <Label Text="🔔"          
+        Style="{StaticResource IconeCardMenu}" />
+                        <Label Text="Notificações"     
         Style="{StaticResource TextoCardMenu}" />
                     </VerticalStackLayout>
                 </Frame>

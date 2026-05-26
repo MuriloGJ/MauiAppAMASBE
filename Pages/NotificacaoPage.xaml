@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="MauiAppAMASBE.Pages.NotificacaoPage"
+    Title="Notificações"
+     BackgroundColor="#F6F7FB">
+    <ScrollView>
+        <VerticalStackLayout Spacing="15">
+
+            <!-- Título -->
+            <Label 
+            Text="🔔 Notificações"
+              Style="{StaticResource TituloPagina}" />
+
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+
+                <Button Text="Todas"
+            Clicked="BtnTodas_Clicked"
+                      Style="{StaticResource BotaoPadrao}" />
+
+                <Button Text="Pendentes"
+            Clicked="BtnPendentes_Clicked"
+                    Style="{StaticResource BotaoPadrao}" />
+
+                <Button Text="Lidas"
+            Clicked="BtnLidas_Clicked"  
+                    Style="{StaticResource BotaoPadrao}" />
+
+            </HorizontalStackLayout>
+
+            <!-- Lista -->
+
+            <Frame Style="{StaticResource CardLista}"
+        Margin="0,10">
+                <ListView x:Name="ListaNotificacoes"
+                  SelectionMode="Single"
+                  ItemSelected="ListaNotificacoes_ItemSelected"
+                  HasUnevenRows="True"
+                 BackgroundColor="Transparent">
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+
+                            <ViewCell>
+
+                                <Frame Style="{StaticResource CardItem}"
+                                       Margin="10,8">
+
+                                    <VerticalStackLayout Spacing="6">
+                                        <!-- Ícone + Título -->
+                                        <HorizontalStackLayout Spacing="8">
+
+                                            <Label Text="🔔"
+                                           FontSize="18"/>
+
+                                            <Label Text="{Binding TituloNotificacao}"
+                                          Style="{StaticResource LabelInfoItem}" />
+
+                                        </HorizontalStackLayout>
+
+                                        <!-- Tipo -->
+                                        <Label Text="{Binding TipoNotificacao}"
+                                      Style="{StaticResource LabelInfoItem}" />
+
+                                        <!-- Data e Hora -->
+                                        <Label TextColor="#403A5F">
+                                            <Label.Text>
+                                                <MultiBinding StringFormat="{}{0:dd/MM/yyyy} às {1}">
+                                                    <Binding Path="DataNotificacao"/>
+                                                    <Binding Path="HorarioNotificacao"/>
+                                                </MultiBinding>
+                                            </Label.Text>
+                                        </Label>
+
+                                        <!-- Status -->
+                                        <Label Text="{Binding StatusNotificacao}"
+                                       Style="{StaticResource LabelInfoItem}" />
+
+                                    </VerticalStackLayout>
+
+                                </Frame>
+
+                            </ViewCell>
+
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+
+                </ListView>
+            </Frame>
+            <Button Text="Voltar"
+        Clicked="ButtonVoltar"
+        Style="{StaticResource BotaoSecundario}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

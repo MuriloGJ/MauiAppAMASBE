@@ -20,16 +20,21 @@ namespace MauiAppAMASBE.Helpers.HelperNotificacao
             return lista.Where(n => n.StatusNotificacao == "pendente").ToList();
         }
 
-        public static async Task CriarNotificacao(int idLembrete, int idMensagem)
+        public static async Task CriarNotificacao(Lembrete lembrete)
         {
             var notificacao = new Notificacao
             {
-                IdLembrete = idLembrete,
-                IdMensagem = idMensagem,
-                TituloNotificacao = "Novo alerta",//tem que usar as estradas dos usuarios
-                TipoNotificacao = "lembrete",//tem que usar as estradas dos usuarios
-                DataNotificacao = DateTime.Now,
-                HorarioNotificacao = DateTime.Now.TimeOfDay,
+                IdLembrete = lembrete.IdLembrete,
+                IdMensagem = 0,
+
+                TituloNotificacao = lembrete.TituloLembrete,
+
+                TipoNotificacao = lembrete.TipoLembrete,
+
+                DataNotificacao = lembrete.DataLembrete,
+
+                HorarioNotificacao = lembrete.HorarioLembrete,
+
                 StatusNotificacao = "pendente"
             };
 

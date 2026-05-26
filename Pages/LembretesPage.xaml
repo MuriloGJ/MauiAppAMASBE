@@ -7,8 +7,8 @@
              BackgroundColor="#F6F7FB">
 
     <Grid Padding="10">
-
-        <VerticalStackLayout Spacing="15">
+        <ScrollView>
+            <VerticalStackLayout Spacing="15">
 
             <Label Text="Meus Lembretes"
                    Style="{StaticResource TituloPagina}" />
@@ -89,8 +89,9 @@
             <Button Text="Voltar"
                     Clicked="ButtonVoltar"
                     Style="{StaticResource BotaoSecundario}" />
+               
         </VerticalStackLayout>
-
+        </ScrollView>
         <!-- Card de cadastro -->
         <Frame x:Name="CadastroCard"
                IsVisible="False"
