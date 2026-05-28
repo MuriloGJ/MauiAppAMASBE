@@ -33,6 +33,10 @@ namespace MauiAppAMASBE
             Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR");
 
             MainPage = new NavigationPage(new LoginPage());
+            Task.Run(async () =>
+            {
+                await App.Db.CriarAdministradorPadrao();
+            });
         }
         protected override Window CreateWindow(IActivationState? activationState)
         {

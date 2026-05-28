@@ -13,6 +13,14 @@ namespace MauiAppAMASBE.Pages
             BindingContext = this;
            
         }
+        //teste para habilitar frame apenas para Administrador
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            /*CardNotificacao.IsVisible =
+                App.UsuarioLogado?.TipoUsuario == "Administrador";*/
+        }
         public string ResultadoIMCTexto
         {
             get

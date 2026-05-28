@@ -184,6 +184,7 @@
                 </Frame>
                 <!-- Notificação -->
                 <Frame Grid.Row="4"
+                       x:Name="CardNotificacao"
                Grid.Column="0"
               Style="{StaticResource CardMenu}">
                     <Frame.GestureRecognizers>

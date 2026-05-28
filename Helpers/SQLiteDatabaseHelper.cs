@@ -82,6 +82,42 @@ namespace MauiAppAMASBE.Helpers
             string sql = "SELECT * FROM CadastroSaudeUsuario WHERE Nome LIKE ?";
             return _conn.QueryAsync<CadastroSaudeUsuario>(sql, "%" + u + "%");
         }
+        public async Task CriarAdministradorPadrao()
+        {
+            var adminExistente = await _conn.Table<CadastroSaudeUsuario>()
+                .Where(u => u.TipoUsuario == "Administrador")
+                .FirstOrDefaultAsync();
+
+            if (adminExistente == null)
+            {
+                CadastroSaudeUsuario admin = new CadastroSaudeUsuario
+                {
+                    Nome = "admin",
+                    NomeUsuario = "admin",
+                    TipoUsuario = "Administrador",
+                    DataNascimento = new DateTime(2000, 1, 1),
+                    Sexo = "Outro",
+                    Cpf = "00000000000",
+                    RuaUsuario = "",
+                    NumeroUsuario = "",
+                    BairroUsuario = "",
+                    CidadeUsuario = "",
+                    EstadoUsuario = "",
+                    CepUsuario = "",
+                    ComplementoUsuario = "",
+                    TelefoneUsuario = "",
+                    Email = "admin@admin.com",
+                    ContatoEmergencia = "",
+                    TipoSanguineo = "O+",
+                    Peso = 0,
+                    Altura = 0,
+                    Senha = "admin123"
+                };
+
+                await _conn.InsertAsync(admin);
+            }
+        }
+
         #endregion
         #region Habito
         public Task<int> InsertHabito(Habito h)
