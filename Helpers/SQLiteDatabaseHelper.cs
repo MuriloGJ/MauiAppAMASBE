@@ -426,6 +426,36 @@ namespace MauiAppAMASBE.Helpers
             string sql = "SELECT * FROM ConteudoSaude WHERE Categoria LIKE ?";
             return _conn.QueryAsync<ConteudoSaude>(sql, "%" + ct + "%");
         }
+        public async Task CriarConteudosPadrao()
+        {
+            var conteudos = await _conn.Table<ConteudoSaude>().ToListAsync();
+
+            if (conteudos.Count == 0)
+            {
+                List<ConteudoSaude> lista = new List<ConteudoSaude>()
+        {
+            new ConteudoSaude
+            {
+                TituloConteudo = "Importância da hidratação",
+                CategoriaConteudo = "Bem-estar",
+                TextoConteudo = "Beber água diariamente ajuda no funcionamento do organismo.",
+                Favorito = false,
+                OfflineDisponivel = true
+            },
+
+            new ConteudoSaude
+            {
+                TituloConteudo = "Sono saudável",
+                CategoriaConteudo = "Saúde",
+                TextoConteudo = "Dormir bem melhora a imunidade e a concentração.",
+                Favorito = false,
+                OfflineDisponivel = true
+            }
+        };
+
+                await _conn.InsertAllAsync(lista);
+            }
+        }
         #endregion
         #region PerguntaFrequente
         public Task<int> InsertPergunta(PerguntaFrequente p)

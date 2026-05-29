@@ -36,6 +36,7 @@ namespace MauiAppAMASBE
             Task.Run(async () =>
             {
                 await App.Db.CriarAdministradorPadrao();
+                await App.Db.CriarConteudosPadrao();
             });
         }
         protected override Window CreateWindow(IActivationState? activationState)

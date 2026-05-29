@@ -56,6 +56,9 @@
 	  <MauiXaml Update="Pages\FAQPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\GerenciadorPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\HabitosPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

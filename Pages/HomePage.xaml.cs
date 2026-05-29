@@ -18,8 +18,8 @@ namespace MauiAppAMASBE.Pages
         {
             base.OnAppearing();
 
-            /*CardNotificacao.IsVisible =
-                App.UsuarioLogado?.TipoUsuario == "Administrador";*/
+            CardGerenciador.IsVisible =
+                App.UsuarioLogado?.TipoUsuario == "Administrador";
         }
         public string ResultadoIMCTexto
         {
@@ -72,6 +72,10 @@ namespace MauiAppAMASBE.Pages
         private async void OnNotificacaoTapped(object sender, TappedEventArgs e)
         {
             await Navigation.PushAsync(new NotificacaoPage());
+        }
+        private async void OnGerenciadorTapped(object sender, TappedEventArgs e)
+        {
+            await Navigation.PushAsync(new GerenciadorPage());
         }
 
         private void Button_Logout(object sender, EventArgs e)

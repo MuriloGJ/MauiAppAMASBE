@@ -198,6 +198,22 @@
         Style="{StaticResource TextoCardMenu}" />
                     </VerticalStackLayout>
                 </Frame>
+                <!-- Gerenciador -->
+                <Frame Grid.Row="4"
+               x:Name="CardGerenciador"
+       Grid.Column="1"
+      Style="{StaticResource CardMenu}">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnGerenciadorTapped"/>
+                    </Frame.GestureRecognizers>
+                    <VerticalStackLayout Spacing="8"   
+          VerticalOptions="Center">
+                        <Label Text="🔔"          
+Style="{StaticResource IconeCardMenu}" />
+                        <Label Text="Gerenciador"     
+Style="{StaticResource TextoCardMenu}" />
+                    </VerticalStackLayout>
+                </Frame>
             </Grid>
         </VerticalStackLayout>
     </ScrollView>

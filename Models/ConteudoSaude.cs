@@ -11,9 +11,11 @@ namespace MauiAppAMASBE.Models
         public int IdConteudo { get; set; }
 
         public string TituloConteudo { get; set; }
-        public string Categoria { get; set; }
+        public string CategoriaConteudo { get; set; }
+        public string TextoConteudo { get; set; }
 
         public bool Favorito { get; set; }
         public bool OfflineDisponivel { get; set; }
     }
+
 }

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAppAMASBE.Pages.GerenciadorPage"
+             Title="GerenciadorPage"
+    BackgroundColor="#F6F7FB">
+    <ScrollView>
+
+        <Grid Padding="10">
+
+
+            <VerticalStackLayout Spacing="15">
+                <Label Text="Conteúdos"
+         Style="{StaticResource TituloPagina}" />
+
+
+                <!-- Estado vazio -->
+                <VerticalStackLayout 
+                x:Name="EmptyState"
+                Spacing="10"
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
+
+
+                    <Label Text="📋"
+                       FontSize="50"
+                       HorizontalOptions="Center" />
+
+                    <Label Text="Crie novos conteúdos"
+                       FontSize="16"
+                       TextColor="#666"
+                       HorizontalTextAlignment="Center" />
+
+                </VerticalStackLayout>
+
+                <!-- Botão -->
+                <Button Text="+ Novo Conteúdo"
+                    Clicked="OnNovoConteudoClicked"
+                    Style="{StaticResource BotaoPadrao}" />
+
+
+                <!-- Lista -->
+                <Frame Padding="0"
+       Margin="0,10"
+       CornerRadius="15"
+       HasShadow="True"
+       BackgroundColor="White">
+
+                    <ListView x:Name="lst_conteudo"
+                          IsPullToRefreshEnabled="True"
+                          Refreshing="lst_conteudo_Refreshing"
+                          ItemSelected="lst_conteudo_ItemSelected"
+                          HasUnevenRows="True"
+                          SeparatorVisibility="None"
+                    BackgroundColor="Transparent">
+
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+
+                                    <ViewCell.ContextActions>
+                                        <MenuItem Text="Remover"
+                                              Clicked="MenuItem_Remover_Conteudo"/>
+
+                                        <MenuItem Text="Editar"
+                                              Clicked="MenuItem_Editar_Conteudo"/>
+                                    </ViewCell.ContextActions>
+
+                                    <Frame Margin="10,8"
+                           Padding="15"
+                           CornerRadius="15"
+                           BackgroundColor="White"
+                                           
+                           HasShadow="True">
+
+                                        <VerticalStackLayout Spacing="6">
+
+                                            <Label Text="{Binding TituloConteudo}"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   TextColor="#1E1E1E"/>
+
+                                            <Label Text="{Binding TextoConteudo}"
+                                   FontSize="14"
+                                   TextColor="#666"/>
+
+                                            <Label Text="{Binding CategoriaConteudo}"
+                                   FontSize="14"
+                                   TextColor="#666"/>
+
+                                          
+                                        </VerticalStackLayout>
+
+                                    </Frame>
+
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+
+                    </ListView>
+
+                </Frame>
+                <Button Text="Voltar"
+                Clicked="ButtonVoltar"
+                 Style="{StaticResource BotaoSecundario}" />
+
+            </VerticalStackLayout>
+
+            <!-- Card cadastro -->
+            <Frame x:Name="CadastroCard"
+               IsVisible="False"
+               Style="{StaticResource CardFormulario}"
+               Margin="20"
+               BackgroundColor="#777"
+               VerticalOptions="Center">
+
+                <VerticalStackLayout Spacing="12"
+                                 BackgroundColor="#777"
+                                 Padding="15"
+                                 Margin="5">
+
+                    <Label Text="Novo Conteúdo"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="#1E1E1E"/>
+
+                    <Entry x:Name="TituloEntry"
+                       Placeholder="Título do conteúdo"
+                       TextColor="#333"
+                       PlaceholderColor="#777"/>
+
+                    <Entry x:Name="TextoEntry"
+                       Placeholder="Tipo (Ex: Exercício)"
+                       TextColor="#333"
+                       PlaceholderColor="#777"/>
+
+                    <Picker x:Name="pck_categoria"
+                        Title="Categoria"
+                        TextColor="#333"
+                        TitleColor="#777"
+                        ItemsSource="{Binding Categorias}"
+                        SelectedItem="{Binding CategoriaSelecionada}" />
+
+                   
+                    <Button Text="Salvar"
+                        Clicked="OnSalvarConteudoClicked"
+                        BackgroundColor="#6A0DAD"
+                        TextColor="White"
+                        CornerRadius="10"/>
+
+                    <Button Text="Cancelar"
+                        Clicked="OnCancelarClicked"
+                        Style="{StaticResource BotaoSecundario}" />
+
+                </VerticalStackLayout>
+
+            </Frame>
+
+            <!-- Card edição -->
+            <Frame x:Name="EditCard"
+               IsVisible="False"
+               Style="{StaticResource CardFormulario}"
+               Margin="5"
+               BackgroundColor="#6A0DAD"
+               VerticalOptions="Center">
+
+                <VerticalStackLayout Spacing="12"
+                                 BackgroundColor="#F4F1FF"
+                                 Padding="15"
+                                 Margin="5">
+
+                    <Label Text="Editar Conteúdo"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="#1E1E1E"/>
+
+                    <Label Text="Título do conteúdo"
+                       TextColor="#333"/>
+
+                    <Entry x:Name="Edit_TituloEntry"
+                       Text="{Binding TituloConteudo}"
+                       TextColor="#333"
+                       PlaceholderColor="#777"/>
+
+                    <Label Text="Texto do Conteúdo"
+                       TextColor="#333"/>
+
+                    <Entry x:Name="Edit_TextoEntry"
+                       Text="{Binding TextoConteudo}"
+                       TextColor="#333"
+                       PlaceholderColor="#777"/>
+
+                    
+                    <Picker x:Name="Edit_pck_categoria"
+                        Title="Selecione a categoria"
+                        TextColor="#333"
+                        TitleColor="#777"
+                        ItemsSource="{Binding Categorias}"
+                        SelectedItem="{Binding CategoriaSelecionada}" />
+
+                    <Button Text="Salvar"
+                        Clicked="Button_Editar_Conteudo"
+                        BackgroundColor="#6A0DAD"
+                        TextColor="White"
+                        CornerRadius="10"/>
+
+                    <Button Text="Cancelar Edição"
+                        Clicked="Button_Cancelar_edicao"
+                        BackgroundColor="Gray"
+                        TextColor="White"
+                        CornerRadius="10"/>
+
+                </VerticalStackLayout>
+
+            </Frame>
+
+        </Grid>
+    </ScrollView>
+</ContentPage>
