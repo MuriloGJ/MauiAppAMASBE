@@ -2,6 +2,8 @@ using MauiAppAMASBE.Helpers.HelperNotificacao;
 using MauiAppAMASBE.Models;
 using MauiAppAMASBE.ViewModel;
 using Microsoft.Maui.Controls;
+using Plugin.LocalNotification;
+using Plugin.LocalNotification.Core.Models;
 using System.Collections.ObjectModel;
 
 namespace MauiAppAMASBE.Pages
@@ -33,7 +35,10 @@ namespace MauiAppAMASBE.Pages
             {
                 CadastroSaudeUsuario usuario = App.UsuarioLogado;
                 lista.Clear();
-                List<Lembrete> tmp = await App.Db.GetLembretePorUsuario(usuario.IdCadastro);
+
+                List<Lembrete> tmp =
+                    await App.Db.GetLembretePorUsuario(usuario.IdCadastro);
+
                 tmp.ForEach(i => lista.Add(i));
 
                 var pendentes = tmp.Where(l => !l.Concluido);
@@ -163,11 +168,47 @@ namespace MauiAppAMASBE.Pages
             Lembrete l = (sender as MenuItem)?.BindingContext as Lembrete;
             AbrirFormularioEdicao(l);
         }
+        private async void CheckBox_ConcluidoChanged(object sender, CheckedChangedEventArgs e)
+        {
+            try
+            {
+                CheckBox checkBox = sender as CheckBox;
+
+                Lembrete lembrete = checkBox.BindingContext as Lembrete;
+
+                if (lembrete == null)
+                    return;
+
+                lembrete.Concluido = e.Value;
+
+                await App.Db.UpdateLembrete(lembrete);
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Ops", ex.Message, "OK");
+            }
+        }
         private async void MenuItem_ConcluirLembrete(object sender, EventArgs e)
         {
             try
             {
                 MenuItem item = sender as MenuItem;
+
+                Lembrete lembrete = item.BindingContext as Lembrete;
+
+                lembrete.Concluido = true;
+
+                await App.Db.UpdateLembrete(lembrete);
+
+                await DisplayAlert("Sucesso", "Lembrete marcado como concluído.", "OK");
+
+                lista.Remove(lembrete);
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Ops", ex.Message, "OK");
+            }
+        }
 
         private void AbrirFormularioEdicao(Lembrete l)
         {
@@ -217,7 +258,7 @@ namespace MauiAppAMASBE.Pages
                 await DisplayAlert("Ops", ex.Message, "OK");
             }
         }
-
+        
         private void Button_Cancelar(object sender, EventArgs e)
         {
             EditCard.IsVisible   = false;
