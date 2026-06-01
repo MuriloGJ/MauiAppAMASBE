@@ -13,6 +13,9 @@ namespace MauiAppAMASBE.Models
         [Indexed]
         public int IdCadastro { get; set; }
 
+        public bool Notificado { get; set; }
+        public bool Concluido { get; set; }
+
         public string TituloLembrete { get; set; }
 
         public string TipoLembrete { get; set; }

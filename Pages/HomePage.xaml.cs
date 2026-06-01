@@ -20,6 +20,8 @@ namespace MauiAppAMASBE.Pages
 
             CardGerenciador.IsVisible =
                 App.UsuarioLogado?.TipoUsuario == "Administrador";
+            CardNotificacao.IsVisible =
+                App.UsuarioLogado?.TipoUsuario == "Administrador";
         }
         public string ResultadoIMCTexto
         {

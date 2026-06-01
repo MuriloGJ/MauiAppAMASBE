@@ -48,7 +48,7 @@
                 </Grid>
             </Frame>
             <!-- Aviso -->
-            <Frame BackgroundColor="#FFF3CD"    
+           <!-- <Frame BackgroundColor="#FFF3CD"    
                    CornerRadius="14"        
                    Padding="10"   
                    HasShadow="False"    
@@ -57,7 +57,7 @@
                        TextColor="#856404"    
                        FontSize="13"       
                        HorizontalTextAlignment="Center" />
-            </Frame>
+            </Frame>-->
             <!-- Grid principal -->
             <Grid ColumnDefinitions="*,*"  
                   RowDefinitions="Auto,Auto,Auto,Auto,Auto"       

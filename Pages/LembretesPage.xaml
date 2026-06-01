@@ -48,38 +48,48 @@
                             <ViewCell>
 
                                 <ViewCell.ContextActions>
-                                    <MenuItem Text="Remover"
+                                        <MenuItem Text="Concluir"
+                                                  Clicked="MenuItem_ConcluirLembrete"/>
+                                        <MenuItem Text="Remover"
                                               Clicked="MenuItem_RemoverLembrete"/>
 
                                     <MenuItem Text="Editar"
                                               Clicked="MenuItem_EditarLembrete"/>
                                 </ViewCell.ContextActions>
 
-                                <Frame Style="{StaticResource CardItem}"
-                                       Margin="10,8">
+                                    <Frame Style="{StaticResource CardItem}"
+       Margin="10,8">
 
-                                    <VerticalStackLayout Spacing="6">
+                                        <HorizontalStackLayout>
 
-                                        <Label Text="{Binding TituloLembrete}"
-                                               Style="{StaticResource LabelTituloItem}" />
+                                            <CheckBox
+            IsChecked="{Binding Concluido}"
+            CheckedChanged="CheckBox_ConcluidoChanged"/>
 
-                                        <Label Text="{Binding TipoLembrete, StringFormat='Tipo: {0}'}"
-                                               Style="{StaticResource LabelInfoItem}" />
+                                            <VerticalStackLayout Spacing="6">
 
-                                        <Label Text="{Binding FrequenciaLembrete, StringFormat='Frequência: {0}'}"
-                                               Style="{StaticResource LabelInfoItem}" />
+                                                <Label Text="{Binding TituloLembrete}"
+                   Style="{StaticResource LabelTituloItem}" />
 
-                                        <Label Text="{Binding HorarioLembrete, StringFormat='Horário: {0}'}"
-                                               Style="{StaticResource LabelInfoItem}" />
+                                                <Label Text="{Binding TipoLembrete, StringFormat='Tipo: {0}'}"
+                   Style="{StaticResource LabelInfoItem}" />
 
-                                        <Label Text="{Binding DataLembrete, StringFormat='Data: {0:dd/MM/yyyy}'}"
-                                               Style="{StaticResource LabelInfoItem}" />
+                                                <Label Text="{Binding FrequenciaLembrete, StringFormat='Frequência: {0}'}"
+                   Style="{StaticResource LabelInfoItem}" />
 
-                                    </VerticalStackLayout>
+                                                <Label Text="{Binding HorarioLembrete, StringFormat='Horário: {0}'}"
+                   Style="{StaticResource LabelInfoItem}" />
 
-                                </Frame>
+                                                <Label Text="{Binding DataLembrete, StringFormat='Data: {0:dd/MM/yyyy}'}"
+                   Style="{StaticResource LabelInfoItem}" />
 
-                            </ViewCell>
+                                            </VerticalStackLayout>
+
+                                        </HorizontalStackLayout>
+
+                                    </Frame>
+
+                                </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
 
