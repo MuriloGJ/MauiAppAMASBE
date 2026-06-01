@@ -1,18 +1,10 @@
 using MauiAppAMASBE.Models;
 using MauiAppAMASBE.ViewModel;
-using Microsoft.Maui.Controls;
-using System;
-using System.Collections.ObjectModel;
-using System.Globalization;
-
 
 namespace MauiAppAMASBE.Pages;
 
-
-
 public partial class DadosUsuario : ContentPage
 {
-
     CadastroViewModel viewModel = new CadastroViewModel();
 
     public DadosUsuario()
@@ -24,164 +16,116 @@ public partial class DadosUsuario : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
-
-        
+        if (!App.VerificarLogin()) return;
 
         CadastroSaudeUsuario usuario = App.UsuarioLogado;
-
-        viewModel.SexoSelecionado = usuario.Sexo;
-        viewModel.EstadoSelecionado = usuario.EstadoUsuario;
+        viewModel.SexoSelecionado          = usuario.Sexo;
+        viewModel.EstadoSelecionado        = usuario.EstadoUsuario;
         viewModel.TipoSanguineoSelecionado = usuario.TipoSanguineo;
-
         dtp_nascimento.Date = usuario.DataNascimento;
-
-        viewModel.Usuario = usuario;
+        viewModel.Usuario   = usuario;
     }
+
     private void Button_Atualizar(object sender, EventArgs e)
     {
         CadastroSaudeUsuario usuario = App.UsuarioLogado;
-
-        viewModel.SexoSelecionado = usuario.Sexo;
+        viewModel.SexoSelecionado   = usuario.Sexo;
         viewModel.EstadoSelecionado = usuario.EstadoUsuario;
-        viewModel.TipoSanguineoSelecionado = usuario.TipoSanguineo;
-
         CadastroCard.IsVisible = true;
-        EmptyState.IsVisible = false;
+        EmptyState.IsVisible   = false;
     }
+
     private async void Button_Salvar(object sender, EventArgs e)
     {
         try
         {
-            #region validações
+            // CORREÇÃO: verificação única de usuário nulo (estava duplicada)
             CadastroSaudeUsuario usuario = App.UsuarioLogado;
-
-           //Validação do CPF
-            bool CpfValido(string cpf)
+            if (usuario == null)
             {
-                if (string.IsNullOrWhiteSpace(cpf))
-                    return false;
-
-                cpf = cpf.Replace(".", "").Replace("-", "").Trim();
-
-                if (cpf.Length != 11)
-                    return false;
-
-                // evita CPF tipo 11111111111
-                if (new string(cpf[0], 11) == cpf)
-                    return false;
-
-                int[] multiplicador1 = { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
-                int[] multiplicador2 = { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
-
-                string tempCpf = cpf.Substring(0, 9);
-                int soma = 0;
-
-                for (int i = 0; i < 9; i++)
-                    soma += int.Parse(tempCpf[i].ToString()) * multiplicador1[i];
-
-                int resto = soma % 11;
-                resto = resto < 2 ? 0 : 11 - resto;
-
-                string digito = resto.ToString();
-
-                tempCpf += digito;
-                soma = 0;
-
-                for (int i = 0; i < 10; i++)
-                    soma += int.Parse(tempCpf[i].ToString()) * multiplicador2[i];
-
-                resto = soma % 11;
-                resto = resto < 2 ? 0 : 11 - resto;
-
-                digito += resto.ToString();
-
-                return cpf.EndsWith(digito);
+                await DisplayAlert("Erro", "Usuário não está logado", "OK"); return;
             }
+
+            // Validação do CPF
             if (!CpfValido(txtCpf.Text))
             {
-                await DisplayAlert("Erro", "CPF inválido", "OK");
-                return;
-            }
-            if (usuario == null)
-            {
-                await DisplayAlert("Erro", "Usuário não está logado", "OK");
-                return;
-
-            }
-            if (usuario == null)
-            {
-                await DisplayAlert("Erro", "Usuário não logado", "OK");
-                return;
-            }
-            if (dtp_nascimento.Date == null) { 
-                await DisplayAlert("Erro", "Data inválida", "OK");
-            return;
-            } // 🔹 VALIDAR TELEFONE
-            if (string.IsNullOrWhiteSpace(usuario.TelefoneUsuario))
-            {
-                await DisplayAlert("Erro", "Telefone é obrigatório", "OK");
-                return;
-            }
-            // 🔹 TELEFONE
-            if (string.IsNullOrWhiteSpace(usuario.TelefoneUsuario) || usuario.TelefoneUsuario.Length < 10||usuario.TelefoneUsuario.Length > 11)
-            {
-                await DisplayAlert("Erro", "Telefone inválido", "OK");
-                return;
+                await DisplayAlert("Erro", "CPF inválido", "OK"); return;
             }
 
-            // 🔹 PESO
-            if ( usuario.Peso <= 0 || usuario.Peso > 500)
+            if (dtp_nascimento.Date == null)
             {
-                await DisplayAlert("Erro", "Peso inválido", "OK");
-                return;
+                await DisplayAlert("Erro", "Data inválida", "OK"); return;
             }
 
-            // 🔹 ALTURA
-            if ( usuario.Altura <= 20 || usuario.Altura > 300)
+            string tel = usuario.TelefoneUsuario ?? "";
+            if (string.IsNullOrWhiteSpace(tel) || tel.Length < 10 || tel.Length > 11)
             {
-                await DisplayAlert("Erro", "Altura inválida", "OK");
-                return;
+                await DisplayAlert("Erro", "Telefone inválido (10 ou 11 dígitos sem formatação)", "OK"); return;
             }
-            // 🔹 SEXO
+
+            if (usuario.Peso <= 0 || usuario.Peso > 500)
+            {
+                await DisplayAlert("Erro", "Peso inválido (1–500 kg)", "OK"); return;
+            }
+
+            // CORREÇÃO: altura em centímetros (campo aceita 50–300 cm) — consistente com CalculosHelper
+            if (usuario.Altura <= 20 || usuario.Altura > 300)
+            {
+                await DisplayAlert("Erro", "Altura inválida (21–300 cm)", "OK"); return;
+            }
+
             if (string.IsNullOrEmpty(viewModel.SexoSelecionado))
             {
-                await DisplayAlert("Erro", "Selecione o sexo", "OK");
-                return;
+                await DisplayAlert("Erro", "Selecione o sexo", "OK"); return;
             }
-            #endregion
 
-
-            // 🔹 ATRIBUIR DADOS
             usuario.DataNascimento = dtp_nascimento.Date.Value;
-            usuario.EstadoUsuario = viewModel.EstadoSelecionado;
-            usuario.Sexo = viewModel.SexoSelecionado;
-            usuario.TipoSanguineo = viewModel.TipoSanguineoSelecionado;
-            await App.Db.UpdateUsuario(usuario);
+            usuario.EstadoUsuario  = viewModel.EstadoSelecionado;
+            usuario.Sexo           = viewModel.SexoSelecionado;
+            usuario.TipoSanguineo  = viewModel.TipoSanguineoSelecionado;
 
+            await App.Db.UpdateUsuario(usuario);
             await DisplayAlert("Sucesso!", "Dados atualizados", "OK");
 
+            // CORREÇÃO: PopAsync, reset visual e OnAppearing dentro do try (só após sucesso)
+            CadastroCard.IsVisible = false;
+            EmptyState.IsVisible   = true;
             await Navigation.PopAsync();
         }
         catch (Exception ex)
         {
             await DisplayAlert("Ops", ex.Message, "OK");
         }
-        CadastroCard.IsVisible = false;
-        EmptyState.IsVisible = true;
-
-        // 🔥 importante pra atualizar lista
-        OnAppearing();
     }
-    
+
+    private static bool CpfValido(string cpf)
+    {
+        if (string.IsNullOrWhiteSpace(cpf)) return false;
+        cpf = cpf.Replace(".", "").Replace("-", "").Trim();
+        if (cpf.Length != 11) return false;
+        if (new string(cpf[0], 11) == cpf) return false;
+
+        int[] m1 = { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+        int[] m2 = { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+        string temp = cpf[..9];
+        int soma = 0;
+        for (int i = 0; i < 9; i++) soma += int.Parse(temp[i].ToString()) * m1[i];
+        int resto = soma % 11; resto = resto < 2 ? 0 : 11 - resto;
+        string digito = resto.ToString();
+        temp += digito; soma = 0;
+        for (int i = 0; i < 10; i++) soma += int.Parse(temp[i].ToString()) * m2[i];
+        resto = soma % 11; resto = resto < 2 ? 0 : 11 - resto;
+        digito += resto.ToString();
+        return cpf.EndsWith(digito);
+    }
 
     private async void Button_Voltar(object sender, EventArgs e)
-    {
-        await Navigation.PushAsync(new HomePage());
-    }
-    private async void ButtonVoltar(object sender, EventArgs e)
     {
         await Navigation.PopAsync();
     }
 
-
+    private async void ButtonVoltar(object sender, EventArgs e)
+    {
+        await Navigation.PopAsync();
+    }
 }

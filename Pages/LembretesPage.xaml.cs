@@ -2,131 +2,116 @@ using MauiAppAMASBE.Helpers.HelperNotificacao;
 using MauiAppAMASBE.Models;
 using MauiAppAMASBE.ViewModel;
 using Microsoft.Maui.Controls;
-using System;
 using System.Collections.ObjectModel;
-using System.Globalization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MauiAppAMASBE.Pages
 {
     public partial class LembretesPage : ContentPage
     {
         ObservableCollection<Lembrete> lista = new ObservableCollection<Lembrete>();
+        LembreteViewModel viewModel          = new LembreteViewModel();
+        Lembrete lembreteSelecionado;
 
-        LembreteViewModel viewModel = new LembreteViewModel();
-        Lembrete LembreteSelecionado;
         public LembretesPage()
         {
             InitializeComponent();
-            BindingContext = viewModel;
-
+            BindingContext          = viewModel;
             lst_lembrete.ItemsSource = lista;
         }
+
+        // ── Ciclo de vida ───────────────────────────────────────────────────
         protected async override void OnAppearing()
         {
-            CadastroSaudeUsuario usuario = App.UsuarioLogado;
+            base.OnAppearing();
+            if (!App.VerificarLogin()) return;
+            await CarregarListaAsync();
+        }
 
+        private async Task CarregarListaAsync()
+        {
             try
             {
+                CadastroSaudeUsuario usuario = App.UsuarioLogado;
                 lista.Clear();
-
                 List<Lembrete> tmp = await App.Db.GetLembretePorUsuario(usuario.IdCadastro);
                 tmp.ForEach(i => lista.Add(i));
             }
             catch (Exception ex)
             {
-                await DisplayAlertAsync("Ops", ex.Message, "OK");
+                await DisplayAlert("Ops", ex.Message, "OK");
             }
         }
 
-        private async void OnNovoLembreteClicked(object sender, EventArgs e)
+        // ── Novo lembrete ───────────────────────────────────────────────────
+        private void OnNovoLembreteClicked(object sender, EventArgs e)
         {
-            CadastroSaudeUsuario usuario = App.UsuarioLogado;
-            if (usuario == null)
-            {
-                await DisplayAlert("Erro", "Usuário não está logado", "OK");
-                return;
-            }
-
-
             CadastroCard.IsVisible = true;
-            EmptyState.IsVisible = false;
+            EmptyState.IsVisible   = false;
         }
 
         private async void OnSalvarLembreteClicked(object sender, EventArgs e)
         {
-
             try
             {
                 CadastroSaudeUsuario usuario = App.UsuarioLogado;
+                if (usuario == null) { await DisplayAlert("Erro", "Usuário não está logado", "OK"); return; }
 
-                if (usuario == null)
+                if (string.IsNullOrWhiteSpace(TituloEntry.Text))
                 {
-                    await DisplayAlert("Erro", "Usuário não está logado", "OK");
-                    return;
+                    await DisplayAlert("Erro", "Título é obrigatório", "OK"); return;
                 }
                 if (dtp_lembrete.Date == null)
                 {
-                    await DisplayAlert("Erro", "Selecione uma data", "OK");
-                    return;
+                    await DisplayAlert("Erro", "Selecione uma data", "OK"); return;
+                }
+                if (string.IsNullOrEmpty(viewModel.TipoLSelecionada))
+                {
+                    await DisplayAlert("Erro", "Selecione o tipo do lembrete", "OK"); return;
+                }
+                if (string.IsNullOrEmpty(viewModel.FrequenciaLSelecionada))
+                {
+                    await DisplayAlert("Erro", "Selecione a frequência", "OK"); return;
                 }
 
                 Lembrete lembrete = new Lembrete
                 {
-                    TituloLembrete = TituloEntry.Text,
-                    DataLembrete = dtp_lembrete.Date.Value,
-                    HorarioLembrete = HoraLembrete.Time ?? TimeSpan.Zero,
-
-                    TipoLembrete = viewModel.TipoLSelecionada,
+                    TituloLembrete     = TituloEntry.Text.Trim(),
+                    DataLembrete       = dtp_lembrete.Date.Value,
+                    HorarioLembrete    = HoraLembrete.Time ?? TimeSpan.Zero,
+                    TipoLembrete       = viewModel.TipoLSelecionada,
                     FrequenciaLembrete = viewModel.FrequenciaLSelecionada,
-
-                    IdCadastro = usuario.IdCadastro,
-
-
+                    IdCadastro         = usuario.IdCadastro,
                 };
 
-                // Salva lembrete
                 await App.Db.InsertLembrete(lembrete);
-
-                // Cria notificação vinculada
                 await NotificacaoHelper.CriarNotificacao(lembrete);
-
                 await DisplayAlert("Sucesso!", "Lembrete Inserido", "OK");
+
+                TituloEntry.Text       = "";
+                CadastroCard.IsVisible = false;
+                EmptyState.IsVisible   = true;
+                // CORREÇÃO: chama CarregarListaAsync() em vez de OnAppearing() diretamente
+                await CarregarListaAsync();
             }
             catch (Exception ex)
             {
                 await DisplayAlert("Ops", ex.Message, "OK");
             }
-
-            TituloEntry.Text = "";
-
-
-            CadastroCard.IsVisible = false;
-            EmptyState.IsVisible = true;
-            OnAppearing();
         }
 
         private void OnCancelarClicked(object sender, EventArgs e)
         {
-
-
             CadastroCard.IsVisible = false;
-            EmptyState.IsVisible = true;
+            EmptyState.IsVisible   = true;
         }
 
+        // ── Pull-to-Refresh ─────────────────────────────────────────────────
         private async void lst_lembrete_Refreshing(object sender, EventArgs e)
         {
-            CadastroSaudeUsuario usuario = App.UsuarioLogado;
             try
             {
-                lista.Clear();
-
-                List<Lembrete> tmp = await App.Db.GetLembrete();
-                tmp.ForEach(i => lista.Add(i));
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlertAsync("Ops", ex.Message, "OK");
+                // CORREÇÃO: filtrar pelo usuário logado (antes chamava GetLembrete() — todos os usuários)
+                await CarregarListaAsync();
             }
             finally
             {
@@ -134,122 +119,97 @@ namespace MauiAppAMASBE.Pages
             }
         }
 
+        // ── Seleção de item ─────────────────────────────────────────────────
         private void lst_lembrete_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            CadastroSaudeUsuario usuario = App.UsuarioLogado;
-            try
-            {
-                Lembrete l = e.SelectedItem as Lembrete;
-
-                Navigation.PushAsync(new Pages.LembretesPage
-                { BindingContext = l, });
-
-
-            }
-            catch (Exception ex)
-            {
-                DisplayAlertAsync("Ops", ex.Message, "OK");
-            }
+            // CORREÇÃO: abrir formulário de edição, NÃO nova LembretesPage (causava loop infinito)
+            if (e.SelectedItem is not Lembrete l) return;
+            ((ListView)sender).SelectedItem = null;
+            AbrirFormularioEdicao(l);
         }
 
+        // ── Menu de contexto ────────────────────────────────────────────────
         private async void MenuItem_RemoverLembrete(object sender, EventArgs e)
         {
-            CadastroSaudeUsuario usuario = App.UsuarioLogado;
             try
             {
-                MenuItem item = sender as MenuItem;
-
-                Lembrete l = item.BindingContext as Lembrete;
-
-                bool confirma = await DisplayAlertAsync("Tem Certeza?", $"Remover {l.TituloLembrete}", "Sim", "Não");
-
+                Lembrete l = (sender as MenuItem)?.BindingContext as Lembrete;
+                bool confirma = await DisplayAlert("Tem Certeza?", $"Remover {l.TituloLembrete}?", "Sim", "Não");
                 if (confirma)
                 {
                     await App.Db.DeleteLembrete(l.IdLembrete);
                     lista.Remove(l);
-                    await DisplayAlertAsync("Sucesso!", "Registro Apagado", "OK");
-
+                    await DisplayAlert("Sucesso!", "Registro Apagado", "OK");
                 }
-                else
-                {
-                    await DisplayAlertAsync("Falha!", "Registro Mantido", "OK");
-                }
-
             }
-            catch (Exception ex)
-            {
-                await DisplayAlertAsync("Ops", ex.Message, "OK");
-            }
-
+            catch (Exception ex) { await DisplayAlert("Ops", ex.Message, "OK"); }
         }
 
+        private void MenuItem_EditarLembrete(object sender, EventArgs e)
+        {
+            Lembrete l = (sender as MenuItem)?.BindingContext as Lembrete;
+            AbrirFormularioEdicao(l);
+        }
 
-
-        private async void MenuItem_EditarLembrete(object sender, EventArgs e)
+        private void AbrirFormularioEdicao(Lembrete l)
         {
             BindingContext = null;
             BindingContext = viewModel;
-         
-            CadastroSaudeUsuario usuario = App.UsuarioLogado;
+            lembreteSelecionado = l;
 
-            if (usuario == null)
-            {
-                await DisplayAlert("Erro", "Usuário não está logado", "OK");
-                return;
-            }
+            TituloEntryEdit.Text = l.TituloLembrete;
+            Edit_timeHorario.Time = l.HorarioLembrete;
+            viewModel.FrequenciaLSelecionada = l.FrequenciaLembrete;
+            viewModel.TipoLSelecionada       = l.TipoLembrete;
 
-            var menuItem = sender as MenuItem;
-
-            LembreteSelecionado = menuItem.BindingContext as Lembrete;
-
-            // PREENCHE CAMPOS
-            TituloEntryEdit.Text = LembreteSelecionado.TituloLembrete;
-
-            Edit_timeHorario.Time = LembreteSelecionado.HorarioLembrete;
-
-            // PICKERS
-            viewModel.FrequenciaLSelecionada =
-                LembreteSelecionado.FrequenciaLembrete;
-
-            viewModel.TipoLSelecionada =
-                LembreteSelecionado.TipoLembrete;
-
-            EditCard.IsVisible = true;
-
+            EditCard.IsVisible   = true;
             EmptyState.IsVisible = false;
         }
+
+        // ── Salvar edição ───────────────────────────────────────────────────
         private async void Button_EditarLembrete(object sender, EventArgs e)
         {
             CadastroSaudeUsuario usuario = App.UsuarioLogado;
-            if (usuario == null)
-            {
-                await DisplayAlert("Erro", "Usuário não está logado", "OK");
-                return;
+            if (usuario == null) { await DisplayAlert("Erro", "Usuário não está logado", "OK"); return; }
+            if (lembreteSelecionado == null) { await DisplayAlert("Erro", "Nenhum lembrete selecionado", "OK"); return; }
 
+            if (string.IsNullOrWhiteSpace(TituloEntryEdit.Text))
+            {
+                await DisplayAlert("Erro", "Título é obrigatório", "OK"); return;
             }
 
-            LembreteSelecionado.TituloLembrete = TituloEntryEdit.Text;
-            LembreteSelecionado.TipoLembrete = viewModel.TipoLSelecionada;
-            LembreteSelecionado.HorarioLembrete = Edit_timeHorario.Time ?? TimeSpan.Zero;
-            LembreteSelecionado.HorarioLembrete = Edit_timeHorario.Time ?? TimeSpan.Zero;
-            LembreteSelecionado.FrequenciaLembrete = viewModel.FrequenciaLSelecionada;
+            try
+            {
+                lembreteSelecionado.TituloLembrete     = TituloEntryEdit.Text.Trim();
+                lembreteSelecionado.TipoLembrete       = viewModel.TipoLSelecionada;
+                // CORREÇÃO: linha duplicada removida (HorarioLembrete era atribuído duas vezes)
+                lembreteSelecionado.HorarioLembrete    = Edit_timeHorario.Time ?? TimeSpan.Zero;
+                lembreteSelecionado.FrequenciaLembrete = viewModel.FrequenciaLSelecionada;
 
-            await App.Db.UpdateLembrete(LembreteSelecionado);
+                await App.Db.UpdateLembrete(lembreteSelecionado);
+                await DisplayAlert("Sucesso", "Lembrete atualizado!", "OK");
 
-            EditCard.IsVisible = false;
-
-            await DisplayAlert("Sucesso", "Lembrete atualizado!", "OK");
-
+                EditCard.IsVisible   = false;
+                EmptyState.IsVisible = true;
+                lembreteSelecionado  = null;
+                await CarregarListaAsync();
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Ops", ex.Message, "OK");
+            }
         }
 
         private void Button_Cancelar(object sender, EventArgs e)
         {
-            EditCard.IsVisible = false;
+            EditCard.IsVisible   = false;
             EmptyState.IsVisible = true;
+            lembreteSelecionado  = null;
         }
+
         private async void ButtonVoltar(object sender, EventArgs e)
         {
             await Navigation.PopAsync();
         }
     }
-    }
+}

@@ -13,8 +13,8 @@
 		<Nullable>enable</Nullable>
 		<MauiXamlInflator>SourceGen</MauiXamlInflator>
 
-		<ApplicationTitle>MauiAppAMASBE</ApplicationTitle>
-		<ApplicationId>com.companyname.mauiappamasbe</ApplicationId>
+		<ApplicationTitle>AMASBE Saúde</ApplicationTitle>
+		<ApplicationId>br.etec.amasbe.saude</ApplicationId>
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 		<WindowsPackageType>None</WindowsPackageType>

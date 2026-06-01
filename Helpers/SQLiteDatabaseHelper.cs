@@ -1,532 +1,512 @@
-﻿using MauiAppAMASBE.Models;
+using MauiAppAMASBE.Models;
 using SQLite;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MauiAppAMASBE.Helpers
 {
     public class SQLiteDatabaseHelper
     {
         readonly SQLiteAsyncConnection _conn;
+        private bool _initialized = false;
+        private readonly SemaphoreSlim _initLock = new SemaphoreSlim(1, 1);
+
         public SQLiteDatabaseHelper(string path)
         {
             _conn = new SQLiteAsyncConnection(path);
-            _conn.CreateTableAsync<CadastroSaudeUsuario>().Wait();
-            _conn.CreateTableAsync<Medicamento>().Wait();
-            _conn.CreateTableAsync<Alergia>().Wait();
-            _conn.CreateTableAsync<DoencaCronica>().Wait();
-            _conn.CreateTableAsync<Vacina>().Wait();
-            _conn.CreateTableAsync<Habito>().Wait();
-            _conn.CreateTableAsync<MensagemMotivacional>().Wait();
-            _conn.CreateTableAsync<Lembrete>().Wait();
-            _conn.CreateTableAsync<Notificacao>().Wait();
-            _conn.CreateTableAsync<ConteudoSaude>().Wait();
-            _conn.CreateTableAsync<PerguntaFrequente>().Wait();
-            _conn.CreateTableAsync<ServicoSus>().Wait();
+            // CORREÇÃO: não usar .Wait() no construtor — usa inicialização lazy assíncrona
         }
-        #region CadastroSaudeUsuario //organização dos metodos
-        public Task<int> InsertUsuario(CadastroSaudeUsuario u)
+
+        /// <summary>
+        /// Garante que as tabelas existam antes de qualquer operação.
+        /// Usa SemaphoreSlim para evitar race condition em chamadas paralelas.
+        /// </summary>
+        private async Task EnsureInitializedAsync()
         {
-            return _conn.InsertAsync(u);
+            if (_initialized) return;
+            await _initLock.WaitAsync();
+            try
+            {
+                if (_initialized) return;
+                await _conn.CreateTableAsync<CadastroSaudeUsuario>();
+                await _conn.CreateTableAsync<Medicamento>();
+                await _conn.CreateTableAsync<Alergia>();
+                await _conn.CreateTableAsync<DoencaCronica>();
+                await _conn.CreateTableAsync<Vacina>();
+                await _conn.CreateTableAsync<Habito>();
+                await _conn.CreateTableAsync<MensagemMotivacional>();
+                await _conn.CreateTableAsync<Lembrete>();
+                await _conn.CreateTableAsync<Notificacao>();
+                await _conn.CreateTableAsync<ConteudoSaude>();
+                await _conn.CreateTableAsync<PerguntaFrequente>();
+                await _conn.CreateTableAsync<ServicoSus>();
+                _initialized = true;
+            }
+            finally { _initLock.Release(); }
         }
-        public Task<int> UpdateUsuario(CadastroSaudeUsuario u)
+
+        #region CadastroSaudeUsuario
+        public async Task<int> InsertUsuario(CadastroSaudeUsuario u)
         {
-            return _conn.UpdateAsync(u);
+            await EnsureInitializedAsync();
+            return await _conn.InsertAsync(u);
         }
-        public Task<CadastroSaudeUsuario> GetUsuarioPorId(int id)
+        public async Task<int> UpdateUsuario(CadastroSaudeUsuario u)
         {
-            return _conn.Table<CadastroSaudeUsuario>()
-                        .Where(u => u.IdCadastro == id)
-                        .FirstOrDefaultAsync();
+            await EnsureInitializedAsync();
+            return await _conn.UpdateAsync(u);
         }
-        public Task<List<CadastroSaudeUsuario>> GetUsuarios()
+        public async Task<CadastroSaudeUsuario> GetUsuarioPorId(int id)
         {
-            return _conn.Table<CadastroSaudeUsuario>().ToListAsync();
+            await EnsureInitializedAsync();
+            return await _conn.Table<CadastroSaudeUsuario>()
+                               .Where(u => u.IdCadastro == id).FirstOrDefaultAsync();
+        }
+        public async Task<List<CadastroSaudeUsuario>> GetUsuarios()
+        {
+            await EnsureInitializedAsync();
+            return await _conn.Table<CadastroSaudeUsuario>().ToListAsync();
         }
         public async Task<CadastroSaudeUsuario> GetUsuario(string email, string nomeUsuario, string senha)
         {
+            await EnsureInitializedAsync();
             return await _conn.Table<CadastroSaudeUsuario>()
-                .Where(u => ((email != null && u.Email == email) ||(nomeUsuario != null && u.NomeUsuario == nomeUsuario)) && u.Senha == senha)
+                .Where(u => ((email != null && u.Email == email) ||
+                             (nomeUsuario != null && u.NomeUsuario == nomeUsuario))
+                             && u.Senha == senha)
                 .FirstOrDefaultAsync();
         }
-
-        public Task<CadastroSaudeUsuario> GetUsuarioSenha(string login, string senha)
+        public async Task<CadastroSaudeUsuario> GetUsuarioSenha(string login, string senha)
         {
-            return _conn.Table<CadastroSaudeUsuario>()
+            await EnsureInitializedAsync();
+            return await _conn.Table<CadastroSaudeUsuario>()
                 .Where(u => (u.Email == login || u.Cpf == login) && u.Senha == senha)
                 .FirstOrDefaultAsync();
         }
-        public Task<CadastroSaudeUsuario> GetUsuarioPorNomeUsuario(string nomeUsuario)
+        public async Task<CadastroSaudeUsuario> GetUsuarioPorNomeUsuario(string nomeUsuario)
         {
-            return _conn.Table<CadastroSaudeUsuario>()
-                        .Where(u => u.NomeUsuario == nomeUsuario)
-                        .FirstOrDefaultAsync();
+            await EnsureInitializedAsync();
+            return await _conn.Table<CadastroSaudeUsuario>()
+                               .Where(u => u.NomeUsuario == nomeUsuario).FirstOrDefaultAsync();
         }
-
-        public Task<int> DeleteUsuario(int id)
+        public async Task<int> DeleteUsuario(int id)
         {
-            return _conn.Table<CadastroSaudeUsuario>()
-                        .DeleteAsync(u => u.IdCadastro == id);
+            await EnsureInitializedAsync();
+            return await _conn.Table<CadastroSaudeUsuario>().DeleteAsync(u => u.IdCadastro == id);
         }
         public async Task<bool> EmailExiste(string email)
         {
-            var usuario = await _conn.Table<CadastroSaudeUsuario>()
-                                     .Where(u => u.Email == email)
-                                     .FirstOrDefaultAsync();
-
-            return usuario != null;
+            await EnsureInitializedAsync();
+            var u = await _conn.Table<CadastroSaudeUsuario>()
+                                .Where(x => x.Email == email).FirstOrDefaultAsync();
+            return u != null;
         }
-        public Task<List<CadastroSaudeUsuario>> SearchUsuario(string u)
+        public async Task<List<CadastroSaudeUsuario>> SearchUsuario(string u)
         {
-            string sql = "SELECT * FROM CadastroSaudeUsuario WHERE Nome LIKE ?";
-            return _conn.QueryAsync<CadastroSaudeUsuario>(sql, "%" + u + "%");
+            await EnsureInitializedAsync();
+            return await _conn.QueryAsync<CadastroSaudeUsuario>(
+                "SELECT * FROM CadastroSaudeUsuario WHERE Nome LIKE ?", "%" + u + "%");
         }
         public async Task CriarAdministradorPadrao()
         {
+            await EnsureInitializedAsync();
             var adminExistente = await _conn.Table<CadastroSaudeUsuario>()
-                .Where(u => u.TipoUsuario == "Administrador")
-                .FirstOrDefaultAsync();
-
+                .Where(u => u.TipoUsuario == "Administrador").FirstOrDefaultAsync();
             if (adminExistente == null)
             {
-                CadastroSaudeUsuario admin = new CadastroSaudeUsuario
+                await _conn.InsertAsync(new CadastroSaudeUsuario
                 {
-                    Nome = "admin",
-                    NomeUsuario = "admin",
-                    TipoUsuario = "Administrador",
-                    DataNascimento = new DateTime(2000, 1, 1),
-                    Sexo = "Outro",
-                    Cpf = "00000000000",
-                    RuaUsuario = "",
-                    NumeroUsuario = "",
-                    BairroUsuario = "",
-                    CidadeUsuario = "",
-                    EstadoUsuario = "",
-                    CepUsuario = "",
-                    ComplementoUsuario = "",
-                    TelefoneUsuario = "",
-                    Email = "admin@admin.com",
-                    ContatoEmergencia = "",
-                    TipoSanguineo = "O+",
-                    Peso = 0,
-                    Altura = 0,
-                    Senha = "admin123"
-                };
-
-                await _conn.InsertAsync(admin);
+                    Nome = "admin", NomeUsuario = "admin", TipoUsuario = "Administrador",
+                    DataNascimento = new DateTime(2000, 1, 1), Sexo = "Outro",
+                    Cpf = "00000000000", RuaUsuario = "", NumeroUsuario = "",
+                    BairroUsuario = "", CidadeUsuario = "", EstadoUsuario = "",
+                    CepUsuario = "", ComplementoUsuario = "", TelefoneUsuario = "",
+                    Email = "admin@admin.com", ContatoEmergencia = "",
+                    TipoSanguineo = "O+", Peso = 0, Altura = 0, Senha = "admin123"
+                });
             }
         }
-
         #endregion
+
         #region Habito
-        public Task<int> InsertHabito(Habito h)
+        public async Task<int> InsertHabito(Habito h)
         {
-            return _conn.InsertAsync(h);
+            await EnsureInitializedAsync(); return await _conn.InsertAsync(h);
         }
-        public Task<List<Habito>> GetHabitosPorUsuario(int idUsuario)
+        public async Task<List<Habito>> GetHabitosPorUsuario(int idUsuario)
         {
-            return _conn.Table<Habito>()
-                        .Where(h => h.IdCadastro == idUsuario)
-                        .ToListAsync();
+            await EnsureInitializedAsync();
+            return await _conn.Table<Habito>().Where(h => h.IdCadastro == idUsuario).ToListAsync();
         }
-        public Task<Habito> GetHabitoPorId(int idH)
+        public async Task<Habito> GetHabitoPorId(int idH)
         {
-            return _conn.Table<Habito>()
-                        .Where(h => h.IdHabito == idH)
-                        .FirstOrDefaultAsync();
+            await EnsureInitializedAsync();
+            return await _conn.Table<Habito>().Where(h => h.IdHabito == idH).FirstOrDefaultAsync();
         }
-        public Task<List<Habito>> GetHabitos()
+        public async Task<List<Habito>> GetHabitos()
         {
-            return _conn.Table<Habito>().ToListAsync();
+            await EnsureInitializedAsync(); return await _conn.Table<Habito>().ToListAsync();
         }
-
-        public Task<int> UpdateHabito(Habito h)
+        public async Task<int> UpdateHabito(Habito h)
         {
-            return _conn.UpdateAsync(h);
+            await EnsureInitializedAsync(); return await _conn.UpdateAsync(h);
         }
-        public Task<int> DeleteHabito(int idH)
+        public async Task<int> DeleteHabito(int idH)
         {
-            return _conn.Table<Habito>()
-                        .DeleteAsync(h => h.IdHabito == idH);
+            await EnsureInitializedAsync();
+            return await _conn.Table<Habito>().DeleteAsync(h => h.IdHabito == idH);
         }
-        public Task<List<Habito>> SearchHabito(string h)
+        public async Task<List<Habito>> SearchHabito(string h)
         {
-            string sql = "SELECT * FROM Habito WHERE NomeHabito LIKE ?";
-            return _conn.QueryAsync<Habito>(sql, "%" + h + "%");
+            await EnsureInitializedAsync();
+            return await _conn.QueryAsync<Habito>(
+                "SELECT * FROM Habito WHERE NomeHabito LIKE ?", "%" + h + "%");
         }
-
         #endregion
+
         #region Notificação
-        public Task<int> InsertNotificacao(Notificacao n)
+        public async Task<int> InsertNotificacao(Notificacao n)
         {
-            return _conn.InsertAsync(n);
+            await EnsureInitializedAsync(); return await _conn.InsertAsync(n);
         }
-        public Task<List<Notificacao>> GetNotificacaoPorLembrete(int idLembrete)
+        public async Task<List<Notificacao>> GetNotificacaoPorLembrete(int idLembrete)
         {
-            return _conn.Table<Notificacao>()
-                        .Where(n => n.IdLembrete == idLembrete)
-                        .ToListAsync();
+            await EnsureInitializedAsync();
+            return await _conn.Table<Notificacao>().Where(n => n.IdLembrete == idLembrete).ToListAsync();
         }
-        public Task<Notificacao> GetNotificacaoPorId(int idN)
+        public async Task<Notificacao> GetNotificacaoPorId(int idN)
         {
-            return _conn.Table<Notificacao>()
-                        .Where(n => n.IdNotificacao == idN)
-                        .FirstOrDefaultAsync();
+            await EnsureInitializedAsync();
+            return await _conn.Table<Notificacao>().Where(n => n.IdNotificacao == idN).FirstOrDefaultAsync();
         }
-        public Task<List<Notificacao>> GetNotificacoes()
+        public async Task<List<Notificacao>> GetNotificacoes()
         {
-            return _conn.Table<Notificacao>().ToListAsync();
+            await EnsureInitializedAsync(); return await _conn.Table<Notificacao>().ToListAsync();
         }
-
-        public Task<int> UpdateNotificacao(Notificacao n)
+        public async Task<int> UpdateNotificacao(Notificacao n)
         {
-            return _conn.UpdateAsync(n);
+            await EnsureInitializedAsync(); return await _conn.UpdateAsync(n);
         }
-        public Task<int> DeleteNotificacao(int idN)
+        public async Task<int> DeleteNotificacao(int idN)
         {
-            return _conn.Table<Notificacao>()
-                        .DeleteAsync(n => n.IdNotificacao == idN);
+            await EnsureInitializedAsync();
+            return await _conn.Table<Notificacao>().DeleteAsync(n => n.IdNotificacao == idN);
         }
         #endregion
+
         #region Lembrete
-        public Task<int> InsertLembrete(Lembrete l)
+        public async Task<int> InsertLembrete(Lembrete l)
         {
-            return _conn.InsertAsync(l);
+            await EnsureInitializedAsync(); return await _conn.InsertAsync(l);
         }
-        public Task<List<Lembrete>> GetLembrete()
+        public async Task<List<Lembrete>> GetLembrete()
         {
-            return _conn.Table<Lembrete>().ToListAsync();
+            await EnsureInitializedAsync(); return await _conn.Table<Lembrete>().ToListAsync();
         }
-        public Task<List<Lembrete>> GetLembretePorUsuario(int idUsuario)
+        public async Task<List<Lembrete>> GetLembretePorUsuario(int idUsuario)
         {
-            return _conn.Table<Lembrete>()
-                        .Where(l => l.IdCadastro == idUsuario)
-                        .ToListAsync();
+            await EnsureInitializedAsync();
+            return await _conn.Table<Lembrete>().Where(l => l.IdCadastro == idUsuario).ToListAsync();
         }
-        public Task<Lembrete> GetLembretePorId(int idL)
+        public async Task<Lembrete> GetLembretePorId(int idL)
         {
-            return _conn.Table<Lembrete>()
-                        .Where(l => l.IdLembrete == idL)
-                        .FirstOrDefaultAsync();
+            await EnsureInitializedAsync();
+            return await _conn.Table<Lembrete>().Where(l => l.IdLembrete == idL).FirstOrDefaultAsync();
         }
-
-        public Task<int> UpdateLembrete(Lembrete l)
+        public async Task<int> UpdateLembrete(Lembrete l)
         {
-            return _conn.UpdateAsync(l);
+            await EnsureInitializedAsync(); return await _conn.UpdateAsync(l);
         }
-        public Task<int> DeleteLembrete(int idL)
+        public async Task<int> DeleteLembrete(int idL)
         {
-            return _conn.Table<Lembrete>()
-                        .DeleteAsync(l => l.IdLembrete == idL);
+            await EnsureInitializedAsync();
+            return await _conn.Table<Lembrete>().DeleteAsync(l => l.IdLembrete == idL);
         }
-
         #endregion
+
         #region Medicamento
-        public Task<int> InsertMedicamento(Medicamento m)
+        public async Task<int> InsertMedicamento(Medicamento m)
         {
-            return _conn.InsertAsync(m);
+            await EnsureInitializedAsync(); return await _conn.InsertAsync(m);
         }
-        public Task<List<Medicamento>> GetMedicamentoPorUsuario(int idUsuario)
+        public async Task<List<Medicamento>> GetMedicamentoPorUsuario(int idUsuario)
         {
-            return _conn.Table<Medicamento>()
-                        .Where(m => m.IdCadastro == idUsuario)
-                        .ToListAsync();
+            await EnsureInitializedAsync();
+            return await _conn.Table<Medicamento>().Where(m => m.IdCadastro == idUsuario).ToListAsync();
         }
-        public Task<Medicamento> GetMedicamentoPorId(int idM)
+        public async Task<Medicamento> GetMedicamentoPorId(int idM)
         {
-            return _conn.Table<Medicamento>()
-                        .Where(m => m.IdMedicamento == idM)
-                        .FirstOrDefaultAsync();
+            await EnsureInitializedAsync();
+            return await _conn.Table<Medicamento>().Where(m => m.IdMedicamento == idM).FirstOrDefaultAsync();
         }
-        public Task<int> UpdateMedicamento(Medicamento m)
+        public async Task<int> UpdateMedicamento(Medicamento m)
         {
-            return _conn.UpdateAsync(m);
+            await EnsureInitializedAsync(); return await _conn.UpdateAsync(m);
         }
-        public Task<int> DeleteMedicamento(int idM)
+        public async Task<int> DeleteMedicamento(int idM)
         {
-            return _conn.Table<Medicamento>()
-                        .DeleteAsync(m => m.IdMedicamento == idM);
+            await EnsureInitializedAsync();
+            return await _conn.Table<Medicamento>().DeleteAsync(m => m.IdMedicamento == idM);
         }
-        public Task<List<Medicamento>> SearchMedicamento(string m)
+        public async Task<List<Medicamento>> SearchMedicamento(string m)
         {
-            string sql = "SELECT * FROM Medicamento WHERE NomeMedicamento LIKE ?";
-            return _conn.QueryAsync<Medicamento>(sql, "%" + m + "%");
+            await EnsureInitializedAsync();
+            return await _conn.QueryAsync<Medicamento>(
+                "SELECT * FROM Medicamento WHERE NomeMedicamento LIKE ?", "%" + m + "%");
         }
-
         #endregion
+
         #region Alergia
-        public Task<int> InsertAlergia(Alergia a)
+        public async Task<int> InsertAlergia(Alergia a)
         {
-            return _conn.InsertAsync(a);
+            await EnsureInitializedAsync(); return await _conn.InsertAsync(a);
         }
-        public Task<List<Alergia>> GetAlergiaPorUsuario(int idUsuario)
+        public async Task<List<Alergia>> GetAlergiaPorUsuario(int idUsuario)
         {
-            return _conn.Table<Alergia>()
-                        .Where(a => a.IdCadastro == idUsuario)
-                        .ToListAsync();
+            await EnsureInitializedAsync();
+            return await _conn.Table<Alergia>().Where(a => a.IdCadastro == idUsuario).ToListAsync();
         }
-        public Task<Alergia> GetAlergiaPorId(int idA)
+        public async Task<Alergia> GetAlergiaPorId(int idA)
         {
-            return _conn.Table<Alergia>()
-                        .Where(a => a.IdAlergia == idA)
-                        .FirstOrDefaultAsync();
+            await EnsureInitializedAsync();
+            return await _conn.Table<Alergia>().Where(a => a.IdAlergia == idA).FirstOrDefaultAsync();
         }
-        public Task<int> UpdateAlergia(Alergia a)
+        public async Task<int> UpdateAlergia(Alergia a)
         {
-            return _conn.UpdateAsync(a);
+            await EnsureInitializedAsync(); return await _conn.UpdateAsync(a);
         }
-        public Task<int> DeleteAlergia(int idA)
+        public async Task<int> DeleteAlergia(int idA)
         {
-            return _conn.Table<Alergia>()
-                        .DeleteAsync(a => a.IdAlergia == idA);
+            await EnsureInitializedAsync();
+            return await _conn.Table<Alergia>().DeleteAsync(a => a.IdAlergia == idA);
         }
-        public Task<List<Alergia>> SearchAlergia(string a)
+        public async Task<List<Alergia>> SearchAlergia(string a)
         {
-            string sql = "SELECT * FROM Alergia WHERE NomeAlergia LIKE ?";
-            return _conn.QueryAsync<Alergia>(sql, "%" + a + "%");
+            await EnsureInitializedAsync();
+            return await _conn.QueryAsync<Alergia>(
+                "SELECT * FROM Alergia WHERE NomeAlergia LIKE ?", "%" + a + "%");
         }
-
         #endregion
+
         #region DoencaCronica
-        public Task<int> InsertDoenca(DoencaCronica d)
+        public async Task<int> InsertDoenca(DoencaCronica d)
         {
-            return _conn.InsertAsync(d);
+            await EnsureInitializedAsync(); return await _conn.InsertAsync(d);
         }
-        public Task<List<DoencaCronica>> GetDoencaPorUsuario(int idUsuario)
+        public async Task<List<DoencaCronica>> GetDoencaPorUsuario(int idUsuario)
         {
-            return _conn.Table<DoencaCronica>()
-                        .Where(d => d.IdCadastro == idUsuario)
-                        .ToListAsync();
+            await EnsureInitializedAsync();
+            return await _conn.Table<DoencaCronica>().Where(d => d.IdCadastro == idUsuario).ToListAsync();
         }
-        public Task<DoencaCronica> GetDoencaPorId(int idD)
+        public async Task<DoencaCronica> GetDoencaPorId(int idD)
         {
-            return _conn.Table<DoencaCronica>()
-                        .Where(d => d.IdDoenca == idD)
-                        .FirstOrDefaultAsync();
+            await EnsureInitializedAsync();
+            return await _conn.Table<DoencaCronica>().Where(d => d.IdDoenca == idD).FirstOrDefaultAsync();
         }
-        public Task<List<DoencaCronica>> GetDoenca()
+        public async Task<List<DoencaCronica>> GetDoenca()
         {
-            return _conn.Table<DoencaCronica>().ToListAsync();
+            await EnsureInitializedAsync(); return await _conn.Table<DoencaCronica>().ToListAsync();
         }
-
-        public Task<int> UpdateDoenca(DoencaCronica d)
+        public async Task<int> UpdateDoenca(DoencaCronica d)
         {
-            return _conn.UpdateAsync(d);
+            await EnsureInitializedAsync(); return await _conn.UpdateAsync(d);
         }
-        public Task<int> DeleteDoenca(int idD)
+        public async Task<int> DeleteDoenca(int idD)
         {
-            return _conn.Table<DoencaCronica>()
-                        .DeleteAsync(d => d.IdDoenca == idD);
+            await EnsureInitializedAsync();
+            return await _conn.Table<DoencaCronica>().DeleteAsync(d => d.IdDoenca == idD);
         }
-        public Task<List<DoencaCronica>> SearchDoenca(string d)
+        public async Task<List<DoencaCronica>> SearchDoenca(string d)
         {
-            string sql = "SELECT * FROM DoencaCronica WHERE NomeDoenca LIKE ?";
-            return _conn.QueryAsync<DoencaCronica>(sql, "%" + d + "%");
+            await EnsureInitializedAsync();
+            return await _conn.QueryAsync<DoencaCronica>(
+                "SELECT * FROM DoencaCronica WHERE NomeDoenca LIKE ?", "%" + d + "%");
         }
         #endregion
+
         #region Vacina
-        public Task<int> InsertVacina(Vacina v)
+        public async Task<int> InsertVacina(Vacina v)
         {
-            return _conn.InsertAsync(v);
+            await EnsureInitializedAsync(); return await _conn.InsertAsync(v);
         }
-        public Task<List<Vacina>> GetVacinaPorUsuario(int idUsuario)
+        public async Task<List<Vacina>> GetVacinaPorUsuario(int idUsuario)
         {
-            return _conn.Table<Vacina>()
-                        .Where(v => v.IdCadastro == idUsuario)
-                        .ToListAsync();
+            await EnsureInitializedAsync();
+            return await _conn.Table<Vacina>().Where(v => v.IdCadastro == idUsuario).ToListAsync();
         }
-        public Task<Vacina> GetVacinaPorId(int idV)
+        public async Task<Vacina> GetVacinaPorId(int idV)
         {
-            return _conn.Table<Vacina>()
-                        .Where(v => v.IdVacina == idV)
-                        .FirstOrDefaultAsync();
+            await EnsureInitializedAsync();
+            return await _conn.Table<Vacina>().Where(v => v.IdVacina == idV).FirstOrDefaultAsync();
         }
-        public Task<List<Vacina>> GetVacina()
+        public async Task<List<Vacina>> GetVacina()
         {
-            return _conn.Table<Vacina>().ToListAsync();
+            await EnsureInitializedAsync(); return await _conn.Table<Vacina>().ToListAsync();
         }
-
-        public Task<int> UpdateVacina(Vacina v)
+        public async Task<int> UpdateVacina(Vacina v)
         {
-            return _conn.UpdateAsync(v);
+            await EnsureInitializedAsync(); return await _conn.UpdateAsync(v);
         }
-        public Task<int> DeleteVacina(int idV)
+        public async Task<int> DeleteVacina(int idV)
         {
-            return _conn.Table<Vacina>()
-                        .DeleteAsync(v => v.IdVacina == idV);
+            await EnsureInitializedAsync();
+            return await _conn.Table<Vacina>().DeleteAsync(v => v.IdVacina == idV);
         }
-        public Task<List<Vacina>> SearchVacina(string v)
+        public async Task<List<Vacina>> SearchVacina(string v)
         {
-            string sql = "SELECT * FROM Vacina WHERE NomeVacina LIKE ?";
-            return _conn.QueryAsync<Vacina>(sql, "%" + v + "%");
+            await EnsureInitializedAsync();
+            return await _conn.QueryAsync<Vacina>(
+                "SELECT * FROM Vacina WHERE NomeVacina LIKE ?", "%" + v + "%");
         }
         #endregion
+
         #region MensagemMotivacional
-        public Task<int> InsertMensagem(MensagemMotivacional msg)
+        public async Task<int> InsertMensagem(MensagemMotivacional msg)
         {
-            return _conn.InsertAsync(msg);
+            await EnsureInitializedAsync(); return await _conn.InsertAsync(msg);
         }
-
-        public Task<MensagemMotivacional> GetMensagemId(int idMSG)
+        public async Task<MensagemMotivacional> GetMensagemId(int idMSG)
         {
-            return _conn.Table<MensagemMotivacional>()
-                        .Where(msg => msg.IdMensagem == idMSG)
-                        .FirstOrDefaultAsync();
+            await EnsureInitializedAsync();
+            return await _conn.Table<MensagemMotivacional>()
+                               .Where(msg => msg.IdMensagem == idMSG).FirstOrDefaultAsync();
         }
-        public Task<List<MensagemMotivacional>> GetMensagem()
+        public async Task<List<MensagemMotivacional>> GetMensagem()
         {
-            return _conn.Table<MensagemMotivacional>().ToListAsync();
+            await EnsureInitializedAsync(); return await _conn.Table<MensagemMotivacional>().ToListAsync();
         }
-
-        public Task<int> UpdateMensagem(MensagemMotivacional msg)
+        public async Task<int> UpdateMensagem(MensagemMotivacional msg)
         {
-            return _conn.UpdateAsync(msg);
+            await EnsureInitializedAsync(); return await _conn.UpdateAsync(msg);
         }
-        public Task<int> DeleteMensagem(int idMSG)
+        public async Task<int> DeleteMensagem(int idMSG)
         {
-            return _conn.Table<MensagemMotivacional>()
-                        .DeleteAsync(msg => msg.IdMensagem == idMSG);
+            await EnsureInitializedAsync();
+            return await _conn.Table<MensagemMotivacional>()
+                               .DeleteAsync(msg => msg.IdMensagem == idMSG);
         }
         #endregion
+
         #region ConteudoSaude
-        public Task<int> InsertConteudo(ConteudoSaude c)
+        public async Task<int> InsertConteudo(ConteudoSaude c)
         {
-            return _conn.InsertAsync(c);
+            await EnsureInitializedAsync(); return await _conn.InsertAsync(c);
         }
-
-        public Task<ConteudoSaude> GetConteudoPorId(int idC)
+        public async Task<ConteudoSaude> GetConteudoPorId(int idC)
         {
-            return _conn.Table<ConteudoSaude>()
-                        .Where(c => c.IdConteudo == idC)
-                        .FirstOrDefaultAsync();
+            await EnsureInitializedAsync();
+            return await _conn.Table<ConteudoSaude>().Where(c => c.IdConteudo == idC).FirstOrDefaultAsync();
         }
-        public Task<List<ConteudoSaude>> GetConteudo()
+        public async Task<List<ConteudoSaude>> GetConteudo()
         {
-            return _conn.Table<ConteudoSaude>().ToListAsync();
+            await EnsureInitializedAsync(); return await _conn.Table<ConteudoSaude>().ToListAsync();
         }
-
-        public Task<int> UpdateConteudo(ConteudoSaude c)
+        public async Task<int> UpdateConteudo(ConteudoSaude c)
         {
-            return _conn.UpdateAsync(c);
+            await EnsureInitializedAsync(); return await _conn.UpdateAsync(c);
         }
-        public Task<int> DeleteConteudo(int idC)
+        public async Task<int> DeleteConteudo(int idC)
         {
-            return _conn.Table<ConteudoSaude>()
-                        .DeleteAsync(c => c.IdConteudo == idC);
+            await EnsureInitializedAsync();
+            return await _conn.Table<ConteudoSaude>().DeleteAsync(c => c.IdConteudo == idC);
         }
-        public Task<List<ConteudoSaude>> SearchConteudoTitulo(string ct)
+        public async Task<List<ConteudoSaude>> SearchConteudoTitulo(string ct)
         {
-            string sql = "SELECT * FROM ConteudoSaude WHERE TituloConteudo LIKE ?";
-            return _conn.QueryAsync<ConteudoSaude>(sql, "%" + ct + "%");
-
+            await EnsureInitializedAsync();
+            return await _conn.QueryAsync<ConteudoSaude>(
+                "SELECT * FROM ConteudoSaude WHERE TituloConteudo LIKE ?", "%" + ct + "%");
         }
-        public Task<List<ConteudoSaude>> SearchConteudoCategoria(string ct)
+        public async Task<List<ConteudoSaude>> SearchConteudoCategoria(string ct)
         {
-            string sql = "SELECT * FROM ConteudoSaude WHERE Categoria LIKE ?";
-            return _conn.QueryAsync<ConteudoSaude>(sql, "%" + ct + "%");
+            await EnsureInitializedAsync();
+            return await _conn.QueryAsync<ConteudoSaude>(
+                "SELECT * FROM ConteudoSaude WHERE Categoria LIKE ?", "%" + ct + "%");
         }
         public async Task CriarConteudosPadrao()
         {
+            await EnsureInitializedAsync();
             var conteudos = await _conn.Table<ConteudoSaude>().ToListAsync();
-
             if (conteudos.Count == 0)
             {
-                List<ConteudoSaude> lista = new List<ConteudoSaude>()
-        {
-            new ConteudoSaude
-            {
-                TituloConteudo = "Importância da hidratação",
-                CategoriaConteudo = "Bem-estar",
-                TextoConteudo = "Beber água diariamente ajuda no funcionamento do organismo.",
-                Favorito = false,
-                OfflineDisponivel = true
-            },
-
-            new ConteudoSaude
-            {
-                TituloConteudo = "Sono saudável",
-                CategoriaConteudo = "Saúde",
-                TextoConteudo = "Dormir bem melhora a imunidade e a concentração.",
-                Favorito = false,
-                OfflineDisponivel = true
-            }
-        };
-
-                await _conn.InsertAllAsync(lista);
+                await _conn.InsertAllAsync(new List<ConteudoSaude>
+                {
+                    new ConteudoSaude { TituloConteudo = "Importância da hidratação",
+                        CategoriaConteudo = "Bem-estar",
+                        TextoConteudo = "Beber água diariamente ajuda no funcionamento do organismo.",
+                        Favorito = false, OfflineDisponivel = true },
+                    new ConteudoSaude { TituloConteudo = "Sono saudável",
+                        CategoriaConteudo = "Saúde",
+                        TextoConteudo = "Dormir bem melhora a imunidade e a concentração.",
+                        Favorito = false, OfflineDisponivel = true }
+                });
             }
         }
         #endregion
+
         #region PerguntaFrequente
-        public Task<int> InsertPergunta(PerguntaFrequente p)
+        public async Task<int> InsertPergunta(PerguntaFrequente p)
         {
-            return _conn.InsertAsync(p);
+            await EnsureInitializedAsync(); return await _conn.InsertAsync(p);
         }
-
-        public Task<PerguntaFrequente> GetPerguntaPorId(int idP)
+        public async Task<PerguntaFrequente> GetPerguntaPorId(int idP)
         {
-            return _conn.Table<PerguntaFrequente>()
-                        .Where(p => p.IdPergunta == idP)
-                        .FirstOrDefaultAsync();
+            await EnsureInitializedAsync();
+            return await _conn.Table<PerguntaFrequente>().Where(p => p.IdPergunta == idP).FirstOrDefaultAsync();
         }
-        public Task<List<PerguntaFrequente>> GetPergunta()
+        public async Task<List<PerguntaFrequente>> GetPergunta()
         {
-            return _conn.Table<PerguntaFrequente>().ToListAsync();
+            await EnsureInitializedAsync(); return await _conn.Table<PerguntaFrequente>().ToListAsync();
         }
-
-        public Task<int> UpdatePergunta(PerguntaFrequente p)
+        public async Task<int> UpdatePergunta(PerguntaFrequente p)
         {
-            return _conn.UpdateAsync(p);
+            await EnsureInitializedAsync(); return await _conn.UpdateAsync(p);
         }
-        public Task<int> DeletePergunta(int idP)
+        public async Task<int> DeletePergunta(int idP)
         {
-            return _conn.Table<PerguntaFrequente>()
-                        .DeleteAsync(p => p.IdPergunta == idP);
+            await EnsureInitializedAsync();
+            return await _conn.Table<PerguntaFrequente>().DeleteAsync(p => p.IdPergunta == idP);
         }
-        public Task<List<PerguntaFrequente>> SearchPerguntaCategoria(string pc)
+        public async Task<List<PerguntaFrequente>> SearchPerguntaCategoria(string pc)
         {
-            string sql = "SELECT * FROM PerguntaFrequente WHERE CategoriaPergunta LIKE ?";
-            return _conn.QueryAsync<PerguntaFrequente>(sql, "%" + pc + "%");
+            await EnsureInitializedAsync();
+            return await _conn.QueryAsync<PerguntaFrequente>(
+                "SELECT * FROM PerguntaFrequente WHERE CategoriaPergunta LIKE ?", "%" + pc + "%");
         }
         #endregion
+
         #region ServicoSus
-        public Task<int> InsertServico(ServicoSus s)
+        public async Task<int> InsertServico(ServicoSus s)
         {
-            return _conn.InsertAsync(s);
+            await EnsureInitializedAsync(); return await _conn.InsertAsync(s);
         }
-
-        public Task<ServicoSus> GetServicoPorId(int idS)
+        public async Task<ServicoSus> GetServicoPorId(int idS)
         {
-            return _conn.Table<ServicoSus>()
-                        .Where(s => s.IdServico == idS)
-                        .FirstOrDefaultAsync();
+            await EnsureInitializedAsync();
+            return await _conn.Table<ServicoSus>().Where(s => s.IdServico == idS).FirstOrDefaultAsync();
         }
-        public Task<List<ServicoSus>> GetServico()
+        public async Task<List<ServicoSus>> GetServico()
         {
-            return _conn.Table<ServicoSus>().ToListAsync();
+            await EnsureInitializedAsync(); return await _conn.Table<ServicoSus>().ToListAsync();
         }
-
-        public Task<int> UpdateServico(ServicoSus s)
+        public async Task<int> UpdateServico(ServicoSus s)
         {
-            return _conn.UpdateAsync(s);
+            await EnsureInitializedAsync(); return await _conn.UpdateAsync(s);
         }
-        public Task<int> DeleteServico(int idS)
+        public async Task<int> DeleteServico(int idS)
         {
-            return _conn.Table<ServicoSus>()
-                        .DeleteAsync(s => s.IdServico == idS);
+            await EnsureInitializedAsync();
+            return await _conn.Table<ServicoSus>().DeleteAsync(s => s.IdServico == idS);
         }
-        public Task<List<ServicoSus>> SearchServicoNome(string sn)
+        public async Task<List<ServicoSus>> SearchServicoNome(string sn)
         {
-            string sql = "SELECT * FROM ServicoSus WHERE NomeServico LIKE ?";
-            return _conn.QueryAsync<ServicoSus>(sql, "%" + sn + "%");
+            await EnsureInitializedAsync();
+            return await _conn.QueryAsync<ServicoSus>(
+                "SELECT * FROM ServicoSus WHERE NomeServico LIKE ?", "%" + sn + "%");
         }
-        public Task<List<ServicoSus>> SearchServicoTipo(string st)
+        public async Task<List<ServicoSus>> SearchServicoTipo(string st)
         {
-            string sql = "SELECT * FROM ServicoSus WHERE TipoServico LIKE ?";
-            return _conn.QueryAsync<ServicoSus>(sql, "%" + st + "%");
+            await EnsureInitializedAsync();
+            return await _conn.QueryAsync<ServicoSus>(
+                "SELECT * FROM ServicoSus WHERE TipoServico LIKE ?", "%" + st + "%");
         }
         #endregion
     }
-
 }
-
