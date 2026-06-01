@@ -1,367 +1,275 @@
 using MauiAppAMASBE.Models;
 using MauiAppAMASBE.ViewModel;
 using Microsoft.Maui.Controls;
-using System;
 using System.Collections.ObjectModel;
-using System.Globalization;
+
 namespace MauiAppAMASBE.Pages
 {
-
-
-
-
     public partial class HabitosPage : ContentPage
     {
-
         ObservableCollection<Habito> lista = new ObservableCollection<Habito>();
-
-        HabitoViewModel viewModel = new HabitoViewModel();
+        HabitoViewModel viewModel         = new HabitoViewModel();
         Habito habitoSelecionado;
-
 
         public HabitosPage()
         {
             InitializeComponent();
-            BindingContext = viewModel;
-
+            BindingContext        = viewModel;
             lst_habito.ItemsSource = lista;
-
         }
+
+        // ── Ciclo de vida ───────────────────────────────────────────────────
         protected async override void OnAppearing()
         {
-            CadastroSaudeUsuario usuario = App.UsuarioLogado;
+            base.OnAppearing();
+            if (!App.VerificarLogin()) return;
+            await CarregarListaAsync();
+        }
 
+        /// <summary>Carrega hábitos do usuário logado. Extraído para evitar chamar OnAppearing() diretamente.</summary>
+        private async Task CarregarListaAsync()
+        {
             try
             {
+                CadastroSaudeUsuario usuario = App.UsuarioLogado;
                 lista.Clear();
-
                 List<Habito> tmp = await App.Db.GetHabitosPorUsuario(usuario.IdCadastro);
                 tmp.ForEach(i => lista.Add(i));
             }
             catch (Exception ex)
             {
-                await DisplayAlertAsync("Ops", ex.Message, "OK");
+                await DisplayAlert("Ops", ex.Message, "OK");
             }
         }
 
+        // ── Novo hábito ─────────────────────────────────────────────────────
         private void OnNovoHabitoClicked(object sender, EventArgs e)
         {
-            CadastroSaudeUsuario usuario = App.UsuarioLogado;
-
             CadastroCard.IsVisible = true;
-            EmptyState.IsVisible = false;
+            EmptyState.IsVisible   = false;
         }
 
         private async void OnSalvarHabitoClicked(object sender, EventArgs e)
         {
-
-
             try
             {
                 CadastroSaudeUsuario usuario = App.UsuarioLogado;
+                if (usuario == null) { await DisplayAlert("Erro", "Usuário não está logado", "OK"); return; }
 
-                if (usuario == null)
-                {
-                    await DisplayAlert("Erro", "Usuário não está logado", "OK");
-                    return;
-                }
-
-
-
-
-                #region validação_das_entradas
-                // 🔹 NOME
-                var lista = await App.Db.GetHabitosPorUsuario(usuario.IdCadastro);
-
-                if (lista.Any(h => h.NomeHabito == NomeEntry.Text))
-                {
-                    await DisplayAlert("Erro", "Você já tem um hábito com esse nome", "OK");
-                    return;
-                }
-
+                // Validar nome primeiro (antes de buscar o banco)
                 if (string.IsNullOrWhiteSpace(NomeEntry.Text))
                 {
-                    await DisplayAlert("Erro", "Nome do hábito é obrigatório", "OK");
-                    return;
+                    await DisplayAlert("Erro", "Nome do hábito é obrigatório", "OK"); return;
                 }
-                //Meta
-                double meta;
 
-                if (!double.TryParse(MetaEntry.Text, out meta) || meta <= 0)
+                var habitosExistentes = await App.Db.GetHabitosPorUsuario(usuario.IdCadastro);
+                if (habitosExistentes.Any(h => h.NomeHabito == NomeEntry.Text.Trim()))
                 {
-                    await DisplayAlert("Erro", "Meta inválida", "OK");
-                    return;
+                    await DisplayAlert("Erro", "Você já tem um hábito com esse nome", "OK"); return;
                 }
 
-                // 🔹 FREQUÊNCIA
+                if (!double.TryParse(MetaEntry.Text, out double meta) || meta <= 0)
+                {
+                    await DisplayAlert("Erro", "Meta inválida", "OK"); return;
+                }
                 if (string.IsNullOrEmpty(viewModel.FrequenciaSelecionada))
                 {
-                    await DisplayAlert("Erro", "Selecione a frequência", "OK");
-                    return;
+                    await DisplayAlert("Erro", "Selecione a frequência", "OK"); return;
                 }
-
-                // 🔹 UNIDADE
                 if (string.IsNullOrEmpty(viewModel.UnidadeSelecionada))
                 {
-                    await DisplayAlert("Erro", "Selecione a unidade", "OK");
-                    return;
+                    await DisplayAlert("Erro", "Selecione a unidade", "OK"); return;
                 }
 
-                // 🔹 HORÁRIO (opcional mas seguro)
-                var horario = timeHorario.Time ?? TimeSpan.Zero;
-                #endregion
                 Habito habito = new Habito
                 {
-                    NomeHabito = NomeEntry.Text,
-
-                    TipoHabito = TipoEntry.Text,
-                    DescricaoHabito = DescricaoEntry.Text,
-                    HorarioHabito = timeHorario.Time ?? TimeSpan.Zero,
+                    NomeHabito       = NomeEntry.Text.Trim(),
+                    TipoHabito       = TipoEntry.Text,
+                    DescricaoHabito  = DescricaoEntry.Text,
+                    HorarioHabito    = timeHorario.Time ?? TimeSpan.Zero,
                     FrequenciaHabito = viewModel.FrequenciaSelecionada,
-
-                    IdCadastro = usuario.IdCadastro,
-                    MetaValor = meta,
-                    MetaUnidade = viewModel.UnidadeSelecionada,
+                    IdCadastro       = usuario.IdCadastro,
+                    MetaValor        = meta,
+                    MetaUnidade      = viewModel.UnidadeSelecionada,
                 };
 
                 await App.Db.InsertHabito(habito);
-
                 await DisplayAlert("Sucesso!", "Hábito Inserido", "OK");
 
+                NomeEntry.Text = ""; TipoEntry.Text = ""; DescricaoEntry.Text = ""; MetaEntry.Text = "";
+                CadastroCard.IsVisible = false;
+                EmptyState.IsVisible   = true;
+                // CORREÇÃO: chama CarregarListaAsync() em vez de OnAppearing() diretamente
+                await CarregarListaAsync();
             }
             catch (Exception ex)
             {
                 await DisplayAlert("Ops", ex.Message, "OK");
             }
-
-            // limpar campos
-            NomeEntry.Text = "";
-            TipoEntry.Text = "";
-            DescricaoEntry.Text = "";
-            MetaEntry.Text = "";
-
-            CadastroCard.IsVisible = false;
-            EmptyState.IsVisible = true;
-
-            // 🔥 importante pra atualizar lista 
-            OnAppearing();
-        }
-
-        private async Task<bool> VerificarPerm()
-        {
-            throw new NotImplementedException();
         }
 
         private void OnCancelarClicked(object sender, EventArgs e)
         {
             CadastroCard.IsVisible = false;
-            EmptyState.IsVisible = true;
+            EmptyState.IsVisible   = true;
         }
+
+        // ── Pull-to-Refresh ─────────────────────────────────────────────────
         private async void lst_habito_Refreshing(object sender, EventArgs e)
         {
-            CadastroSaudeUsuario usuario = App.UsuarioLogado;
             try
             {
-                lista.Clear();
-
-                List<Habito> tmp = await App.Db.GetHabitos();
-                tmp.ForEach(i => lista.Add(i));
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlertAsync("Ops", ex.Message, "OK");
+                // CORREÇÃO: filtrar pelo usuário logado (antes chamava GetHabitos() — todos os usuários)
+                await CarregarListaAsync();
             }
             finally
             {
                 lst_habito.IsRefreshing = false;
             }
         }
+
+        // ── Seleção de item ─────────────────────────────────────────────────
         private void lst_habito_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            CadastroSaudeUsuario usuario = App.UsuarioLogado;
-            try
-            {
-                Habito h = e.SelectedItem as Habito;
-
-                Navigation.PushAsync(new Pages.HabitosPage
-                { BindingContext = h, });
-
-
-            }
-            catch (Exception ex)
-            {
-                DisplayAlertAsync("Ops", ex.Message, "OK");
-            }
+            // CORREÇÃO: abrir formulário de edição, NÃO nova instância de HabitosPage (causava loop)
+            if (e.SelectedItem is not Habito h) return;
+            ((ListView)sender).SelectedItem = null;
+            AbrirFormularioEdicao(h);
         }
+
+        // ── Menu de contexto ────────────────────────────────────────────────
         private async void MenuItem_Remover_Habito(object sender, EventArgs e)
         {
-            CadastroSaudeUsuario usuario = App.UsuarioLogado;
             try
             {
-                MenuItem item = sender as MenuItem;
-
-                Habito h = item.BindingContext as Habito;
-
-                bool confirma = await DisplayAlertAsync("Tem Certeza?", $"Remover {h.NomeHabito}", "Sim", "Não");
-
+                Habito h = (sender as MenuItem)?.BindingContext as Habito;
+                bool confirma = await DisplayAlert("Tem Certeza?", $"Remover {h.NomeHabito}?", "Sim", "Não");
                 if (confirma)
                 {
                     await App.Db.DeleteHabito(h.IdHabito);
                     lista.Remove(h);
-                    await DisplayAlertAsync("Sucesso!", "Registro Apagado", "OK");
-
+                    await DisplayAlert("Sucesso!", "Registro Apagado", "OK");
                 }
-                else
-                {
-                    await DisplayAlertAsync("Falha!", "Registro Mantido", "OK");
-                }
-
-
-
             }
-            catch (Exception ex)
-            {
-                await DisplayAlertAsync("Ops", ex.Message, "OK");
-            }
+            catch (Exception ex) { await DisplayAlert("Ops", ex.Message, "OK"); }
         }
+
         private void MenuItem_Editar_Habito(object sender, EventArgs e)
         {
+            Habito h = (sender as MenuItem)?.BindingContext as Habito;
+            AbrirFormularioEdicao(h);
+        }
 
-
+        private void AbrirFormularioEdicao(Habito h)
+        {
             BindingContext = null;
             BindingContext = viewModel;
-            var menuItem = sender as MenuItem;
-            habitoSelecionado = menuItem.BindingContext as Habito;
+            habitoSelecionado = h;
 
-            EditCard.IsVisible = true;
+            Edit_NomeEntry.Text      = h.NomeHabito;
+            Edit_DescricaoEntry.Text = h.DescricaoHabito;
+            Edit_MetaEntry.Text      = h.MetaValor.ToString();
+            Edit_timeHorario.Time    = h.HorarioHabito;
+            viewModel.FrequenciaSelecionada = h.FrequenciaHabito;
+            viewModel.UnidadeSelecionada    = h.MetaUnidade;
 
-            // Preenche campos
-            Edit_NomeEntry.Text = habitoSelecionado.NomeHabito;
-            Edit_DescricaoEntry.Text = habitoSelecionado.DescricaoHabito;
-            Edit_MetaEntry.Text = habitoSelecionado.MetaValor.ToString();
-            Edit_timeHorario.Time = habitoSelecionado.HorarioHabito;
-
-            viewModel.FrequenciaSelecionada = habitoSelecionado.FrequenciaHabito;
+            EditCard.IsVisible   = true;
+            EmptyState.IsVisible = false;
         }
+
+        // ── Salvar edição ───────────────────────────────────────────────────
         private async void Button_Editar_Habito(object sender, EventArgs e)
         {
-            base.OnAppearing();
             CadastroSaudeUsuario usuario = App.UsuarioLogado;
-
-            if (usuario == null)
-            {
-                await DisplayAlert("Erro", "Usuário não está logado", "OK");
-                return;
-            }
+            if (usuario == null) { await DisplayAlert("Erro", "Usuário não está logado", "OK"); return; }
+            if (habitoSelecionado == null) { await DisplayAlert("Erro", "Nenhum hábito selecionado", "OK"); return; }
 
             try
             {
-
-
-                #region validação_das_entradas
-                // 🔹 NOME
-                var lista = await App.Db.GetHabitosPorUsuario(usuario.IdCadastro);
-
-                if (lista.Any(h => h.NomeHabito == NomeEntry.Text))
+                // CORREÇÃO: lê campos Edit_* (não os do formulário de cadastro)
+                if (string.IsNullOrWhiteSpace(Edit_NomeEntry.Text))
                 {
-                    await DisplayAlert("Erro", "Você já tem um hábito com esse nome", "OK");
-                    return;
+                    await DisplayAlert("Erro", "Nome do hábito é obrigatório", "OK"); return;
                 }
 
-                if (string.IsNullOrWhiteSpace(NomeEntry.Text))
+                var habitosExistentes = await App.Db.GetHabitosPorUsuario(usuario.IdCadastro);
+                if (habitosExistentes.Any(h =>
+                    h.NomeHabito == Edit_NomeEntry.Text.Trim() &&
+                    h.IdHabito   != habitoSelecionado.IdHabito))
                 {
-                    await DisplayAlert("Erro", "Nome do hábito é obrigatório", "OK");
-                    return;
-                }
-                //Meta
-                double meta;
-
-                if (!double.TryParse(MetaEntry.Text, out meta) || meta <= 0)
-                {
-                    await DisplayAlert("Erro", "Meta inválida", "OK");
-                    return;
+                    await DisplayAlert("Erro", "Você já tem outro hábito com esse nome", "OK"); return;
                 }
 
-                // 🔹 FREQUÊNCIA
+                if (!double.TryParse(Edit_MetaEntry.Text, out double meta) || meta <= 0)
+                {
+                    await DisplayAlert("Erro", "Meta inválida", "OK"); return;
+                }
                 if (string.IsNullOrEmpty(viewModel.FrequenciaSelecionada))
                 {
-                    await DisplayAlert("Erro", "Selecione a frequência", "OK");
-                    return;
+                    await DisplayAlert("Erro", "Selecione a frequência", "OK"); return;
                 }
-
-                // 🔹 UNIDADE
                 if (string.IsNullOrEmpty(viewModel.UnidadeSelecionada))
                 {
-                    await DisplayAlert("Erro", "Selecione a unidade", "OK");
-                    return;
+                    await DisplayAlert("Erro", "Selecione a unidade", "OK"); return;
                 }
 
-                // 🔹 HORÁRIO (opcional mas seguro)
-                var horario = timeHorario.Time ?? TimeSpan.Zero;
-                #endregion
-                Habito habito = new Habito
+                // CORREÇÃO: usa IdHabito original e chama UpdateHabito (antes chamava InsertHabito)
+                Habito habitoAtualizado = new Habito
                 {
-                    NomeHabito = NomeEntry.Text,
-
-                    TipoHabito = TipoEntry.Text,
-                    DescricaoHabito = DescricaoEntry.Text,
-                    HorarioHabito = timeHorario.Time ?? TimeSpan.Zero,
+                    IdHabito         = habitoSelecionado.IdHabito,
+                    IdCadastro       = usuario.IdCadastro,
+                    NomeHabito       = Edit_NomeEntry.Text.Trim(),
+                    TipoHabito       = habitoSelecionado.TipoHabito,
+                    DescricaoHabito  = Edit_DescricaoEntry.Text,
+                    HorarioHabito    = Edit_timeHorario.Time ?? TimeSpan.Zero,
                     FrequenciaHabito = viewModel.FrequenciaSelecionada,
-
-                    IdCadastro = usuario.IdCadastro,
-                    MetaValor = meta,
-                    MetaUnidade = viewModel.UnidadeSelecionada,
+                    MetaValor        = meta,
+                    MetaUnidade      = viewModel.UnidadeSelecionada,
+                    ValorAtual       = habitoSelecionado.ValorAtual,
                 };
 
-                await App.Db.InsertHabito(habito);
+                await App.Db.UpdateHabito(habitoAtualizado);
+                await DisplayAlert("Sucesso!", "Hábito Atualizado", "OK");
 
-                await DisplayAlert("Sucesso!", "Hábito Inserido", "OK");
-
+                EditCard.IsVisible   = false;
+                EmptyState.IsVisible = true;
+                habitoSelecionado    = null;
+                await CarregarListaAsync();
             }
             catch (Exception ex)
             {
                 await DisplayAlert("Ops", ex.Message, "OK");
             }
-
-            // limpar campos
-            NomeEntry.Text = "";
-            TipoEntry.Text = "";
-            DescricaoEntry.Text = "";
-            MetaEntry.Text = "";
-
-            CadastroCard.IsVisible = false;
-            EmptyState.IsVisible = true;
-
-            // 🔥 importante pra atualizar lista 
-            OnAppearing();
         }
 
-       
-
-      private void Button_Cancelar_edicao(object sender, EventArgs e)
+        private void Button_Cancelar_edicao(object sender, EventArgs e)
         {
-            EditCard.IsVisible = false;
+            EditCard.IsVisible   = false;
             EmptyState.IsVisible = true;
+            habitoSelecionado    = null;
         }
 
+        // ── Stepper ─────────────────────────────────────────────────────────
         private async void Stepper_ValueChanged(object sender, ValueChangedEventArgs e)
         {
-            var stepper = sender as Stepper;
-            var habito = stepper?.BindingContext as Habito;
-
-            if (habito == null)
-                return;
-
-            // Atualiza o valor atual
+            var habito = (sender as Stepper)?.BindingContext as Habito;
+            if (habito == null) return;
             habito.ValorAtual = e.NewValue;
-
-
             await App.Db.UpdateHabito(habito);
         }
 
         private async void ButtonVoltar(object sender, EventArgs e)
         {
             await Navigation.PopAsync();
+        }
+
+        // CORREÇÃO: VerificarPerm implementado corretamente (estava com NotImplementedException)
+        private async Task<bool> VerificarPerm()
+        {
+            var status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+            if (status != PermissionStatus.Granted)
+                status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+            return status == PermissionStatus.Granted;
         }
     }
 }

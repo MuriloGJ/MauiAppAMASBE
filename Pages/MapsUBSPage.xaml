@@ -26,7 +26,7 @@
                     <Label Text="RADAR URBANO"
                            FontSize="20"
                            FontAttributes="Bold"
-                           TextColor="#0A0E1A"
+                           TextColor="Azure"
                            CharacterSpacing="4"/>
                     <Label Text="UBS · Hospitais · Parques"
                            FontSize="11"
@@ -37,7 +37,7 @@
                 <Frame Grid.Column="1"
                        Padding="14,8"
                        CornerRadius="20"
-                       BackgroundColor="#141C30"
+                       BackgroundColor="Azure"
                        BorderColor="#1A3A5F"
                        HasShadow="False">
                     <Frame.GestureRecognizers>
@@ -59,7 +59,7 @@
             <!-- Barra de busca -->
             <Frame Padding="14,0"
                    CornerRadius="14"
-                   BackgroundColor="#111827"
+                   BackgroundColor="Azure"
                    BorderColor="#1A2E4A"
                    HasShadow="False"
                    HeightRequest="48">
