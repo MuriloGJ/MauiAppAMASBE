@@ -1,7 +1,6 @@
 using MauiAppAMASBE.Models;
 using MauiAppAMASBE.Services;
-using Microsoft.Maui.Controls;
-using System;
+using System.Globalization;
 
 namespace MauiAppAMASBE.Pages
 {
@@ -20,7 +19,7 @@ namespace MauiAppAMASBE.Pages
         private double _latUsuario = -23.5505;
         private double _lonUsuario = -46.6333;
 
-        // ── Cores dos filtros (futurista) ─────────────────────────────
+        // ── Cores dos filtros ─────────────────────────────────────────
         private static readonly Color CorUbsAtivo      = Color.FromArgb("#00C2E0");
         private static readonly Color CorParqueAtivo   = Color.FromArgb("#00E5A0");
         private static readonly Color CorFiltroInativo = Color.FromArgb("#141C30");
@@ -50,17 +49,40 @@ namespace MauiAppAMASBE.Pages
                 var status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
                 if (status != PermissionStatus.Granted) return;
 
-                var loc = await Geolocation.GetLastKnownLocationAsync()
-                       ?? await Geolocation.GetLocationAsync(
-                              new GeolocationRequest(GeolocationAccuracy.Medium,
-                                                     TimeSpan.FromSeconds(8)));
+                var loc = await Geolocation.GetLastKnownLocationAsync();
+
+                if (loc == null)
+                {
+                    var request = new GeolocationRequest(GeolocationAccuracy.Medium,
+                                                         TimeSpan.FromSeconds(10));
+                    loc = await Geolocation.GetLocationAsync(request);
+                }
+
                 if (loc != null)
                 {
                     _latUsuario = loc.Latitude;
                     _lonUsuario = loc.Longitude;
                 }
             }
-            catch { /* GPS indisponível — usa São Paulo como fallback */ }
+            catch (FeatureNotSupportedException)
+            {
+                await DisplayAlert("GPS indisponível",
+                    "Este dispositivo não suporta geolocalização. Usando São Paulo como referência.", "OK");
+            }
+            catch (FeatureNotEnabledException)
+            {
+                await DisplayAlert("GPS desativado",
+                    "Ative o GPS nas configurações do dispositivo para melhores resultados.", "OK");
+            }
+            catch (PermissionException)
+            {
+                await DisplayAlert("Permissão negada",
+                    "Conceda permissão de localização para ver locais próximos a você.", "OK");
+            }
+            catch
+            {
+                /* usa fallback São Paulo silenciosamente */
+            }
         }
 
         // ── Carregar locais ───────────────────────────────────────────
@@ -70,8 +92,16 @@ namespace MauiAppAMASBE.Pages
             Loading.IsRunning = true;
             Loading.IsVisible = true;
             LblStatus.Text    = "Escaneando...";
+            ListaLocais.ItemsSource = null;
 
-            _todosLocais = await _mapaService.BuscarTodosAsync(_latUsuario, _lonUsuario, _raioKm);
+            try
+            {
+                _todosLocais = await _mapaService.BuscarTodosAsync(_latUsuario, _lonUsuario, _raioKm);
+            }
+            catch
+            {
+                _todosLocais = new List<LocalizacaoItem>();
+            }
 
             Loading.IsRunning = false;
             Loading.IsVisible = false;
@@ -85,8 +115,8 @@ namespace MauiAppAMASBE.Pages
 
             var filtrado = _todosLocais.Where(l =>
             {
-                bool tipoOk = (l.Tipo == "UBS"    && _filtroUbs) ||
-                              (l.Tipo == "Parque"  && _filtroParques);
+                bool tipoOk = (l.Tipo == "UBS"   && _filtroUbs) ||
+                              (l.Tipo == "Parque" && _filtroParques);
 
                 bool textoOk = string.IsNullOrWhiteSpace(busca)
                             || l.Nome.Contains(busca, StringComparison.OrdinalIgnoreCase)
@@ -100,8 +130,8 @@ namespace MauiAppAMASBE.Pages
             int totalUbs     = _todosLocais.Count(l => l.Tipo == "UBS");
             int totalParques = _todosLocais.Count(l => l.Tipo == "Parque");
 
-            LblFiltroUbs.Text     = $"UBS ({totalUbs})";
-            LblFiltroParques.Text = $"Parques ({totalParques})";
+            LblFiltroUbs.Text     = totalUbs > 0     ? $"UBS ({totalUbs})"         : "UBS";
+            LblFiltroParques.Text = totalParques > 0 ? $"Parques ({totalParques})" : "Parques";
             LblStatus.Text        = $"{filtrado.Count} detectado(s)";
         }
 
@@ -134,12 +164,11 @@ namespace MauiAppAMASBE.Pages
 
             if (escolha == null || escolha == "Cancelar") return;
 
-            _raioKm      = double.Parse(escolha.Replace(" km", ""));
+            // CORREÇÃO: usar InvariantCulture para evitar problema com vírgula em pt-BR
+            _raioKm      = double.Parse(escolha.Replace(" km", ""), CultureInfo.InvariantCulture);
             LblRaio.Text = escolha;
 
-            // Invalida cache e recarrega
-            Preferences.Remove("mapa_cache_ubs_ts");
-            Preferences.Remove("mapa_cache_parques_ts");
+            // O novo raio gera novas cache keys, então carrega automaticamente dados frescos
             await CarregarLocaisAsync();
         }
 

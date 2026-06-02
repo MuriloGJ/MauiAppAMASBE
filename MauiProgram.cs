@@ -1,8 +1,6 @@
-﻿
 using MauiAppAMASBE;
 using Microsoft.Extensions.Logging;
-using Plugin.LocalNotification; // adicionado para usar o plugin de notificações locais
-
+using Plugin.LocalNotification;
 
 namespace MauiAppAMASBE;
 
@@ -13,16 +11,18 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
-            .UseLocalNotification() // adicionado para usar o plugin de notificações locais
+            .UseLocalNotification()
+            // REMOVIDO: .UseMauiMaps() — não é necessário para Map.Default.OpenAsync()
+            // e causa exceção no Windows por exigir chave Bing Maps.
+            // Map.Default.OpenAsync() abre o app de mapas externo sem precisar disso.
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-
 #if ANDROID
-        // Especifica explicitamente a interface do aplicativo para evitar ambiguidade com Plugin.LocalNotification.INotificationService
+        // Especifica explicitamente a interface para evitar ambiguidade com Plugin.LocalNotification
         builder.Services.AddSingleton<MauiAppAMASBE.INotificationService, NotificationServiceAndroid>();
 #endif
 

@@ -11,8 +11,6 @@ namespace MauiAppAMASBE.Models
         public string Horario   { get; set; } = string.Empty;
 
         public string Icone => Tipo == "UBS" ? "🏥" : "🌳";
-
-        // Cor do marcador no mapa (hex sem #)
         public string CorMarcador => Tipo == "UBS" ? "2E86AB" : "4CAF50";
     }
 }

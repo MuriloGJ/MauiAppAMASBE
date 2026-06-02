@@ -1,17 +1,20 @@
 using MauiAppAMASBE.Models;
+using System.Globalization;
 using System.Text.Json;
 
 namespace MauiAppAMASBE.Services
 {
     public class MapaService
     {
-        private static readonly HttpClient _http = new() { Timeout = TimeSpan.FromSeconds(12) };
+        private static readonly HttpClient _http = new() { Timeout = TimeSpan.FromSeconds(15) };
 
-        private const string CacheUbs      = "mapa_cache_ubs";
-        private const string CacheUbsTs    = "mapa_cache_ubs_ts";
-        private const string CacheParques  = "mapa_cache_parques";
-        private const string CacheParquesTs = "mapa_cache_parques_ts";
-        private static readonly TimeSpan ValidadeCache = TimeSpan.FromHours(24);
+        // Cache key inclui coordenadas e raio para evitar reuso indevido
+        private string CacheKey(string tipo, double lat, double lon, double raio) =>
+            $"mapa_{tipo}_{lat:F2}_{lon:F2}_{raio}";
+        private string CacheTsKey(string tipo, double lat, double lon, double raio) =>
+            $"mapa_{tipo}_{lat:F2}_{lon:F2}_{raio}_ts";
+
+        private static readonly TimeSpan ValidadeCache = TimeSpan.FromHours(12);
 
         public async Task<List<LocalizacaoItem>> BuscarTodosAsync(double lat, double lon, double raioKm)
         {
@@ -24,38 +27,84 @@ namespace MauiAppAMASBE.Services
                 .ToList();
         }
 
+        // ── UBS via Overpass API (OpenStreetMap) ─────────────────────
+        // A API apidadosnet.saude.gov.br não é pública. Usamos Overpass
+        // que retorna UBS/postos de saúde com dados reais.
         public async Task<List<LocalizacaoItem>> BuscarUBSsAsync(double lat, double lon, double raioKm)
         {
-            var cache = LerCache<List<LocalizacaoItem>>(CacheUbs, CacheUbsTs);
-            if (cache != null) return FiltrarRaio(cache, lat, lon, raioKm);
+            var cacheKey = CacheKey("ubs", lat, lon, raioKm);
+            var cacheTsKey = CacheTsKey("ubs", lat, lon, raioKm);
+            var cache = LerCache<List<LocalizacaoItem>>(cacheKey, cacheTsKey);
+            if (cache != null) return cache;
 
             try
             {
-                var latStr = lat.ToString(System.Globalization.CultureInfo.InvariantCulture);
-                var lonStr = lon.ToString(System.Globalization.CultureInfo.InvariantCulture);
-                var url = $"https://apidadosnet.saude.gov.br/api/v1/estabelecimentos" +
-                          $"?lat={latStr}&lng={lonStr}&raio={raioKm}&tp_unidade=1&limit=50";
+                int raioM = (int)(raioKm * 1000);
+                var latStr = lat.ToString(CultureInfo.InvariantCulture);
+                var lonStr = lon.ToString(CultureInfo.InvariantCulture);
 
-                var json = await _http.GetStringAsync(url);
-                var resposta = JsonSerializer.Deserialize<DadosSusResposta>(json,
+                // Consulta Overpass: UBS, postos de saúde, clínicas
+                string query = $@"[out:json][timeout:25];
+(
+  node[""amenity""=""clinic""](around:{raioM},{latStr},{lonStr});
+  node[""amenity""=""health_post""](around:{raioM},{latStr},{lonStr});
+  node[""amenity""=""doctors""](around:{raioM},{latStr},{lonStr});
+  node[""healthcare""=""centre""](around:{raioM},{latStr},{lonStr});
+  node[""healthcare""=""clinic""](around:{raioM},{latStr},{lonStr});
+  way[""amenity""=""clinic""](around:{raioM},{latStr},{lonStr});
+  way[""amenity""=""health_post""](around:{raioM},{latStr},{lonStr});
+  way[""healthcare""=""centre""](around:{raioM},{latStr},{lonStr});
+);
+out center 40;";
+
+                var content = new FormUrlEncodedContent(
+                    new[] { new KeyValuePair<string, string>("data", query) });
+                var resp = await _http.PostAsync("https://overpass-api.de/api/interpreter", content);
+                var json = await resp.Content.ReadAsStringAsync();
+
+                var resultado = JsonSerializer.Deserialize<OverpassResposta>(json,
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                if (resposta?.Items?.Count > 0)
+                if (resultado?.Elements?.Count > 0)
                 {
-                    var lista = resposta.Items
-                        .Where(i => i.NuLatitude != 0 && i.NuLongitude != 0)
-                        .Select(i => new LocalizacaoItem
+                    var lista = resultado.Elements
+                        .Select(el =>
                         {
-                            Nome      = i.NoFantasia ?? i.NoRazaoSocial ?? "UBS",
-                            Endereco  = $"{i.DsLogradouro}, {i.NuEndereco} — {i.NoBairro}",
-                            Latitude  = i.NuLatitude,
-                            Longitude = i.NuLongitude,
-                            Telefone  = i.NuTelefone ?? "",
-                            Horario   = "Seg–Sex: 07h às 19h",
-                            Tipo      = "UBS"
-                        }).ToList();
+                            double eLat = el.Lat ?? el.Center?.Lat ?? 0;
+                            double eLon = el.Lon ?? el.Center?.Lon ?? 0;
+                            if (eLat == 0) return null;
 
-                    SalvarCache(CacheUbs, CacheUbsTs, lista);
+                            var nome = el.Tags?.GetValueOrDefault("name")
+                                    ?? el.Tags?.GetValueOrDefault("operator")
+                                    ?? "UBS / Posto de Saúde";
+
+                            var rua     = el.Tags?.GetValueOrDefault("addr:street") ?? "";
+                            var numero  = el.Tags?.GetValueOrDefault("addr:housenumber") ?? "";
+                            var bairro  = el.Tags?.GetValueOrDefault("addr:suburb")
+                                       ?? el.Tags?.GetValueOrDefault("addr:neighbourhood") ?? "";
+                            var endereco = string.Join(", ", new[]{ rua, numero, bairro }
+                                            .Where(s => !string.IsNullOrWhiteSpace(s)));
+                            if (string.IsNullOrWhiteSpace(endereco)) endereco = "Ver no mapa";
+
+                            var telefone = el.Tags?.GetValueOrDefault("phone")
+                                        ?? el.Tags?.GetValueOrDefault("contact:phone") ?? "";
+                            var horario  = el.Tags?.GetValueOrDefault("opening_hours") ?? "";
+
+                            return new LocalizacaoItem
+                            {
+                                Nome      = nome,
+                                Endereco  = endereco,
+                                Latitude  = eLat,
+                                Longitude = eLon,
+                                Telefone  = telefone,
+                                Horario   = horario,
+                                Tipo      = "UBS"
+                            };
+                        })
+                        .Where(p => p != null).Cast<LocalizacaoItem>()
+                        .ToList();
+
+                    SalvarCache(cacheKey, cacheTsKey, lista);
                     return lista;
                 }
             }
@@ -64,16 +113,19 @@ namespace MauiAppAMASBE.Services
             return new List<LocalizacaoItem>();
         }
 
+        // ── Parques via Overpass API ──────────────────────────────────
         public async Task<List<LocalizacaoItem>> BuscarParquesAsync(double lat, double lon, double raioKm)
         {
-            var cache = LerCache<List<LocalizacaoItem>>(CacheParques, CacheParquesTs);
-            if (cache != null) return FiltrarRaio(cache, lat, lon, raioKm);
+            var cacheKey = CacheKey("parques", lat, lon, raioKm);
+            var cacheTsKey = CacheTsKey("parques", lat, lon, raioKm);
+            var cache = LerCache<List<LocalizacaoItem>>(cacheKey, cacheTsKey);
+            if (cache != null) return cache;
 
             try
             {
                 int raioM = (int)(raioKm * 1000);
-                var latStr = lat.ToString(System.Globalization.CultureInfo.InvariantCulture);
-                var lonStr = lon.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                var latStr = lat.ToString(CultureInfo.InvariantCulture);
+                var lonStr = lon.ToString(CultureInfo.InvariantCulture);
 
                 string query = $@"[out:json][timeout:20];
 (
@@ -103,7 +155,9 @@ out center 30;";
                             return new LocalizacaoItem
                             {
                                 Nome      = el.Tags?.GetValueOrDefault("name") ?? "Parque",
-                                Endereco  = el.Tags?.GetValueOrDefault("addr:full") ?? "Ver no mapa",
+                                Endereco  = el.Tags?.GetValueOrDefault("addr:full")
+                                          ?? el.Tags?.GetValueOrDefault("addr:street")
+                                          ?? "Ver no mapa",
                                 Latitude  = eLat,
                                 Longitude = eLon,
                                 Tipo      = "Parque"
@@ -112,7 +166,7 @@ out center 30;";
                         .Where(p => p != null).Cast<LocalizacaoItem>()
                         .ToList();
 
-                    SalvarCache(CacheParques, CacheParquesTs, lista);
+                    SalvarCache(cacheKey, cacheTsKey, lista);
                     return lista;
                 }
             }
@@ -163,19 +217,7 @@ out center 30;";
         }
     }
 
-    // DTOs
-    public class DadosSusResposta { public List<DadosSusItem> Items { get; set; } = new(); }
-    public class DadosSusItem
-    {
-        public string? NoFantasia { get; set; }
-        public string? NoRazaoSocial { get; set; }
-        public string? DsLogradouro { get; set; }
-        public string? NuEndereco { get; set; }
-        public string? NoBairro { get; set; }
-        public double NuLatitude { get; set; }
-        public double NuLongitude { get; set; }
-        public string? NuTelefone { get; set; }
-    }
+    // ── DTOs Overpass ─────────────────────────────────────────────────
     public class OverpassResposta { public List<OverpassElement> Elements { get; set; } = new(); }
     public class OverpassElement
     {
@@ -186,6 +228,4 @@ out center 30;";
         public Dictionary<string, string>? Tags { get; set; }
     }
     public class OverpassCenter { public double Lat { get; set; } public double Lon { get; set; } }
-
-
 }
