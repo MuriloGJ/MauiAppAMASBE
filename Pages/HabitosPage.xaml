@@ -4,208 +4,177 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="MauiAppAMASBE.Pages.HabitosPage"
     Title="Hábitos"
- BackgroundColor="#F6F7FB">
-    <ScrollView>
-        
+    BackgroundColor="#F6F7FB">
+
     <Grid Padding="10">
-        
 
-        <VerticalStackLayout Spacing="15">
+        <ScrollView>
+            <VerticalStackLayout Spacing="15">
+
                 <Label Text="Meus Hábitos"
-         Style="{StaticResource TituloPagina}" />
+                       Style="{StaticResource TituloPagina}" />
 
+                <VerticalStackLayout x:Name="EmptyState"
+                                     Spacing="10"
+                                     HorizontalOptions="Center">
 
-                <!-- Estado vazio -->
-            <VerticalStackLayout 
-                x:Name="EmptyState"
-                Spacing="10"
-                HorizontalOptions="Center"
-                VerticalOptions="Center">
-                    
-                
-                <Label Text="📋"
-                       FontSize="50"
-                       HorizontalOptions="Center" />
+                    <Label Text="📋"
+                           FontSize="50"
+                           HorizontalOptions="Center" />
 
-                <Label Text="Crie novos hábitos!"
-                       FontSize="16"
-                       TextColor="#666"
-                       HorizontalTextAlignment="Center" />
+                    <Label Text="Crie novos hábitos!"
+                           FontSize="16"
+                           TextColor="#666"
+                           HorizontalTextAlignment="Center" />
 
-            </VerticalStackLayout>
+                </VerticalStackLayout>
 
-            <!-- Botão -->
-            <Button Text="+ Novo Hábito"
-                    Clicked="OnNovoHabitoClicked"
-                    Style="{StaticResource BotaoPadrao}" />
-                
+                <Button Text="+ Novo Hábito"
+                        Clicked="OnNovoHabitoClicked"
+                        Style="{StaticResource BotaoPadrao}" />
 
-                <!-- Lista -->
-                <Frame Padding="0"
-       Margin="0,10"
-       CornerRadius="15"
-       HasShadow="True"
-       BackgroundColor="White">
+                <Frame x:Name="ListaCard"
+                       Style="{StaticResource CardLista}"
+                       Margin="0,10">
 
-                <ListView x:Name="lst_habito"
-                          IsPullToRefreshEnabled="True"
-                          Refreshing="lst_habito_Refreshing"
-                          ItemSelected="lst_habito_ItemSelected"
-                          HasUnevenRows="True"
-                          SeparatorVisibility="None"
-                    BackgroundColor="Transparent">
+                    <ListView x:Name="lst_habito"
+                              IsPullToRefreshEnabled="True"
+                              Refreshing="lst_habito_Refreshing"
+                              ItemSelected="lst_habito_ItemSelected"
+                              HasUnevenRows="True"
+                              SeparatorVisibility="None"
+                              BackgroundColor="Transparent">
 
-                    <ListView.ItemTemplate>
+                        <ListView.ItemTemplate>
                             <DataTemplate>
-                            <ViewCell>
+                                <ViewCell>
 
-                                <ViewCell.ContextActions>
-                                    <MenuItem Text="Remover"
-                                              Clicked="MenuItem_Remover_Habito"/>
+                                    <ViewCell.ContextActions>
+                                        <MenuItem Text="Remover"
+                                                  Clicked="MenuItem_Remover_Habito"/>
+                                        <MenuItem Text="Editar"
+                                                  Clicked="MenuItem_Editar_Habito"/>
+                                    </ViewCell.ContextActions>
 
-                                    <MenuItem Text="Editar"
-                                              Clicked="MenuItem_Editar_Habito"/>
-                                </ViewCell.ContextActions>
-
-                                    <Frame Margin="10,8"
-                           Padding="15"
-                           CornerRadius="15"
-                           BackgroundColor="White"
-                                           
-                           HasShadow="True">
+                                    <Frame Style="{StaticResource CardItem}"
+                                           Margin="10,8">
 
                                         <VerticalStackLayout Spacing="6">
 
                                             <Label Text="{Binding NomeHabito}"
-                                   FontSize="18"
-                                   FontAttributes="Bold"
-                                   TextColor="#1E1E1E"/>
+                                                   Style="{StaticResource LabelTituloItem}" />
 
                                             <Label Text="{Binding DescricaoHabito}"
-                                   FontSize="14"
-                                   TextColor="#666"/>
+                                                   Style="{StaticResource LabelInfoItem}" />
 
                                             <Label Text="{Binding FrequenciaHabito, StringFormat='Frequência: {0}'}"
-                                   FontSize="14"
-                                   TextColor="#666"/>
+                                                   Style="{StaticResource LabelInfoItem}" />
 
                                             <Label Text="{Binding HorarioHabito, StringFormat='Horário: {0}'}"
-                                   FontSize="14"
-                                   TextColor="#666"/>
+                                                   Style="{StaticResource LabelInfoItem}" />
 
                                             <HorizontalStackLayout Spacing="5">
-
                                                 <Label Text="Meta:"
-                                       FontAttributes="Bold"
-                                       TextColor="#333"/>
-
+                                                       FontAttributes="Bold"
+                                                       TextColor="#333"/>
                                                 <Label Text="{Binding MetaValor}"
-                                       TextColor="#333"/>
-
+                                                       TextColor="#333"/>
                                                 <Label Text="{Binding MetaUnidade}"
-                                       TextColor="#333"/>
-
+                                                       TextColor="#333"/>
                                             </HorizontalStackLayout>
 
-                                            <HorizontalStackLayout Spacing="10"
-                                                                   >
-
+                                            <HorizontalStackLayout Spacing="10">
                                                 <Label Text="{Binding Progresso, StringFormat='Progresso: {0:F0}%'}"
-                                       TextColor="#333"
-                                       VerticalOptions="Center"/>
+                                                       TextColor="#333"
+                                                       VerticalOptions="Center"/>
 
                                                 <Stepper Minimum="0"
-                                                         BackgroundColor="#333"
-                                                     Maximum="{Binding MetaValor}"
-                                                     Increment="1"
-                                                     Value="{Binding ValorAtual}"
-                                                     ValueChanged="Stepper_ValueChanged"/>
-
+                                                         Maximum="{Binding MetaValor}"
+                                                         Increment="1"
+                                                         Value="{Binding ValorAtual}"
+                                                         ValueChanged="Stepper_ValueChanged"/>
                                             </HorizontalStackLayout>
 
                                         </VerticalStackLayout>
 
                                     </Frame>
 
-                            </ViewCell>
+                                </ViewCell>
                             </DataTemplate>
-                    </ListView.ItemTemplate>
+                        </ListView.ItemTemplate>
 
-                </ListView>
+                    </ListView>
 
                 </Frame>
-                <Button Text="Voltar"
-                Clicked="ButtonVoltar"
-                 Style="{StaticResource BotaoSecundario}" />
 
             </VerticalStackLayout>
+        </ScrollView>
 
         <!-- Card cadastro -->
         <Frame x:Name="CadastroCard"
                IsVisible="False"
-               Style="{StaticResource CardFormulario}"
+               BackgroundColor="#F4F1FF"
+               CornerRadius="20"
+               Padding="20"
                Margin="20"
-               BackgroundColor="#777"
+               HasShadow="True"
                VerticalOptions="Center">
 
-            <VerticalStackLayout Spacing="12"
-                                 BackgroundColor="#777"
-                                 Padding="15"
-                                 Margin="5">
+            <VerticalStackLayout Spacing="15">
 
                 <Label Text="Novo Hábito"
-                       FontSize="22"
+                       FontSize="24"
                        FontAttributes="Bold"
+                       HorizontalOptions="Center"
                        TextColor="#1E1E1E"/>
 
                 <Entry x:Name="NomeEntry"
                        Placeholder="Nome do hábito"
-                       TextColor="#333"
-                       PlaceholderColor="#777"/>
+                       Style="{StaticResource EntryPadrao}" />
 
                 <Entry x:Name="TipoEntry"
                        Placeholder="Tipo (Ex: Exercício)"
-                       TextColor="#333"
-                       PlaceholderColor="#777"/>
+                       Style="{StaticResource EntryPadrao}" />
 
                 <Entry x:Name="DescricaoEntry"
                        Placeholder="Descrição (Ex: Caminhar por 1 hora)"
-                       TextColor="#333"
-                       PlaceholderColor="#777"/>
+                       Style="{StaticResource EntryPadrao}" />
 
                 <Label Text="Hora do Hábito"
-                       TextColor="#1E1E1E"
-                       FontSize="18"
-                       FontAttributes="Bold"/>
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="#1E1E1E"/>
 
                 <TimePicker x:Name="timeHorario"
                             Format="HH:mm"
                             TextColor="#333"/>
 
-                <Entry x:Name="MetaEntry"
-                       Placeholder="Meta Nº (Ex: 5.5)"
-                       Keyboard="Numeric"
-                       TextColor="#333"
-                       PlaceholderColor="#777"/>
+                <Grid ColumnDefinitions="*,*"
+                      ColumnSpacing="10">
 
-                <Picker Title="Unidade"
-                        TextColor="#333"
-                        TitleColor="#777"
-                        ItemsSource="{Binding Unidades}"
-                        SelectedItem="{Binding UnidadeSelecionada}" />
+                    <Entry Grid.Column="0"
+                           x:Name="MetaEntry"
+                           Placeholder="Meta Nº (Ex: 5)"
+                           Keyboard="Numeric"
+                           Style="{StaticResource EntryPadrao}" />
+
+                    <Picker Grid.Column="1"
+                            Title="Unidade"
+                            Style="{StaticResource PickerPadrao}"
+                            ItemsSource="{Binding Unidades}"
+                            SelectedItem="{Binding UnidadeSelecionada}" />
+
+                </Grid>
 
                 <Picker x:Name="pck_frequencia"
                         Title="Selecione a frequência"
-                        TextColor="#333"
-                        TitleColor="#777"
+                        Style="{StaticResource PickerPadrao}"
                         ItemsSource="{Binding Frequencias}"
                         SelectedItem="{Binding FrequenciaSelecionada}" />
 
                 <Button Text="Salvar"
                         Clicked="OnSalvarHabitoClicked"
-                        BackgroundColor="#6A0DAD"
-                        TextColor="White"
-                        CornerRadius="10"/>
+                        Style="{StaticResource BotaoPadrao}" />
 
                 <Button Text="Cancelar"
                         Clicked="OnCancelarClicked"
@@ -218,76 +187,62 @@
         <!-- Card edição -->
         <Frame x:Name="EditCard"
                IsVisible="False"
-               Style="{StaticResource CardFormulario}"
-               Margin="5"
-               BackgroundColor="#6A0DAD"
+               BackgroundColor="#F4F1FF"
+               CornerRadius="20"
+               Padding="20"
+               Margin="20"
+               HasShadow="True"
                VerticalOptions="Center">
 
-            <VerticalStackLayout Spacing="12"
-                                 BackgroundColor="#F4F1FF"
-                                 Padding="15"
-                                 Margin="5">
+            <VerticalStackLayout Spacing="15">
 
                 <Label Text="Editar Hábito"
-                       FontSize="22"
+                       FontSize="24"
                        FontAttributes="Bold"
+                       HorizontalOptions="Center"
                        TextColor="#1E1E1E"/>
-
-                <Label Text="Nome do Hábito"
-                       TextColor="#333"/>
 
                 <Entry x:Name="Edit_NomeEntry"
                        Text="{Binding NomeHabito}"
-                       TextColor="#333"
-                       PlaceholderColor="#777"/>
-
-                <Label Text="Descrição do Hábito"
-                       TextColor="#333"/>
+                       Placeholder="Nome do hábito"
+                       Style="{StaticResource EntryPadrao}" />
 
                 <Entry x:Name="Edit_DescricaoEntry"
                        Text="{Binding DescricaoHabito}"
-                       TextColor="#333"
-                       PlaceholderColor="#777"/>
+                       Placeholder="Descrição do hábito"
+                       Style="{StaticResource EntryPadrao}" />
 
                 <Label Text="Hora do Hábito"
-                       TextColor="#333"/>
+                       TextColor="#333"
+                       FontAttributes="Bold"/>
 
                 <TimePicker x:Name="Edit_timeHorario"
                             Format="HH:mm"
                             TextColor="#333"/>
 
-                <Label Text="Nº de vezes"
-                       TextColor="#333"/>
-
                 <Entry x:Name="Edit_MetaEntry"
-                       Placeholder="Meta (Ex: 5.5)"
+                       Placeholder="Meta (Ex: 5)"
                        Keyboard="Numeric"
-                       TextColor="#333"
-                       PlaceholderColor="#777"/>
+                       Style="{StaticResource EntryPadrao}" />
 
                 <Picker x:Name="Edit_pck_frequencia"
                         Title="Selecione a frequência"
-                        TextColor="#333"
-                        TitleColor="#777"
+                        Style="{StaticResource PickerPadrao}"
                         ItemsSource="{Binding Frequencias}"
                         SelectedItem="{Binding FrequenciaSelecionada}" />
 
                 <Button Text="Salvar"
                         Clicked="Button_Editar_Habito"
-                        BackgroundColor="#6A0DAD"
-                        TextColor="White"
-                        CornerRadius="10"/>
+                        Style="{StaticResource BotaoPadrao}" />
 
                 <Button Text="Cancelar Edição"
                         Clicked="Button_Cancelar_edicao"
-                        BackgroundColor="Gray"
-                        TextColor="White"
-                        CornerRadius="10"/>
+                        Style="{StaticResource BotaoSecundario}" />
 
             </VerticalStackLayout>
 
         </Frame>
 
     </Grid>
-    </ScrollView>
+
 </ContentPage>
