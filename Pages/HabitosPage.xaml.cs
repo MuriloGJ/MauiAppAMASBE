@@ -257,11 +257,12 @@ namespace MauiAppAMASBE.Pages
             habito.ValorAtual = e.NewValue;
             await App.Db.UpdateHabito(habito);
         }
-
         private async void ButtonVoltar(object sender, EventArgs e)
         {
             await Navigation.PopAsync();
         }
+
+       
 
         // CORREÇÃO: VerificarPerm implementado corretamente (estava com NotImplementedException)
         private async Task<bool> VerificarPerm()

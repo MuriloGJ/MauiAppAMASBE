@@ -106,7 +106,9 @@
                     </ListView>
 
                 </Frame>
-
+                <Button Text="Voltar" 
+                        Clicked="ButtonVoltar"
+                        Style="{StaticResource BotaoSecundario}" />
             </VerticalStackLayout>
         </ScrollView>
 
